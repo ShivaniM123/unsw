@@ -1,0 +1,109 @@
+/* Vanilla tabs styles (scoped to tabs-research) + variant overrides merged */
+.tabs-research .tabs-research-list {
+  display: flex;
+  gap: 0;
+  max-width: 100%;
+  font-size: var(--body-font-size-xs);
+  overflow-x: auto;
+  border-bottom: 2px solid #e0e0e0;
+  margin-bottom: 24px;
+}
+
+@media (width >= 600px) {
+  .tabs-research .tabs-research-list {
+    font-size: var(--body-font-size-s);
+  }
+}
+
+@media (width >= 900px) {
+  .tabs-research .tabs-research-list {
+    font-size: var(--body-font-size-m);
+  }
+}
+
+.tabs-research .tabs-research-list button {
+  flex: 0 0 max-content;
+  margin: 0;
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  padding: 12px 20px;
+  background-color: transparent;
+  color: var(--brand-black);
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: unset;
+  text-overflow: unset;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.tabs-research .tabs-research-list button:hover {
+  color: var(--brand-black);
+  border-bottom-color: var(--brand-grey);
+}
+
+.tabs-research .tabs-research-list button[aria-selected='true'] {
+  border-bottom-color: var(--brand-yellow);
+  font-weight: 700;
+  color: var(--brand-black);
+  background-color: transparent;
+  cursor: default;
+}
+
+.tabs-research .tabs-research-panel {
+  margin-top: -1px;
+  padding: 0;
+  border: none;
+  overflow: auto;
+}
+
+.tabs-research .tabs-research-panel[aria-hidden='true'] {
+  display: none;
+}
+
+/* Variant: research content styling */
+.tabs-research .tabs-research-panel h3 {
+  font-family: var(--heading-font-family);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--brand-dark-grey);
+  margin: 24px 0 8px;
+  padding: 12px 0;
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+}
+
+.tabs-research .tabs-research-panel h3:first-child {
+  margin-top: 0;
+}
+
+.tabs-research .tabs-research-panel p {
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  line-height: 1.75;
+  color: var(--brand-black);
+  margin: 8px 0;
+}
+
+.tabs-research .tabs-research-panel ul {
+  padding-left: 24px;
+}
+
+.tabs-research .tabs-research-panel li {
+  margin-bottom: 12px;
+  line-height: 1.75;
+}
+
+.tabs-research .tabs-research-panel a {
+  color: var(--link-color);
+  text-decoration: underline;
+}
+
+.tabs-research .tabs-research-list button p {
+  margin: 0;
+}
