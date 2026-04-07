@@ -66,22 +66,115 @@
   display: none;
 }
 
-/* Variant: research content styling */
-.tabs-research .tabs-research-panel h3 {
+/* Variant: accordion items inside tab panels */
+.tabs-research .tabs-research-accordion-item {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tabs-research .tabs-research-accordion-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 24px 16px;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.tabs-research .tabs-research-accordion-heading {
   font-family: var(--heading-font-family);
   font-size: 20px;
   font-weight: 700;
   color: var(--brand-dark-grey);
-  margin: 24px 0 8px;
-  padding: 12px 0;
-  border-bottom: 1px solid #e0e0e0;
-  cursor: pointer;
 }
 
-.tabs-research .tabs-research-panel h3:first-child {
-  margin-top: 0;
+.tabs-research .tabs-research-accordion-icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  margin-left: 16px;
 }
 
+.tabs-research .tabs-research-accordion-icon::before,
+.tabs-research .tabs-research-accordion-icon::after {
+  content: '';
+  position: absolute;
+  background-color: var(--brand-dark-grey);
+  transition: transform 0.2s ease;
+}
+
+.tabs-research .tabs-research-accordion-icon::before {
+  top: 50%;
+  left: 4px;
+  width: 16px;
+  height: 2px;
+  transform: translateY(-50%);
+}
+
+.tabs-research .tabs-research-accordion-icon::after {
+  top: 4px;
+  left: 50%;
+  width: 2px;
+  height: 16px;
+  transform: translateX(-50%);
+}
+
+.tabs-research .tabs-research-accordion-btn[aria-expanded='true'] .tabs-research-accordion-icon::after {
+  transform: translateX(-50%) rotate(90deg);
+  opacity: 0;
+}
+
+.tabs-research .tabs-research-accordion-content {
+  padding: 0 16px 16px;
+  overflow: hidden;
+}
+
+.tabs-research .tabs-research-accordion-content[aria-hidden='true'] {
+  display: none;
+}
+
+/* Variant: publication info heading (e.g. "Book Chapters | 2023") */
+.tabs-research .tabs-research-accordion-content h4 {
+  font-family: var(--heading-font-family);
+  font-size: var(--body-font-size-m);
+  font-weight: 300;
+  color: var(--brand-grey);
+  line-height: 1.4;
+  margin: 0 0 16px;
+}
+
+/* Variant: publication body (citation text) */
+.tabs-research .tabs-research-accordion-content p {
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  line-height: 1.75;
+  color: var(--brand-black);
+  margin: 0;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #c8c8c8;
+  margin-bottom: 24px;
+}
+
+.tabs-research .tabs-research-accordion-content ul {
+  padding-left: 24px;
+}
+
+.tabs-research .tabs-research-accordion-content li {
+  margin-bottom: 12px;
+  line-height: 1.75;
+}
+
+.tabs-research .tabs-research-accordion-content a {
+  color: var(--link-color);
+  text-decoration: underline;
+}
+
+/* Variant: tab content without accordions (plain text panels) */
 .tabs-research .tabs-research-panel p {
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-m);
