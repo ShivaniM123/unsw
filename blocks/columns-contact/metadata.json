@@ -1,0 +1,39 @@
+{
+  "variantName": "columns-contact",
+  "baseBlock": "columns",
+  "version": "1.0.0",
+  "created": "2026-04-07T04:28:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.unsw.edu.au/staff/-keith--chee-ooi",
+    "originPage": "staff profile page",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "bio-contact",
+    "imagePattern": "noimg"
+  },
+  "contentPattern": {
+    "structure": "bio-text + contact-tiles",
+    "buttonCount": 0,
+    "imageCount": 0
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "staff profile bio and contact sections",
+      "team member detail pages",
+      "two-column text with sidebar info"
+    ],
+    "notSuitableFor": [
+      "image-heavy column layouts",
+      "product comparison columns",
+      "multi-row column grids"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/staff/keith-chee-ooi"],
+    "reuseCount": 1,
+    "lastUsed": "2026-04-07T04:28:00.000Z"
+  }
+}

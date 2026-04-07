@@ -1,0 +1,14 @@
+{
+  "status": "success",
+  "url": "https://www.unsw.edu.au/staff/-keith--chee-ooi",
+  "path": "staff/keith-chee-ooi",
+  "timestamp": "2026-04-07T05:03:04.807Z",
+  "title": "Professor (Keith) Chee Ooi",
+  "template": "staff-profile",
+  "blocks": [
+    "hero-profile",
+    "columns-contact",
+    "columns-contact",
+    "tabs-research"
+  ]
+}

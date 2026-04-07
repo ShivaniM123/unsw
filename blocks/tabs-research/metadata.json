@@ -1,0 +1,39 @@
+{
+  "variantName": "tabs-research",
+  "baseBlock": "tabs",
+  "version": "1.0.0",
+  "created": "2026-04-07T04:28:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.unsw.edu.au/staff/-keith--chee-ooi",
+    "originPage": "staff profile page",
+    "blockPosition": "bottom"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "research-tabs",
+    "imagePattern": "noimg"
+  },
+  "contentPattern": {
+    "structure": "tab-label + accordion-content",
+    "buttonCount": 0,
+    "imageCount": 0
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "research profile tabs",
+      "academic publication listings",
+      "multi-category content with expandable items"
+    ],
+    "notSuitableFor": [
+      "simple text tabs",
+      "image gallery tabs",
+      "product feature tabs"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/staff/keith-chee-ooi"],
+    "reuseCount": 1,
+    "lastUsed": "2026-04-07T04:28:00.000Z"
+  }
+}

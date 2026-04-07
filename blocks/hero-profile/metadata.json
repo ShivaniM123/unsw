@@ -1,0 +1,40 @@
+{
+  "variantName": "hero-profile",
+  "baseBlock": "hero",
+  "version": "1.0.0",
+  "created": "2026-04-07T04:28:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.unsw.edu.au/staff/-keith--chee-ooi",
+    "originPage": "staff profile page",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "staff-profile",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image + heading + subtitle + qualifications + faculty + school + social-links",
+    "buttonCount": 0,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "staff profile pages",
+      "faculty member pages",
+      "researcher profile pages",
+      "team member detail pages"
+    ],
+    "notSuitableFor": [
+      "product landing pages",
+      "blog post heroes",
+      "generic landing pages with CTAs"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/staff/keith-chee-ooi"],
+    "reuseCount": 1,
+    "lastUsed": "2026-04-07T04:28:00.000Z"
+  }
+}
