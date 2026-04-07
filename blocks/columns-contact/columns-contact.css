@@ -54,7 +54,7 @@
 }
 
 .columns-contact .columns-contact-bio.collapsed {
-  max-height: 200px;
+  max-height: 244px;
 }
 
 .columns-contact .columns-contact-toggle {
@@ -78,7 +78,10 @@
 /* --- Columns-contact variant: contact tiles column --- */
 .columns-contact .columns-contact-tiles-col {
   background-color: var(--brand-light-grey);
-  padding: 24px;
+  padding: 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px 16px;
 }
 
 .columns-contact .columns-contact-tiles-col h3 {
@@ -86,12 +89,8 @@
   font-size: var(--body-font-size-m);
   font-weight: 700;
   color: var(--brand-black);
-  margin: 0 0 4px;
+  margin: 0 0 16px;
   text-transform: none;
-}
-
-.columns-contact .columns-contact-tiles-col h3:not(:first-child) {
-  margin-top: 20px;
 }
 
 .columns-contact .columns-contact-tiles-col p {
@@ -100,11 +99,22 @@
   font-weight: 700;
   color: var(--brand-dark-grey);
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.5;
+}
+
+/* Location tile spans full width */
+.columns-contact .columns-contact-tiles-col h3:nth-of-type(3) {
+  grid-column: 1 / -1;
+  margin-bottom: 0;
+}
+
+.columns-contact .columns-contact-tiles-col p:nth-of-type(3) {
+  grid-column: 1 / -1;
+  margin-top: -24px;
 }
 
 @media (width >= 900px) {
   .columns-contact .columns-contact-tiles-col {
-    flex: 0 0 360px;
+    flex: 0 0 400px;
   }
 }
