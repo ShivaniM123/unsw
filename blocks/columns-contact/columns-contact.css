@@ -1,0 +1,110 @@
+/* --- Vanilla columns styles (scoped to columns-contact) --- */
+.columns-contact > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.columns-contact img {
+  width: 100%;
+}
+
+.columns-contact > div > div {
+  order: 1;
+}
+
+.columns-contact > div > .columns-contact-img-col {
+  order: 0;
+}
+
+.columns-contact > div > .columns-contact-img-col img {
+  display: block;
+}
+
+@media (width >= 900px) {
+  .columns-contact > div {
+    align-items: flex-start;
+    flex-direction: unset;
+    gap: 32px;
+  }
+
+  .columns-contact > div > div {
+    flex: 1;
+    order: unset;
+  }
+}
+
+/* --- Columns-contact variant: bio column --- */
+.columns-contact .columns-contact-bio-col p {
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  line-height: 1.75;
+  color: var(--brand-black);
+  margin: 0 0 16px;
+}
+
+.columns-contact .columns-contact-bio-col a {
+  color: var(--link-color);
+  text-decoration: underline;
+}
+
+/* Read more / Read less toggle */
+.columns-contact .columns-contact-bio {
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.columns-contact .columns-contact-bio.collapsed {
+  max-height: 200px;
+}
+
+.columns-contact .columns-contact-toggle {
+  display: inline;
+  margin-top: 8px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--link-color);
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  font-weight: 400;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.columns-contact .columns-contact-toggle:hover {
+  color: var(--link-hover-color);
+}
+
+/* --- Columns-contact variant: contact tiles column --- */
+.columns-contact .columns-contact-tiles-col {
+  background-color: var(--brand-light-grey);
+  padding: 24px;
+}
+
+.columns-contact .columns-contact-tiles-col h3 {
+  font-family: var(--heading-font-family);
+  font-size: var(--body-font-size-m);
+  font-weight: 700;
+  color: var(--brand-black);
+  margin: 0 0 4px;
+  text-transform: none;
+}
+
+.columns-contact .columns-contact-tiles-col h3:not(:first-child) {
+  margin-top: 20px;
+}
+
+.columns-contact .columns-contact-tiles-col p {
+  font-family: var(--heading-font-family);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--brand-dark-grey);
+  margin: 0;
+  line-height: 1.4;
+}
+
+@media (width >= 900px) {
+  .columns-contact .columns-contact-tiles-col {
+    flex: 0 0 360px;
+  }
+}
