@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="34px" height="34px" viewBox="0 0 34 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>search-thin</title>
+    <g id="Header" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Local-Header-1.2" transform="translate(-6835.000000, -1625.000000)" fill="#FFFFFF">
+            <g id="Content" transform="translate(1338.000000, 1144.000000)">
+                <g id="HF" transform="translate(3804.000000, 47.000000)">
+                    <g id="[L]" transform="translate(0.000000, 24.000000)">
+                        <g id="Inactive" transform="translate(155.000000, 312.000000)">
+                            <g id="Primary" transform="translate(6.000000, 64.000000)">
+                                <g id="Group-74" transform="translate(1498.000000, 0.000000)">
+                                    <g id="Group-2" transform="translate(34.000000, 34.000000)">
+                                        <path d="M13,0 C20.1797017,0 26,5.82029825 26,13 C26,16.2296841 24.8222516,19.1842904 22.8728079,21.4577656 L33.4142136,32 L32,33.4142136 L21.4577656,22.8728079 C19.1842904,24.8222516 16.2296841,26 13,26 C5.82029825,26 0,20.1797017 0,13 C0,5.82029825 5.82029825,0 13,0 Z M13,2 C6.92486775,2 2,6.92486775 2,13 C2,19.0751322 6.92486775,24 13,24 C19.0751322,24 24,19.0751322 24,13 C24,6.92486775 19.0751322,2 13,2 Z" id="search-thin"></path>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

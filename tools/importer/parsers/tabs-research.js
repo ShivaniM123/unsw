@@ -39,46 +39,45 @@ export default function parse(element, { document }) {
           }
 
           if (contentEl) {
-            // Extract publication/grant/award items
+            // Extract publication items (from captured DOM: .publication-item)
             const pubItems = contentEl.querySelectorAll('.publication-item');
             if (pubItems.length > 0) {
               pubItems.forEach((pub) => {
-                const titleEl = pub.querySelector('.publication-title, h4, h3, .title');
-                const detailsEl = pub.querySelector('.publication-details, .details, p');
-                if (titleEl) {
-                  const p = document.createElement('p');
-                  p.innerHTML = '<strong>' + titleEl.textContent.trim() + '</strong>';
-                  contentDiv.append(p);
+                // Publication info heading e.g. "Book Chapters | 2023"
+                const infoEl = pub.querySelector('.publication-item--publication-info');
+                if (infoEl) {
+                  const h4 = document.createElement('h4');
+                  h4.textContent = infoEl.textContent.trim();
+                  contentDiv.append(h4);
                 }
-                if (detailsEl && detailsEl !== titleEl) {
+                // Publication body (author, year, title, source)
+                const bodyEl = pub.querySelector('.publication-item--body');
+                if (bodyEl) {
                   const p = document.createElement('p');
-                  p.textContent = detailsEl.textContent.trim();
+                  p.textContent = bodyEl.textContent.trim();
                   contentDiv.append(p);
                 }
               });
             } else {
-              // Fallback: extract text content from accordion content
-              const paragraphs = contentEl.querySelectorAll('p, li, h3, h4');
-              if (paragraphs.length > 0) {
-                paragraphs.forEach((p) => {
-                  const text = p.textContent.trim();
-                  if (text) contentDiv.append(p);
-                });
-              } else {
-                const text = contentEl.textContent.trim();
-                if (text) {
+              // Fallback: extract all child content from accordion content
+              const children = contentEl.querySelectorAll('p, li, h3, h4, div:not(:empty)');
+              children.forEach((child) => {
+                const text = child.textContent.trim();
+                if (text && child.children.length === 0) {
                   const p = document.createElement('p');
                   p.textContent = text;
                   contentDiv.append(p);
+                } else if (child.tagName === 'P' || child.tagName === 'LI') {
+                  contentDiv.append(child);
                 }
-              }
+              });
             }
           }
         });
       } else {
-        // No accordion — extract direct content
-        const directContent = panel.querySelectorAll('p, li, h3, h4, table');
-        directContent.forEach((el) => {
+        // No accordion — extract direct content (grants, awards, etc.)
+        const directChildren = panel.querySelectorAll('p, li, h3, h4, ul, ol, table');
+        directChildren.forEach((el) => {
           const text = el.textContent.trim();
           if (text) contentDiv.append(el);
         });
