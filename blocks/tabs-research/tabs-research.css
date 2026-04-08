@@ -1,62 +1,78 @@
 /* Vanilla tabs styles (scoped to tabs-research) + variant overrides merged */
+
+/* Mobile: vertical stacked tab list */
 .tabs-research .tabs-research-list {
   display: flex;
+  flex-direction: column;
   gap: 0;
   max-width: 100%;
-  font-size: var(--body-font-size-xs);
-  overflow-x: auto;
-  border-bottom: 2px solid #e0e0e0;
-  margin-bottom: 24px;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 16px;
 }
 
+.tabs-research .tabs-research-list button {
+  margin: 0;
+  border: none;
+  border-bottom: 1px solid #efefef;
+  border-radius: 0;
+  padding: 16px;
+  background-color: transparent;
+  color: var(--brand-black);
+  font-family: var(--heading-font-family);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+  white-space: normal;
+  overflow: unset;
+  text-overflow: unset;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  width: 100%;
+}
+
+.tabs-research .tabs-research-list button:hover {
+  background-color: #f0f0f0;
+}
+
+.tabs-research .tabs-research-list button[aria-selected='true'] {
+  font-weight: 700;
+  color: var(--link-color);
+  background-color: #e9ecf6;
+  cursor: default;
+}
+
+/* Tablet: 600px+ horizontal pill tabs */
 @media (width >= 600px) {
   .tabs-research .tabs-research-list {
+    flex-direction: row;
+    overflow-x: auto;
+    border-bottom: 1px solid #efefef;
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+
+  .tabs-research .tabs-research-list button {
+    flex: 0 0 max-content;
+    border: none;
+    border-radius: 24px;
+    padding: 8px 24px;
     font-size: var(--body-font-size-s);
+    text-align: center;
+    white-space: nowrap;
+    width: auto;
   }
 }
 
 @media (width >= 900px) {
-  .tabs-research .tabs-research-list {
+  .tabs-research .tabs-research-list button {
     font-size: var(--body-font-size-m);
   }
 }
 
-.tabs-research .tabs-research-list button {
-  flex: 0 0 max-content;
-  margin: 0;
-  border: none;
-  border-bottom: 3px solid transparent;
-  border-radius: 0;
-  padding: 12px 20px;
-  background-color: transparent;
-  color: var(--brand-black);
-  font-family: var(--body-font-family);
-  font-size: var(--body-font-size-m);
-  font-weight: 400;
-  line-height: 1.5;
-  text-align: center;
-  cursor: pointer;
-  white-space: nowrap;
-  overflow: unset;
-  text-overflow: unset;
-  transition: border-color 0.2s ease, color 0.2s ease;
-}
-
-.tabs-research .tabs-research-list button:hover {
-  color: var(--brand-black);
-  border-bottom-color: var(--brand-grey);
-}
-
-.tabs-research .tabs-research-list button[aria-selected='true'] {
-  border-bottom-color: var(--brand-yellow);
-  font-weight: 700;
-  color: var(--brand-black);
-  background-color: transparent;
-  cursor: default;
-}
-
+/* Tab panels */
 .tabs-research .tabs-research-panel {
-  margin-top: -1px;
   padding: 0;
   border: none;
   overflow: auto;
@@ -76,7 +92,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 24px 16px;
+  padding: 16px;
   margin: 0;
   border: none;
   border-radius: 0;
@@ -87,7 +103,7 @@
 
 .tabs-research .tabs-research-accordion-heading {
   font-family: var(--heading-font-family);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--brand-dark-grey);
 }
@@ -136,6 +152,17 @@
 
 .tabs-research .tabs-research-accordion-content[aria-hidden='true'] {
   display: none;
+}
+
+/* Tablet/Desktop: larger accordion heading */
+@media (width >= 600px) {
+  .tabs-research .tabs-research-accordion-btn {
+    padding: 24px 16px;
+  }
+
+  .tabs-research .tabs-research-accordion-heading {
+    font-size: 20px;
+  }
 }
 
 /* Variant: publication info heading (e.g. "Book Chapters | 2023") */
