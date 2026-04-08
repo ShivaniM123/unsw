@@ -1,0 +1,64 @@
+{
+  "templates": [
+    {
+      "name": "staff-profile",
+      "urls": [
+        "https://www.unsw.edu.au/staff/-keith--chee-ooi"
+      ],
+      "description": "Staff profile page with biographical information, contact details, research interests, and publications",
+      "blocks": [
+        {
+          "name": "hero-profile",
+          "instances": [
+            ".profile-page-header"
+          ]
+        },
+        {
+          "name": "columns-contact",
+          "instances": [
+            ".text.uds-component.read-more",
+            ".propertytiles"
+          ]
+        },
+        {
+          "name": "tabs-research",
+          "instances": [
+            ".tabs.uds-component"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "section-1",
+          "name": "Profile Hero",
+          "selector": ".profile-page-header",
+          "style": "yellow-accent",
+          "blocks": [
+            "hero-profile"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-2",
+          "name": "Bio and Contact",
+          "selector": ".column-layout:has(.text.read-more)",
+          "style": null,
+          "blocks": [
+            "columns-contact"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-3",
+          "name": "Research Tabs",
+          "selector": ".column-layout:has(.tabs)",
+          "style": null,
+          "blocks": [
+            "tabs-research"
+          ],
+          "defaultContent": []
+        }
+      ]
+    }
+  ]
+}

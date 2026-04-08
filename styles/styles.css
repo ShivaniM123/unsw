@@ -10,40 +10,58 @@
  * governing permissions and limitations under the License.
  */
 
+/* UNSW Design System */
 :root {
-  /* colors */
-  --background-color: white;
-  --light-color: #f8f8f8;
-  --dark-color: #505050;
-  --text-color: #131313;
-  --link-color: #3b63fb;
-  --link-hover-color: #1d3ecf;
+  /* UNSW brand colors */
+  --brand-yellow: #ffd600;
+  --brand-black: #181716;
+  --brand-white: #fff;
+  --brand-grey: #737373;
+  --brand-light-grey: #f9f9f9;
+  --brand-dark-grey: #333;
+  --brand-blue: #3f61c4;
+
+  /* semantic colors */
+  --background-color: var(--brand-white);
+  --light-color: var(--brand-light-grey);
+  --dark-color: var(--brand-dark-grey);
+  --text-color: var(--brand-black);
+  --link-color: var(--brand-blue);
+  --link-hover-color: #2b4a9e;
 
   /* fonts */
   --body-font-family: roboto, roboto-fallback, sans-serif;
-  --heading-font-family: roboto-condensed, roboto-condensed-fallback, sans-serif;
+  --heading-font-family: clancy, clancy-fallback, sans-serif;
 
   /* body sizes */
-  --body-font-size-m: 22px;
-  --body-font-size-s: 19px;
-  --body-font-size-xs: 17px;
+  --body-font-size-m: 16px;
+  --body-font-size-s: 14px;
+  --body-font-size-xs: 12px;
 
   /* heading sizes */
-  --heading-font-size-xxl: 55px;
-  --heading-font-size-xl: 44px;
-  --heading-font-size-l: 34px;
-  --heading-font-size-m: 27px;
-  --heading-font-size-s: 24px;
-  --heading-font-size-xs: 22px;
+  --heading-font-size-xxl: 36px;
+  --heading-font-size-xl: 30px;
+  --heading-font-size-l: 24px;
+  --heading-font-size-m: 22px;
+  --heading-font-size-s: 20px;
+  --heading-font-size-xs: 18px;
 
   /* nav height */
   --nav-height: 64px;
+
+  /* spacing */
+  --spacing-xs: 8px;
+  --spacing-s: 16px;
+  --spacing-m: 24px;
+  --spacing-l: 32px;
+  --spacing-xl: 48px;
+  --spacing-xxl: 64px;
 }
 
 /* fallback fonts */
 @font-face {
-  font-family: roboto-condensed-fallback;
-  size-adjust: 88.82%;
+  font-family: clancy-fallback;
+  size-adjust: 95%;
   src: local('Arial');
 }
 
@@ -55,14 +73,8 @@
 
 @media (width >= 900px) {
   :root {
-    /* body sizes */
-    --body-font-size-m: 18px;
-    --body-font-size-s: 16px;
-    --body-font-size-xs: 14px;
-
-    /* heading sizes */
-    --heading-font-size-xxl: 45px;
-    --heading-font-size-xl: 36px;
+    --heading-font-size-xxl: 48px;
+    --heading-font-size-xl: 42px;
     --heading-font-size-l: 28px;
     --heading-font-size-m: 22px;
     --heading-font-size-s: 20px;
@@ -77,7 +89,7 @@ body {
   color: var(--text-color);
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-m);
-  line-height: 1.6;
+  line-height: 1.75;
 }
 
 body.appear {
@@ -107,9 +119,10 @@ h6 {
   margin-top: 0.8em;
   margin-bottom: 0.25em;
   font-family: var(--heading-font-family);
-  font-weight: 600;
-  line-height: 1.25;
+  font-weight: 700;
+  line-height: 1.5;
   scroll-margin: 40px;
+  color: var(--text-color);
 }
 
 h1 { font-size: var(--heading-font-size-xxl); }
@@ -158,6 +171,7 @@ a:any-link {
   color: var(--link-color);
   text-decoration: none;
   overflow-wrap: break-word;
+  transition: color 0.2s ease;
 }
 
 a:hover {
@@ -179,16 +193,18 @@ button.button {
   max-width: 100%;
   margin: 0;
   border: 2px solid transparent;
-  border-radius: 2.4em;
-  padding: 0.5em 1.2em;
-  font: inherit;
-  font-weight: 500;
+  border-radius: 0;
+  padding: 12px 24px;
+  font-family: var(--body-font-family);
+  font-weight: 700;
+  font-size: var(--body-font-size-m);
   line-height: 1.25;
   text-decoration: none;
   cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: all 0.2s ease;
 }
 
 a.button[aria-disabled="true"],
@@ -199,18 +215,18 @@ button.button:disabled {
 
 a.button.primary,
 button.button.primary {
-  border-color: var(--text-color);
-  background-color: var(--text-color);
-  color: var(--background-color);
+  border-color: var(--brand-yellow);
+  background-color: var(--brand-yellow);
+  color: var(--brand-black);
 }
 
 a.button.primary:hover,
 a.button.primary:focus-visible,
 button.button.primary:hover,
 button.button.primary:focus-visible {
-  border-color: var(--dark-color);
-  background-color: var(--dark-color);
-  color: var(--light-color);
+  border-color: #e6c100;
+  background-color: #e6c100;
+  color: var(--brand-black);
 }
 
 a.button.primary[aria-disabled="true"],
@@ -221,23 +237,23 @@ button.button.primary:disabled:hover,
 button.button.primary:disabled:focus-visible {
   background-color: var(--light-color);
   border-color: var(--light-color);
-  color: var(--dark-color);
+  color: var(--brand-grey);
 }
 
 a.button.secondary,
 button.button.secondary {
-  border-color: var(--text-color);
+  border-color: var(--brand-black);
   background-color: transparent;
-  color: var(--text-color);
+  color: var(--brand-black);
 }
 
 a.button.secondary:hover,
 a.button.secondary:focus-visible,
 button.button.secondary:hover,
 button.button.secondary:focus-visible {
-  border-color: var(--dark-color);
-  background-color: var(--light-color);
-  color: var(--dark-color);
+  border-color: var(--brand-black);
+  background-color: var(--brand-black);
+  color: var(--brand-white);
 }
 
 a.button.secondary[aria-disabled="true"],
@@ -248,7 +264,7 @@ button.button.secondary:disabled:hover,
 button.button.secondary:disabled:focus-visible {
   background-color: var(--light-color);
   border-color: var(--light-color);
-  color: var(--dark-color);
+  color: var(--brand-grey);
 }
 
 /* high-impact call-to-action */
@@ -275,7 +291,7 @@ button.button.accent:disabled:hover,
 button.button.accent:disabled:focus-visible {
   background-color: var(--light-color);
   border-color: var(--light-color);
-  color: var(--dark-color);
+  color: var(--brand-grey);
 }
 
 main img {
@@ -322,4 +338,30 @@ main .section.highlight {
   background-color: var(--light-color);
   margin: 0;
   padding: 40px 0;
+}
+
+/* UNSW yellow accent section */
+main .section.yellow-accent {
+  position: relative;
+  background-color: var(--background-color);
+  margin: 0;
+  padding: 40px 0 24px;
+  overflow: hidden;
+}
+
+main .section.yellow-accent::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 400px;
+  height: 500px;
+  background-color: var(--brand-yellow);
+  transform: rotate(25deg);
+  z-index: 0;
+}
+
+main .section.yellow-accent > div {
+  position: relative;
+  z-index: 1;
 }
