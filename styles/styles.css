@@ -100,6 +100,12 @@ header {
   height: var(--nav-height);
 }
 
+@media (width >= 900px) {
+  header {
+    height: auto;
+  }
+}
+
 header .header,
 footer .footer {
   visibility: hidden;

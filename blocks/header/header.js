@@ -155,10 +155,32 @@ export default async function decorate(block) {
   nav.setAttribute('aria-label', 'Main navigation');
   while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
 
-  const classes = ['brand', 'sections', 'tools'];
-  classes.forEach((c, i) => {
-    const section = nav.children[i];
-    if (section) section.classList.add(`nav-${c}`);
+  // Identify sections by content (not position) to handle varying fragment structures
+  const allSections = [...nav.querySelectorAll(':scope > div.section')];
+
+  // Remove empty sections and skip breadcrumb sections
+  allSections.forEach((s) => {
+    if (s.classList.contains('breadcrumb-container')) { s.remove(); return; }
+    if (!s.textContent.trim() && !s.querySelector('img')) s.remove();
+  });
+
+  // Classify remaining sections by content
+  const remaining = [...nav.querySelectorAll(':scope > div.section')];
+  const navTexts = ['Study', 'Research', 'Faculties', 'Engage with us', 'About us'];
+  remaining.forEach((section) => {
+    if (section.querySelector('img') && !section.classList.contains('nav-brand')) {
+      section.classList.add('nav-brand');
+    } else if (!section.classList.contains('nav-brand')) {
+      const links = [...section.querySelectorAll('a')];
+      if (links.length === 0) return;
+      const firstText = links[0]?.textContent?.trim();
+      if (navTexts.includes(firstText)) {
+        section.classList.add('nav-sections');
+      } else if (!section.classList.contains('nav-sections')
+        && !section.classList.contains('nav-tools')) {
+        section.classList.add('nav-tools');
+      }
+    }
   });
 
   // --- Brand ---

@@ -1,6 +1,15 @@
 /* Breadcrumb - matches original UNSW */
+
+/* Remove default section margin so breadcrumb sits tight under header */
+main > .section.breadcrumb-container {
+  margin: 0;
+}
+
 .breadcrumb-nav {
-  padding: 16px 0;
+  padding: 12px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-inline: 24px;
 }
 
 .breadcrumb-nav ol {
@@ -46,4 +55,10 @@
 .breadcrumb-sep svg {
   width: 8px;
   height: 12px;
+}
+
+@media (width >= 900px) {
+  .breadcrumb-nav {
+    padding-inline: 32px;
+  }
 }
