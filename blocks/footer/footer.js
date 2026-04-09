@@ -256,7 +256,16 @@ export default async function decorate(block) {
   const footer = document.createElement('div');
   footer.className = 'footer-wrapper';
 
-  const divs = [...fragment.querySelectorAll(':scope > div > div')];
+  // Try multiple selectors to handle different fragment structures
+  let divs = [...fragment.querySelectorAll(':scope > div > div')];
+  // Fallback: if loadFragment returns sections with default-content-wrapper
+  if (divs.length < 6) {
+    divs = [...fragment.querySelectorAll('.section > .default-content-wrapper')];
+  }
+  // Fallback: direct children divs
+  if (divs.length < 6) {
+    divs = [...fragment.querySelectorAll(':scope > div')];
+  }
 
   if (divs.length >= 6) {
     const mainSection = document.createElement('div');

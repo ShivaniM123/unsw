@@ -48,6 +48,9 @@ async function loadFonts() {
  * @param {Element} main The container element
  */
 function buildBreadcrumbBlock(main) {
+  // Only add breadcrumb to the actual page main, not fragments
+  if (main !== document.querySelector('main')) return;
+
   // Don't add breadcrumb on homepage
   const { pathname } = window.location;
   const cleanPath = pathname.replace(/^\/content/, '');
