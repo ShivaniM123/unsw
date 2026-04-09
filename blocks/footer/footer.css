@@ -5,9 +5,8 @@ footer {
   margin: 0;
   padding: 0;
   font-family: var(--body-font-family);
+  contain: layout style;
 }
-
-/* visibility controlled by global styles.css via data-block-status */
 
 footer .footer p {
   margin: 0;
@@ -110,6 +109,7 @@ footer .footer-legal a:hover {
 footer .footer-partners img {
   max-width: 100%;
   height: auto;
+  aspect-ratio: auto;
   filter: brightness(0) invert(1);
   transition: opacity 0.2s ease;
 }
@@ -149,8 +149,8 @@ footer .footer-branding {
 
 footer .footer-logo {
   max-width: 144px;
-  width: auto;
-  height: auto;
+  width: 144px;
+  height: 61px;
 }
 
 footer .footer-url {

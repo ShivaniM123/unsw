@@ -252,10 +252,9 @@ export default async function decorate(block) {
   const footerPath = footerMeta ? new URL(footerMeta, window.location).pathname : '/footer';
   const fragment = await loadFragment(footerPath);
 
-  block.textContent = '';
+  // Build the entire footer off-DOM first to avoid CLS
   const footer = document.createElement('div');
   footer.className = 'footer-wrapper';
-  footer.setAttribute('role', 'contentinfo');
 
   const divs = [...fragment.querySelectorAll(':scope > div > div')];
 
@@ -293,6 +292,10 @@ export default async function decorate(block) {
     addMobileToggle(footer);
   }
 
+  // Decorate icons off-DOM before inserting
+  await decorateIcons(footer);
+
+  // Single atomic DOM swap to minimize CLS
+  block.textContent = '';
   block.append(footer);
-  await decorateIcons(block);
 }
