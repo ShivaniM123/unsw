@@ -1,20 +1,453 @@
+/* UNSW Footer - Exact Replica */
+
+/* ===== Reset & Base ===== */
 footer {
-  background-color: var(--light-color);
-  font-size: var(--body-font-size-xs);
+  margin: 0;
+  padding: 0;
+  font-family: var(--body-font-family);
 }
 
-footer .footer > div {
-  margin: auto;
-  max-width: 1200px;
-  padding: 40px 24px 24px;
+footer .footer {
+  visibility: visible;
 }
 
 footer .footer p {
   margin: 0;
 }
 
+/* Screen reader only utility */
+footer .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== Link Defaults ===== */
+footer a:any-link {
+  text-decoration: none;
+}
+
+footer .footer-branding a {
+  display: block;
+  color: var(--brand-white);
+  text-decoration: none;
+}
+
+footer .footer-nav-list a {
+  font-family: 'Roboto Mono', RobotoMono, monospace;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 19px;
+  color: var(--brand-white);
+  display: block;
+  padding: 8px 0;
+  text-decoration: none;
+}
+
+footer .footer-partners a {
+  display: block;
+  text-decoration: none;
+}
+
+footer .footer-ack-text a {
+  color: #000;
+  text-decoration: underline;
+  font-family: 'Roboto Mono', RobotoMono, monospace;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+footer .footer-social-list a {
+  display: inline-block;
+  font-size: 24px;
+  line-height: 28px;
+  color: #000;
+  text-decoration: none;
+}
+
+footer .footer-legal a {
+  font-family: var(--heading-font-family);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 22px;
+  color: #000;
+  text-decoration: none;
+}
+
+/* ===== Link Hover States ===== */
+footer .footer-branding a:hover {
+  text-decoration: none;
+}
+
+footer .footer-nav-list a:hover {
+  text-decoration: underline;
+}
+
+footer .footer-ack-text a:hover {
+  opacity: 0.7;
+}
+
+footer .footer-social-list a:hover {
+  opacity: 0.6;
+  text-decoration: none;
+}
+
+footer .footer-legal a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Image Defaults ===== */
+footer .footer-partners img {
+  max-width: 100%;
+  height: auto;
+  filter: brightness(0) invert(1);
+  transition: opacity 0.2s ease;
+}
+
+footer .footer-flags img {
+  width: 108px;
+  height: 72px;
+  display: block;
+  margin: 0 24px 0 0;
+}
+
+footer .footer-social-list .icon img {
+  width: 100%;
+  height: 100%;
+  filter: brightness(0);
+}
+
+/* ===== Image Hover States ===== */
+footer .footer-partners a:hover img {
+  opacity: 0.8;
+}
+
+/* ===== Main Dark Section ===== */
+footer .footer-main {
+  background-color: var(--brand-black);
+  background-image: url('/icons/footer-background.svg');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+  color: var(--brand-white);
+}
+
+/* ===== Branding ===== */
+footer .footer-branding {
+  padding: 0 48px;
+}
+
+footer .footer-logo {
+  max-width: 144px;
+  width: auto;
+  height: auto;
+}
+
+footer .footer-url {
+  font-family: 'Roboto Mono', RobotoMono, monospace;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  color: var(--brand-white);
+  display: block;
+}
+
+/* ===== Main Content (Org + Nav) ===== */
+footer .footer-main-content {
+  display: block;
+  padding: 16px;
+}
+
+/* ===== Navigation ===== */
+footer .footer-nav {
+  display: block;
+}
+
+footer .footer-nav-column {
+  border-bottom: 1px solid rgb(255 255 255 / 20%);
+}
+
+footer .footer-nav-heading {
+  font-family: var(--heading-font-family);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 36px;
+  color: var(--brand-white);
+  margin: 0;
+  padding: 16px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+
+footer .footer-nav-heading::after {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-right: 2px solid var(--brand-white);
+  border-bottom: 2px solid var(--brand-white);
+  transform: rotate(45deg);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+
+footer .footer-nav-heading[aria-expanded="true"]::after {
+  transform: rotate(-135deg);
+}
+
+footer .footer-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 16px;
+  display: none;
+}
+
+footer .footer-nav-heading[aria-expanded="true"] + .footer-nav-list {
+  display: block;
+}
+
+footer .footer-nav-list li {
+  margin: 0;
+}
+
+/* ===== Org Details ===== */
+footer .footer-org-details {
+  padding: 16px 0;
+  color: var(--brand-white);
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 28px;
+}
+
+footer .footer-org-details strong {
+  font-weight: 700;
+}
+
+footer .footer-address {
+  margin: 0 0 16px;
+}
+
+footer .footer-provider {
+  margin: 16px 0;
+}
+
+/* ===== Partners Section ===== */
+footer .footer-partners {
+  background-color: #000;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 32px 16px;
+  gap: 16px;
+}
+
+/* ===== Bottom Yellow Section ===== */
+footer .footer-bottom {
+  background-color: var(--brand-yellow);
+  color: #000;
+  font-family: 'Roboto Mono', RobotoMono, monospace;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+/* ===== Acknowledgement of Country ===== */
+footer .footer-acknowledgement {
+  display: flex;
+  flex-direction: column;
+  padding: 48px 16px;
+}
+
+footer .footer-flags {
+  display: flex;
+  margin: 0 0 24px;
+  flex-shrink: 0;
+}
+
+footer .footer-ack-text h2 {
+  font-family: var(--heading-font-family);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 36px;
+  color: #000;
+  margin: 0 0 8px;
+}
+
+footer .footer-ack-text p {
+  font-family: 'Roboto Mono', RobotoMono, monospace;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #000;
+  margin: 0 0 20px;
+  max-width: 672px;
+}
+
+/* ===== Social & Legal ===== */
+footer .footer-social-legal {
+  display: flex;
+  flex-direction: column;
+  padding: 32px 16px;
+  gap: 16px;
+  border-top: 1px solid rgb(0 0 0 / 15%);
+}
+
+footer .footer-social {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+footer .footer-social-label {
+  font-family: var(--heading-font-family);
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 34px;
+  color: #000;
+  white-space: nowrap;
+  width: 100%;
+}
+
+footer .footer-social-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+footer .footer-social-list li {
+  margin: 0 16px 0 0;
+}
+
+footer .footer-social-list .icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  padding: 4px;
+}
+
+/* Legal Links */
+footer .footer-legal {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+footer .footer-legal li {
+  margin: 0 16px 0 0;
+}
+
+/* ===== Tablet (600px+) ===== */
+@media (width >= 600px) {
+  footer .footer-acknowledgement {
+    flex-direction: row;
+  }
+
+  footer .footer-flags {
+    flex-direction: column;
+    margin: 0 24px 16px 0;
+  }
+
+  footer .footer-flags img {
+    margin: 0 0 16px;
+  }
+
+  footer .footer-social-legal {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer .footer-social {
+    flex-wrap: nowrap;
+  }
+
+  footer .footer-social-label {
+    width: auto;
+    margin-right: 16px;
+  }
+}
+
+/* ===== Desktop (900px+) ===== */
 @media (width >= 900px) {
-  footer .footer > div {
-    padding: 40px 32px 24px;
+  footer .footer-branding {
+    padding: 0 48px;
+  }
+
+  footer .footer-main-content {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    gap: 0;
+    padding: 32px 48px;
+  }
+
+  footer .footer-nav {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  footer .footer-nav-column {
+    border-bottom: none;
+    padding: 0 16px 0 0;
+  }
+
+  footer .footer-nav-heading {
+    cursor: default;
+    padding: 0;
+    margin: 0 0 16px;
+  }
+
+  footer .footer-nav-heading::after {
+    display: none;
+  }
+
+  footer .footer-nav-list {
+    display: block !important;
+    padding: 0;
+  }
+
+  footer .footer-org-details {
+    padding: 48px 16px 0 0;
+  }
+
+  footer .footer-partners {
+    padding: 48px;
+  }
+
+  footer .footer-partners a {
+    width: 176px;
+  }
+
+  footer .footer-acknowledgement {
+    padding: 64px 0;
+    margin: 0 48px;
+  }
+
+  footer .footer-social-legal {
+    padding: 32px 0;
+    margin: 0 48px;
+  }
+}
+
+/* ===== Large Desktop (1200px+) ===== */
+@media (width >= 1200px) {
+  footer .footer-ack-text p {
+    max-width: 672px;
   }
 }
