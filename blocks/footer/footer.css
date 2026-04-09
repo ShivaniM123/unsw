@@ -7,9 +7,7 @@ footer {
   font-family: var(--body-font-family);
 }
 
-footer .footer {
-  visibility: visible;
-}
+/* visibility controlled by global styles.css via data-block-status */
 
 footer .footer p {
   margin: 0;
@@ -78,6 +76,12 @@ footer .footer-legal a {
   line-height: 22px;
   color: #000;
   text-decoration: none;
+}
+
+/* ===== Focus States ===== */
+footer a:focus-visible {
+  outline: 2px solid var(--brand-yellow);
+  outline-offset: 2px;
 }
 
 /* ===== Link Hover States ===== */
@@ -188,6 +192,11 @@ footer .footer-nav-heading {
   user-select: none;
 }
 
+footer .footer-nav-heading:focus-visible {
+  outline: 2px solid var(--brand-yellow);
+  outline-offset: 2px;
+}
+
 footer .footer-nav-heading::after {
   content: '';
   display: inline-block;
@@ -276,7 +285,7 @@ footer .footer-flags {
   flex-shrink: 0;
 }
 
-footer .footer-ack-text h2 {
+footer .footer-ack-text h3 {
   font-family: var(--heading-font-family);
   font-size: 24px;
   font-weight: 700;

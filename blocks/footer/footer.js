@@ -1,11 +1,6 @@
 import { getMetadata, decorateIcons } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 
-/**
- * Builds the branding section with logo and site URL.
- * @param {Element} brandingDiv The source div containing logo and URL
- * @returns {Element} The decorated branding section
- */
 function buildBranding(brandingDiv) {
   const section = document.createElement('div');
   section.className = 'footer-branding';
@@ -16,13 +11,15 @@ function buildBranding(brandingDiv) {
   if (link && img) {
     const brandLink = document.createElement('a');
     brandLink.href = link.href;
-    brandLink.setAttribute('aria-label', 'UNSW Sydney');
+    brandLink.setAttribute('aria-label', 'UNSW Sydney homepage');
 
     const logo = document.createElement('img');
     logo.src = img.src;
     logo.alt = img.alt || 'UNSW Sydney';
     logo.className = 'footer-logo';
     logo.loading = 'lazy';
+    logo.width = 144;
+    logo.height = 61;
     brandLink.append(logo);
 
     const urlSpan = document.createElement('span');
@@ -36,31 +33,25 @@ function buildBranding(brandingDiv) {
   return section;
 }
 
-/**
- * Builds the navigation columns from headings and lists.
- * @param {Element} navDiv The source div containing nav headings and lists
- * @returns {Element} The decorated nav section
- */
 function buildNav(navDiv) {
   const nav = document.createElement('nav');
   nav.className = 'footer-nav';
-  nav.setAttribute('aria-label', 'Footer');
+  nav.setAttribute('aria-label', 'Footer navigation');
 
   const headings = navDiv.querySelectorAll('h2');
   headings.forEach((heading, index) => {
     const container = document.createElement('div');
     container.className = 'footer-nav-column';
 
-    const h2 = document.createElement('h2');
-    h2.className = 'footer-nav-heading';
-    h2.textContent = heading.textContent;
-    h2.setAttribute('role', 'button');
-    h2.setAttribute('aria-expanded', 'false');
-    h2.setAttribute('aria-controls', `footer-nav-${index + 1}`);
-    h2.tabIndex = 0;
-    container.append(h2);
+    const h3 = document.createElement('h3');
+    h3.className = 'footer-nav-heading';
+    h3.textContent = heading.textContent;
+    h3.setAttribute('role', 'button');
+    h3.setAttribute('aria-expanded', 'false');
+    h3.setAttribute('aria-controls', `footer-nav-${index + 1}`);
+    h3.tabIndex = 0;
+    container.append(h3);
 
-    // Find the UL that follows this heading
     let nextEl = heading.nextElementSibling;
     while (nextEl && nextEl.tagName !== 'UL' && nextEl.tagName !== 'H2') {
       nextEl = nextEl.nextElementSibling;
@@ -78,11 +69,6 @@ function buildNav(navDiv) {
   return nav;
 }
 
-/**
- * Builds the organization details section.
- * @param {Element} orgDiv The source div containing org details
- * @returns {Element} The decorated org details section
- */
 function buildOrgDetails(orgDiv) {
   const section = document.createElement('div');
   section.className = 'footer-org-details';
@@ -104,11 +90,6 @@ function buildOrgDetails(orgDiv) {
   return section;
 }
 
-/**
- * Builds the partners logo section.
- * @param {Element} partnersDiv The source div containing partner logos
- * @returns {Element} The decorated partners section
- */
 function buildPartners(partnersDiv) {
   const section = document.createElement('div');
   section.className = 'footer-partners';
@@ -119,13 +100,14 @@ function buildPartners(partnersDiv) {
     if (img) {
       const a = document.createElement('a');
       a.href = link.href;
-      a.target = '_self';
       a.rel = 'noopener noreferrer';
 
       const partnerImg = document.createElement('img');
       partnerImg.src = img.src;
       partnerImg.alt = img.alt;
       partnerImg.loading = 'lazy';
+      partnerImg.width = img.width || 176;
+      partnerImg.height = img.height || 64;
       a.append(partnerImg);
 
       section.append(a);
@@ -135,11 +117,6 @@ function buildPartners(partnersDiv) {
   return section;
 }
 
-/**
- * Builds the Acknowledgement of Country section.
- * @param {Element} ackDiv The source div containing acknowledgement content
- * @returns {Element} The decorated acknowledgement section
- */
 function buildAcknowledgement(ackDiv) {
   const section = document.createElement('div');
   section.className = 'footer-acknowledgement';
@@ -152,6 +129,8 @@ function buildAcknowledgement(ackDiv) {
     flagImg.src = img.src;
     flagImg.alt = img.alt;
     flagImg.loading = 'lazy';
+    flagImg.width = 108;
+    flagImg.height = 72;
     flags.append(flagImg);
   });
   section.append(flags);
@@ -161,14 +140,13 @@ function buildAcknowledgement(ackDiv) {
 
   const heading = ackDiv.querySelector('h2');
   if (heading) {
-    const h2 = document.createElement('h2');
-    h2.textContent = heading.textContent;
-    text.append(h2);
+    const h3 = document.createElement('h3');
+    h3.textContent = heading.textContent;
+    text.append(h3);
   }
 
   const paragraphs = ackDiv.querySelectorAll('p');
   paragraphs.forEach((p) => {
-    // Skip paragraphs that only contain images
     if (p.querySelector('picture') && !p.textContent.trim()) return;
     const newP = document.createElement('p');
     newP.innerHTML = p.innerHTML;
@@ -179,18 +157,12 @@ function buildAcknowledgement(ackDiv) {
   return section;
 }
 
-/**
- * Builds the social links and legal section.
- * @param {Element} socialDiv The source div containing social and legal links
- * @returns {Element} The decorated social/legal section
- */
 function buildSocialLegal(socialDiv) {
   const section = document.createElement('div');
   section.className = 'footer-social-legal';
 
   const lists = socialDiv.querySelectorAll('ul');
 
-  // Social links (first UL)
   if (lists.length >= 1) {
     const socialContainer = document.createElement('div');
     socialContainer.className = 'footer-social';
@@ -212,12 +184,11 @@ function buildSocialLegal(socialDiv) {
         const newA = document.createElement('a');
         newA.href = a.href;
         newA.target = '_blank';
-        newA.rel = 'nofollow';
+        newA.rel = 'noopener noreferrer';
 
         let icon = a.querySelector('.icon');
         const linkText = a.textContent.trim();
 
-        // If no icon span exists (AEM strips them), create one from link text
         if (!icon) {
           const iconName = linkText.toLowerCase().replace(/\s+/g, '-');
           icon = document.createElement('span');
@@ -227,12 +198,12 @@ function buildSocialLegal(socialDiv) {
         }
         newA.append(icon);
 
-        // Extract platform name for sr-only text
         const srSpan = document.createElement('span');
         srSpan.className = 'sr-only';
         srSpan.textContent = `Follow UNSW on ${linkText}`;
         newA.append(srSpan);
 
+        newA.setAttribute('aria-label', `Follow UNSW on ${linkText}`);
         newLi.append(newA);
       }
       socialList.append(newLi);
@@ -241,7 +212,6 @@ function buildSocialLegal(socialDiv) {
     section.append(socialContainer);
   }
 
-  // Legal links (second UL)
   if (lists.length >= 2) {
     const legalList = document.createElement('ul');
     legalList.className = 'footer-legal';
@@ -256,15 +226,10 @@ function buildSocialLegal(socialDiv) {
   return section;
 }
 
-/**
- * Adds accordion toggle behavior for mobile nav columns.
- * @param {Element} footer The footer element
- */
 function addMobileToggle(footer) {
   footer.querySelectorAll('.footer-nav-heading').forEach((heading) => {
     const handler = () => {
       const expanded = heading.getAttribute('aria-expanded') === 'true';
-      // Close all others
       footer.querySelectorAll('.footer-nav-heading').forEach((h) => {
         h.setAttribute('aria-expanded', 'false');
       });
@@ -282,10 +247,6 @@ function addMobileToggle(footer) {
   });
 }
 
-/**
- * loads and decorates the footer
- * @param {Element} block The footer block element
- */
 export default async function decorate(block) {
   const footerMeta = getMetadata('footer');
   const footerPath = footerMeta ? new URL(footerMeta, window.location).pathname : '/footer';
@@ -294,12 +255,11 @@ export default async function decorate(block) {
   block.textContent = '';
   const footer = document.createElement('div');
   footer.className = 'footer-wrapper';
+  footer.setAttribute('role', 'contentinfo');
 
-  // Get all content divs from the fragment
   const divs = [...fragment.querySelectorAll(':scope > div > div')];
 
   if (divs.length >= 6) {
-    // Section 1: Branding + Nav + Org Details (dark section)
     const mainSection = document.createElement('div');
     mainSection.className = 'footer-main';
 
@@ -316,11 +276,9 @@ export default async function decorate(block) {
     mainSection.append(mainContent);
     footer.append(mainSection);
 
-    // Section 2: Partners
     const partners = buildPartners(divs[3]);
     footer.append(partners);
 
-    // Section 3: Bottom yellow section
     const bottomSection = document.createElement('div');
     bottomSection.className = 'footer-bottom';
 
@@ -332,7 +290,6 @@ export default async function decorate(block) {
 
     footer.append(bottomSection);
 
-    // Add mobile toggle behavior
     addMobileToggle(footer);
   }
 
