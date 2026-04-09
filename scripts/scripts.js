@@ -44,6 +44,27 @@ async function loadFonts() {
 }
 
 /**
+ * Builds breadcrumb block and prepends to first section.
+ * @param {Element} main The container element
+ */
+function buildBreadcrumbBlock(main) {
+  // Don't add breadcrumb on homepage
+  const { pathname } = window.location;
+  const cleanPath = pathname.replace(/^\/content/, '');
+  if (cleanPath === '/' || cleanPath === '') return;
+
+  const firstSection = main.querySelector(':scope > div:first-child');
+  if (!firstSection) return;
+
+  // Don't add if breadcrumb already exists
+  if (main.querySelector('.breadcrumb')) return;
+
+  const section = document.createElement('div');
+  section.append(buildBlock('breadcrumb', { elems: [] }));
+  firstSection.before(section);
+}
+
+/**
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
  */
@@ -68,6 +89,7 @@ function buildAutoBlocks(main) {
     }
 
     buildHeroBlock(main);
+    buildBreadcrumbBlock(main);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
