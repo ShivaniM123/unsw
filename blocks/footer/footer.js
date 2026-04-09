@@ -214,13 +214,20 @@ function buildSocialLegal(socialDiv) {
         newA.target = '_blank';
         newA.rel = 'nofollow';
 
-        const icon = a.querySelector('.icon');
-        if (icon) {
-          newA.append(icon.cloneNode(true));
+        let icon = a.querySelector('.icon');
+        const linkText = a.textContent.trim();
+
+        // If no icon span exists (AEM strips them), create one from link text
+        if (!icon) {
+          const iconName = linkText.toLowerCase().replace(/\s+/g, '-');
+          icon = document.createElement('span');
+          icon.className = `icon icon-${iconName}`;
+        } else {
+          icon = icon.cloneNode(true);
         }
+        newA.append(icon);
 
         // Extract platform name for sr-only text
-        const linkText = a.textContent.trim();
         const srSpan = document.createElement('span');
         srSpan.className = 'sr-only';
         srSpan.textContent = `Follow UNSW on ${linkText}`;
@@ -281,7 +288,7 @@ function addMobileToggle(footer) {
  */
 export default async function decorate(block) {
   const footerMeta = getMetadata('footer');
-  const footerPath = footerMeta ? new URL(footerMeta, window.location).pathname : '/content/footer';
+  const footerPath = footerMeta ? new URL(footerMeta, window.location).pathname : '/footer';
   const fragment = await loadFragment(footerPath);
 
   block.textContent = '';
