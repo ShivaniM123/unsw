@@ -307,7 +307,6 @@ header nav .nav-tools ul li a {
   font-weight: 700;
   line-height: 16px;
   letter-spacing: 1px;
-  text-transform: uppercase;
   color: var(--brand-white);
   text-decoration: none;
   padding: 8px 0;
@@ -316,10 +315,9 @@ header nav .nav-tools ul li a {
   gap: 4px;
 }
 
-/* No underline on utility link hover */
+/* Underline on utility link hover */
 header nav .nav-tools ul li a:hover {
-  text-decoration: none;
-  opacity: 0.7;
+  text-decoration: underline;
 }
 
 /* External link icon on utility links */
@@ -674,4 +672,69 @@ header nav .nav-search .icon img {
   header nav .nav-sections > .default-content-wrapper > ul > li > a {
     padding: 0 32px;
   }
+}
+
+/* ===== Search Overlay - matches original UNSW ===== */
+header nav .nav-search-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgb(0 0 0 / 40%);
+  z-index: 10000;
+  flex-direction: column;
+}
+
+header nav .nav-search-bar {
+  background-color: var(--brand-black);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 48px;
+  height: 100px;
+  box-sizing: border-box;
+}
+
+header nav .nav-search-form {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  border-bottom: 2px solid rgb(255 255 255 / 40%);
+  padding-bottom: 8px;
+}
+
+header nav .nav-search-input {
+  flex: 1;
+  border: none;
+  padding: 8px 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--brand-white);
+  outline: none;
+  background: transparent;
+}
+
+header nav .nav-search-input::placeholder {
+  color: rgb(255 255 255 / 60%);
+}
+
+header nav .nav-search-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--brand-white);
+  margin-left: 24px;
+  flex-shrink: 0;
+}
+
+header nav .nav-search-close svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentcolor;
+  stroke-width: 2;
 }
