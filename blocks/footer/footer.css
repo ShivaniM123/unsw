@@ -140,7 +140,7 @@ footer .footer-main {
 
 /* ===== Branding ===== */
 footer .footer-branding {
-  padding: 0 48px;
+  padding: 16px 16px 0;
 }
 
 footer .footer-logo {
@@ -360,12 +360,8 @@ footer .footer-legal li {
   }
 
   footer .footer-flags {
-    flex-direction: column;
+    flex-direction: row;
     margin: 0 24px 16px 0;
-  }
-
-  footer .footer-flags img {
-    margin: 0 0 16px;
   }
 
   footer .footer-social-legal {
@@ -387,7 +383,7 @@ footer .footer-legal li {
 /* ===== Desktop (900px+) ===== */
 @media (width >= 900px) {
   footer .footer-branding {
-    padding: 0 48px;
+    padding: 16px 48px 0;
   }
 
   footer .footer-main-content {
