@@ -235,14 +235,46 @@ header nav .nav-tools ul li a {
   font-size: 12px;
   font-weight: 700;
   line-height: 16px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
   color: var(--brand-white);
   text-decoration: none;
   padding: 8px 0;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 header nav .nav-tools ul li a:hover {
   text-decoration: underline;
+}
+
+/* External link icon on utility links */
+header nav .nav-tools .external-icon {
+  display: inline-flex;
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+}
+
+header nav .nav-tools .external-icon img {
+  width: 100%;
+  height: 100%;
+  filter: invert(1);
+}
+
+/* Envelope icon for Contact Us */
+header nav .nav-tools .envelope-icon {
+  display: inline-flex;
+  width: 16px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+header nav .nav-tools .envelope-icon img {
+  width: 100%;
+  height: 100%;
+  filter: invert(1);
 }
 
 /* ===== Search Button ===== */
@@ -292,7 +324,7 @@ header nav .nav-search .icon img {
     display: grid;
     grid-template:
       'tools tools tools tools' auto
-      'brand sections . search' auto / auto 1fr auto auto;
+      'brand sections . search' 100px / auto 1fr auto auto;
     max-width: 1440px;
     padding: 0 48px;
     height: auto;
@@ -338,6 +370,11 @@ header nav .nav-search .icon img {
     font-weight: 700;
   }
 
+  header nav .nav-tools .external-icon img,
+  header nav .nav-tools .envelope-icon img {
+    filter: none;
+  }
+
   /* Brand - second row left */
   header .nav-brand {
     justify-content: flex-start;
@@ -371,9 +408,13 @@ header nav .nav-search .icon img {
     align-items: center;
   }
 
+  header nav .nav-sections ul li {
+    position: relative;
+  }
+
   header nav .nav-sections ul li a {
     display: block;
-    padding: 0 24px;
+    padding: 36px 24px;
     font-size: 16px;
     font-weight: 400;
     line-height: 28px;
@@ -383,25 +424,68 @@ header nav .nav-search .icon img {
     transition: color 0.2s ease;
   }
 
-  header nav .nav-sections ul li a:hover {
-    color: var(--brand-grey);
+  /* Yellow underline on hover - matches original */
+  header nav .nav-sections ul li a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 24px;
+    right: 24px;
+    height: 4px;
+    background-color: var(--brand-yellow);
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
   }
 
-  /* Search button - second row right */
+  header nav .nav-sections ul li a:hover::after {
+    transform: scaleX(1);
+  }
+
+  header nav .nav-sections ul li a:hover {
+    color: var(--brand-black);
+  }
+
+  /* Search button - second row right, matches main nav height */
   header nav .nav-search button {
     width: 100px;
-    height: 98px;
+    height: 100px;
   }
 
   header nav .nav-search .icon {
     width: 32px;
     height: 32px;
   }
+
+  /* ===== Sticky Header ===== */
+  header .nav-wrapper.nav-sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+  }
+
+  /* When sticky, hide utility bar and collapse to just the main nav row */
+  header .nav-wrapper.nav-sticky nav {
+    grid-template:
+      'brand sections . search' 100px / auto 1fr auto auto;
+  }
+
+  header .nav-wrapper.nav-sticky .nav-tools {
+    display: none;
+    visibility: hidden;
+  }
 }
 
 /* ===== Large Desktop (1200px+) ===== */
 @media (width >= 1200px) {
   header nav .nav-sections ul li a {
-    padding: 0 32px;
+    padding: 36px 32px;
+  }
+
+  header nav .nav-sections ul li a::after {
+    left: 32px;
+    right: 32px;
   }
 }

@@ -14,6 +14,47 @@ function toggleMenu(nav, forceExpanded = null) {
 }
 
 /**
+ * Makes the main nav row sticky when scrolled past the utility bar.
+ * On desktop: utility bar scrolls away, main nav sticks to top.
+ * @param {Element} navWrapper The nav wrapper element
+ */
+function initStickyHeader(navWrapper) {
+  const nav = navWrapper.querySelector('nav');
+  let spacer = null;
+
+  const handleScroll = () => {
+    if (!isDesktop.matches) {
+      navWrapper.classList.remove('nav-sticky');
+      if (spacer) spacer.style.display = 'none';
+      return;
+    }
+
+    const toolsBar = nav.querySelector('.nav-tools');
+    const toolsHeight = toolsBar ? toolsBar.offsetHeight : 49;
+
+    if (window.scrollY > toolsHeight) {
+      if (!navWrapper.classList.contains('nav-sticky')) {
+        // Create spacer to prevent content jump
+        if (!spacer) {
+          spacer = document.createElement('div');
+          spacer.className = 'nav-sticky-spacer';
+          navWrapper.parentElement.insertBefore(spacer, navWrapper);
+        }
+        spacer.style.height = `${navWrapper.offsetHeight}px`;
+        spacer.style.display = 'block';
+        navWrapper.classList.add('nav-sticky');
+      }
+    } else {
+      navWrapper.classList.remove('nav-sticky');
+      if (spacer) spacer.style.display = 'none';
+    }
+  };
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  isDesktop.addEventListener('change', handleScroll);
+}
+
+/**
  * loads and decorates the header
  * @param {Element} block The header block element
  */
@@ -50,7 +91,6 @@ export default async function decorate(block) {
     const firstLink = navBrand.querySelector('a');
     const href = firstLink ? firstLink.href : '/';
 
-    // Rebuild brand as a clean logo link
     const wrapper = navBrand.querySelector('.default-content-wrapper');
     if (wrapper) wrapper.innerHTML = '';
 
@@ -78,7 +118,6 @@ export default async function decorate(block) {
   // --- Sections (main nav links) ---
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
-    // Remove button classes from section links
     navSections.querySelectorAll('.button').forEach((btn) => {
       btn.className = '';
       const bc = btn.closest('.button-container');
@@ -89,18 +128,26 @@ export default async function decorate(block) {
   // --- Tools (utility bar) ---
   const navTools = nav.querySelector('.nav-tools');
   if (navTools) {
-    // Remove button classes from tool links
     navTools.querySelectorAll('.button').forEach((btn) => {
       btn.className = '';
       const bc = btn.closest('.button-container');
       if (bc) bc.className = '';
     });
-    // Mark external links
     navTools.querySelectorAll('a').forEach((a) => {
-      const href = a.getAttribute('href') || '';
-      if (href.startsWith('http') && !href.includes('unsw.edu.au/about-us')) {
+      const text = a.textContent.trim();
+
+      if (text.toLowerCase() === 'contact us') {
+        const icon = document.createElement('span');
+        icon.className = 'envelope-icon';
+        icon.innerHTML = '<img src="/icons/envelope.svg" alt="" width="16" height="12">';
+        a.prepend(icon);
+      } else {
         a.setAttribute('target', '_blank');
         a.setAttribute('rel', 'noopener noreferrer');
+        const icon = document.createElement('span');
+        icon.className = 'external-icon';
+        icon.innerHTML = '<img src="/icons/external-link.svg" alt="opens in a new tab" width="10" height="10">';
+        a.append(icon);
       }
     });
   }
@@ -125,18 +172,14 @@ export default async function decorate(block) {
   // Assemble nav
   nav.prepend(hamburger);
   nav.append(searchBtn);
-
-  // Always start collapsed - CSS handles desktop visibility
   nav.setAttribute('aria-expanded', 'false');
 
-  // On resize, close mobile menu if switching to desktop
   isDesktop.addEventListener('change', () => {
     if (isDesktop.matches && nav.getAttribute('aria-expanded') === 'true') {
       toggleMenu(nav, false);
     }
   });
 
-  // Close on escape
   window.addEventListener('keydown', (e) => {
     if (e.code === 'Escape' && nav.getAttribute('aria-expanded') === 'true' && !isDesktop.matches) {
       toggleMenu(nav, false);
@@ -150,4 +193,7 @@ export default async function decorate(block) {
   navWrapper.append(nav);
   block.textContent = '';
   block.append(navWrapper);
+
+  // Initialize sticky header behavior
+  initStickyHeader(navWrapper);
 }
