@@ -27,13 +27,22 @@ export default async function decorate(block) {
     button.setAttribute('role', 'tab');
     button.setAttribute('type', 'button');
     button.addEventListener('click', () => {
+      // Collapse all panels with slide animation
       block.querySelectorAll('[role=tabpanel]').forEach((panel) => {
         panel.setAttribute('aria-hidden', true);
+        panel.style.height = `${panel.scrollHeight}px`;
+        requestAnimationFrame(() => { panel.style.height = '0'; });
       });
       tablist.querySelectorAll('button').forEach((btn) => {
         btn.setAttribute('aria-selected', false);
       });
+      // Expand selected panel
       tabpanel.setAttribute('aria-hidden', false);
+      tabpanel.style.height = '0';
+      requestAnimationFrame(() => {
+        tabpanel.style.height = `${tabpanel.scrollHeight}px`;
+        tabpanel.addEventListener('transitionend', () => { tabpanel.style.height = ''; }, { once: true });
+      });
       button.setAttribute('aria-selected', true);
     });
     tablist.append(button);
@@ -93,8 +102,23 @@ export default async function decorate(block) {
 
       btn.addEventListener('click', () => {
         const expanded = btn.getAttribute('aria-expanded') === 'true';
+        if (expanded) {
+          // Collapse
+          contentDiv.style.height = `${contentDiv.scrollHeight}px`;
+          requestAnimationFrame(() => { contentDiv.style.height = '0'; });
+          contentDiv.addEventListener('transitionend', () => {
+            contentDiv.setAttribute('aria-hidden', 'true');
+          }, { once: true });
+        } else {
+          // Expand
+          contentDiv.setAttribute('aria-hidden', 'false');
+          contentDiv.style.height = '0';
+          requestAnimationFrame(() => {
+            contentDiv.style.height = `${contentDiv.scrollHeight}px`;
+            contentDiv.addEventListener('transitionend', () => { contentDiv.style.height = ''; }, { once: true });
+          });
+        }
         btn.setAttribute('aria-expanded', !expanded);
-        contentDiv.setAttribute('aria-hidden', expanded);
       });
 
       item.append(btn);

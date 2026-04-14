@@ -44,6 +44,24 @@ async function loadFonts() {
 }
 
 /**
+ * Converts :iconname: text patterns inside links to icon spans.
+ * Handles the pattern: <a href="...">:iconname:</a>
+ * @param {Element} main The container element
+ */
+function decorateIconLinks(main) {
+  main.querySelectorAll('a').forEach((a) => {
+    const text = a.textContent.trim();
+    const match = text.match(/^:([a-z0-9-]+):$/);
+    if (match) {
+      const span = document.createElement('span');
+      span.className = `icon icon-${match[1]}`;
+      a.textContent = '';
+      a.append(span);
+    }
+  });
+}
+
+/**
  * Builds breadcrumb block and prepends to first section.
  * @param {Element} main The container element
  */
@@ -64,6 +82,11 @@ function buildBreadcrumbBlock(main) {
 
   const section = document.createElement('div');
   section.append(buildBlock('breadcrumb', { elems: [] }));
+
+  // Move authored social icon links (Follow :linkedin: etc.) into breadcrumb section
+  const socialP = firstSection.querySelector('p:has(a > .icon)');
+  if (socialP) section.prepend(socialP);
+
   firstSection.before(section);
 }
 
@@ -144,6 +167,7 @@ function decorateButtons(main) {
  */
 // eslint-disable-next-line import/prefer-default-export
 export function decorateMain(main) {
+  decorateIconLinks(main);
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);

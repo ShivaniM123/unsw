@@ -358,12 +358,12 @@ main .section.yellow-accent {
 main .section.yellow-accent::before {
   content: '';
   position: absolute;
-  top: -80px;
-  right: -80px;
-  width: 400px;
-  height: 500px;
-  background-color: var(--brand-yellow);
-  transform: rotate(25deg);
+  top: -222px;
+  right: -181px;
+  width: 638px;
+  height: 638px;
+  background-color: #ffdc00;
+  clip-path: polygon(13.3% 72.4%, 42.4% 100%, 73% 83%, 88% 18.7%, 71.5% 0%);
   z-index: 0;
 }
 

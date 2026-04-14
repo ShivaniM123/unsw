@@ -54,11 +54,12 @@
   }
 
   .tabs-research .tabs-research-list button {
-    flex: 0 0 max-content;
+    flex: 1 1 auto;
     border: none;
-    border-radius: 24px;
-    padding: 8px 24px;
-    font-size: var(--body-font-size-s);
+    border-radius: 32px;
+    margin: 0 16px;
+    padding: 0 8px;
+    font-size: 16px;
     text-align: center;
     white-space: nowrap;
     width: auto;
@@ -71,15 +72,16 @@
   }
 }
 
-/* Tab panels */
+/* Tab panels — slide animation */
 .tabs-research .tabs-research-panel {
   padding: 0;
   border: none;
-  overflow: auto;
+  overflow: hidden;
+  transition: height 0.35s ease;
 }
 
 .tabs-research .tabs-research-panel[aria-hidden='true'] {
-  display: none;
+  height: 0;
 }
 
 /* Variant: accordion items inside tab panels */
@@ -148,10 +150,13 @@
 .tabs-research .tabs-research-accordion-content {
   padding: 0 16px 16px;
   overflow: hidden;
+  transition: height 0.35s ease;
 }
 
 .tabs-research .tabs-research-accordion-content[aria-hidden='true'] {
-  display: none;
+  height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 /* Tablet/Desktop: larger accordion heading */
