@@ -16,10 +16,6 @@
   order: 0;
 }
 
-.columns-profile > div > .columns-profile-img-col img {
-  display: block;
-}
-
 /* --- Columns-profile variant: staff profile text left + image right --- */
 
 /* Mobile: image on top, text below — square aspect ratio */
@@ -30,8 +26,8 @@
   margin-bottom: 16px;
 }
 
-.columns-profile .columns-profile-image-col > div > img,
-.columns-profile .columns-profile-image-col > div > picture > img {
+.columns-profile .columns-profile-image-col img {
+  display: block;
   width: 100%;
   max-width: 100%;
   aspect-ratio: 1 / 1;
@@ -129,8 +125,7 @@
 
 /* Tablet: 600px+ stacked, larger square image */
 @media (width >= 600px) {
-  .columns-profile .columns-profile-image-col > div > img,
-  .columns-profile .columns-profile-image-col > div > picture > img {
+  .columns-profile .columns-profile-image-col img {
     max-width: 442px;
     max-height: 442px;
   }
@@ -167,8 +162,7 @@
     justify-content: flex-end;
   }
 
-  .columns-profile .columns-profile-image-col > div > img,
-  .columns-profile .columns-profile-image-col > div > picture > img {
+  .columns-profile .columns-profile-image-col img {
     width: 100%;
     max-width: 383px;
     max-height: 383px;
