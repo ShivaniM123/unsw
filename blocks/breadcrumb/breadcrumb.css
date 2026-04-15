@@ -65,7 +65,8 @@ main > .section.breadcrumb-container > .breadcrumb-wrapper {
   height: 12px;
 }
 
-/* Social follow icons — default content, right-aligned in second column */
+/* Social follow — fragment or default content, right-aligned in second column */
+main > .section.breadcrumb-container > .fragment-wrapper,
 main > .section.breadcrumb-container > .default-content-wrapper {
   display: flex;
   flex-direction: column;
@@ -78,12 +79,14 @@ main > .section.breadcrumb-container > .default-content-wrapper {
   padding: 0;
 }
 
+main > .section.breadcrumb-container > .fragment-wrapper p,
 main > .section.breadcrumb-container > .default-content-wrapper p {
   margin: 0;
   display: flex;
   gap: 0;
 }
 
+main > .section.breadcrumb-container > .fragment-wrapper a,
 main > .section.breadcrumb-container > .default-content-wrapper a {
   display: inline-flex;
   align-items: center;
@@ -94,10 +97,12 @@ main > .section.breadcrumb-container > .default-content-wrapper a {
   text-decoration: none;
 }
 
+main > .section.breadcrumb-container > .fragment-wrapper a:hover,
 main > .section.breadcrumb-container > .default-content-wrapper a:hover {
   opacity: 0.7;
 }
 
+main > .section.breadcrumb-container > .fragment-wrapper img,
 main > .section.breadcrumb-container > .default-content-wrapper img {
   width: 24px;
   height: 24px;

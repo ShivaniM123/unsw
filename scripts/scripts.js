@@ -83,9 +83,11 @@ function buildBreadcrumbBlock(main) {
   const section = document.createElement('div');
   section.append(buildBlock('breadcrumb', { elems: [] }));
 
-  // Move authored social icon links (Follow :linkedin: etc.) into breadcrumb section
+  // Move social follow into breadcrumb section (fragment block or inline icons)
+  const fragmentBlock = firstSection.querySelector('.fragment');
   const socialP = firstSection.querySelector('p:has(a > .icon)');
-  if (socialP) section.prepend(socialP);
+  if (fragmentBlock) section.prepend(fragmentBlock);
+  else if (socialP) section.prepend(socialP);
 
   firstSection.before(section);
 }
