@@ -1,1 +1,35 @@
-/* stylelint-disable no-empty-source */
+/* Social follow bar (Follow + icon links inside fragment) */
+.fragment .default-content-wrapper > p:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  font-family: var(--heading-font-family);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 30px;
+  color: #000;
+  margin: 0;
+}
+
+.fragment .default-content-wrapper > p:first-child a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  text-decoration: none;
+}
+
+.fragment .default-content-wrapper > p:first-child a .icon {
+  width: 24px;
+  height: 24px;
+}
+
+.fragment .default-content-wrapper > p:first-child a .icon img {
+  filter: brightness(0);
+  transition: filter 0.2s ease;
+}
+
+.fragment .default-content-wrapper > p:first-child a:hover .icon img {
+  filter: brightness(0) saturate(100%) invert(28%) sepia(63%) saturate(1200%) hue-rotate(210deg) brightness(90%);
+}
