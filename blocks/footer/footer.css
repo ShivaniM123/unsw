@@ -105,6 +105,50 @@ footer .footer-legal a:hover {
   text-decoration: underline;
 }
 
+/* ===== Back to Top Button ===== */
+footer .footer-back-to-top {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 16px;
+  background-color: var(--brand-yellow);
+  color: #000;
+  padding: 16px 32px;
+  cursor: pointer;
+  z-index: 1;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  font-weight: 400;
+  text-align: center;
+  flex-direction: column;
+}
+
+footer .footer-back-to-top.visible {
+  display: flex;
+}
+
+footer .footer-back-to-top img {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+footer .footer-back-to-top span {
+  font-size: 16px;
+  line-height: 1;
+}
+
+footer .footer-back-to-top:hover {
+  background-color: #e6c600;
+}
+
+footer .footer-back-to-top:focus-visible {
+  outline: 2px solid var(--brand-yellow);
+  outline-offset: 2px;
+}
+
 /* ===== Image Defaults ===== */
 footer .footer-partners img {
   max-width: 100%;
@@ -134,6 +178,7 @@ footer .footer-partners a:hover img {
 
 /* ===== Main Dark Section ===== */
 footer .footer-main {
+  position: relative;
   background-color: var(--brand-black);
   background-image: url('/icons/footer-background.svg');
   background-repeat: no-repeat;
@@ -447,6 +492,10 @@ footer .footer-legal li {
   footer .footer-social-legal {
     padding: 32px 0;
     margin: 0 48px;
+  }
+
+  footer .footer-back-to-top {
+    right: 48px;
   }
 }
 
