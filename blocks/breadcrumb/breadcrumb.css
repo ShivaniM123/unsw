@@ -1,17 +1,25 @@
-/* Breadcrumb - matches original UNSW */
+/* Breadcrumb - matches original UNSW 6+6 column grid layout */
 
-/* Remove default section margin so breadcrumb sits tight under header */
+/* Section: 50/50 grid — breadcrumb left, social icons right */
 main > .section.breadcrumb-container {
-  margin: 0;
-}
-
-.breadcrumb-nav {
-  padding: 12px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   max-width: 1200px;
   margin: 0 auto;
-  padding-inline: 24px;
+  padding: 12px 16px;
 }
 
+main > .section.breadcrumb-container > .breadcrumb-wrapper {
+  display: flex;
+  align-items: center;
+  grid-column: 1;
+  grid-row: 1;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Breadcrumb nav */
 .breadcrumb-nav ol {
   list-style: none;
   margin: 0;
@@ -57,8 +65,58 @@ main > .section.breadcrumb-container {
   height: 12px;
 }
 
+/* Social follow — fragment or default content, right-aligned in second column */
+main > .section.breadcrumb-container > .fragment-wrapper,
+main > .section.breadcrumb-container > .default-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  grid-column: 2;
+  grid-row: 1;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+main > .section.breadcrumb-container > .fragment-wrapper p,
+main > .section.breadcrumb-container > .default-content-wrapper p {
+  margin: 0;
+  display: flex;
+  gap: 0;
+}
+
+main > .section.breadcrumb-container > .fragment-wrapper a,
+main > .section.breadcrumb-container > .default-content-wrapper a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 24px;
+  color: var(--brand-black);
+  text-decoration: none;
+}
+
+main > .section.breadcrumb-container > .fragment-wrapper a:hover,
+main > .section.breadcrumb-container > .default-content-wrapper a:hover {
+  opacity: 0.7;
+}
+
+main > .section.breadcrumb-container > .fragment-wrapper img,
+main > .section.breadcrumb-container > .default-content-wrapper img {
+  width: 24px;
+  height: 24px;
+}
+
+/* Mobile: stack vertically */
+@media (width < 600px) {
+  main > .section.breadcrumb-container {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (width >= 900px) {
-  .breadcrumb-nav {
-    padding-inline: 32px;
+  main > .section.breadcrumb-container {
+    padding: 12px 32px;
   }
 }

@@ -19,8 +19,15 @@ import {
  * @returns {HTMLElement} The root element of the fragment
  */
 export async function loadFragment(path) {
-  if (path && path.startsWith('/') && !path.startsWith('//')) {
-    const resp = await fetch(`${path}.plain.html`);
+  // Convert absolute aem.page/aem.live URLs to relative paths
+  let fragmentPath = path;
+  if (path && /^https?:\/\//.test(path)) {
+    try {
+      fragmentPath = new URL(path).pathname;
+    } catch { /* use path as-is */ }
+  }
+  if (fragmentPath && fragmentPath.startsWith('/') && !fragmentPath.startsWith('//')) {
+    const resp = await fetch(`${fragmentPath}.plain.html`);
     if (resp.ok) {
       const main = document.createElement('main');
       main.innerHTML = await resp.text();

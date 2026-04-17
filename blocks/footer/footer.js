@@ -226,6 +226,40 @@ function buildSocialLegal(socialDiv) {
   return section;
 }
 
+function buildBackToTop() {
+  const btn = document.createElement('div');
+  btn.className = 'footer-back-to-top';
+  btn.setAttribute('role', 'button');
+  btn.setAttribute('tabindex', '0');
+  btn.setAttribute('aria-label', 'Back to top');
+
+  const img = document.createElement('img');
+  img.src = '/icons/arrow-up.svg';
+  img.alt = 'Back to top';
+  img.loading = 'lazy';
+  img.width = 24;
+  img.height = 24;
+  btn.append(img);
+
+  const span = document.createElement('span');
+  span.setAttribute('aria-hidden', 'true');
+  span.textContent = 'Top';
+  btn.append(span);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  btn.addEventListener('click', scrollToTop);
+  btn.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      scrollToTop();
+    }
+  });
+
+  return btn;
+}
+
 function addMobileToggle(footer) {
   footer.querySelectorAll('.footer-nav-heading').forEach((heading) => {
     const handler = () => {
@@ -299,6 +333,9 @@ export default async function decorate(block) {
     footer.append(bottomSection);
 
     addMobileToggle(footer);
+
+    const backToTop = buildBackToTop();
+    mainSection.append(backToTop);
   }
 
   // Decorate icons off-DOM before inserting

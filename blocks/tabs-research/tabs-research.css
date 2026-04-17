@@ -43,43 +43,83 @@
   cursor: default;
 }
 
-/* Tablet: 600px+ horizontal pill tabs */
+/* Tablet/Desktop: 600px+ horizontal tabs */
 @media (width >= 600px) {
   .tabs-research .tabs-research-list {
     flex-direction: row;
     overflow-x: auto;
     border-bottom: 1px solid #efefef;
     padding-bottom: 8px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
 
   .tabs-research .tabs-research-list button {
-    flex: 0 0 max-content;
+    position: relative;
+    flex: 1 1 auto;
     border: none;
-    border-radius: 24px;
-    padding: 8px 24px;
-    font-size: var(--body-font-size-s);
+    border-bottom: none;
+    border-radius: 0;
+    margin: 0 16px;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 49px;
     text-align: center;
     white-space: nowrap;
     width: auto;
+    background-color: transparent;
+    transition: color 0.2s ease;
+  }
+
+  .tabs-research .tabs-research-list button:hover {
+    background-color: transparent;
+    cursor: pointer;
+  }
+
+  .tabs-research .tabs-research-list button p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    min-height: 48px;
+    border-radius: 32px;
+    background-color: transparent;
+    transition: background-color 0.3s linear;
+  }
+
+  .tabs-research .tabs-research-list button:hover p {
+    background-color: rgb(74 74 74 / 10%);
+  }
+
+  .tabs-research .tabs-research-list button[aria-selected='true'] {
+    font-weight: 700;
+    color: var(--link-color);
+    background-color: transparent;
+  }
+
+  .tabs-research .tabs-research-list button[aria-selected='true'] p {
+    background-color: #e9ecf6;
+  }
+
+  .tabs-research .tabs-research-list button[aria-selected='true']:hover {
+    background-color: transparent;
+  }
+
+  .tabs-research .tabs-research-list button[aria-selected='true']:hover p {
+    background-color: #e9ecf6;
   }
 }
 
-@media (width >= 900px) {
-  .tabs-research .tabs-research-list button {
-    font-size: var(--body-font-size-m);
-  }
-}
-
-/* Tab panels */
+/* Tab panels — slide animation */
 .tabs-research .tabs-research-panel {
   padding: 0;
   border: none;
-  overflow: auto;
+  overflow: hidden;
+  transition: height 0.35s ease;
 }
 
 .tabs-research .tabs-research-panel[aria-hidden='true'] {
-  display: none;
+  height: 0;
 }
 
 /* Variant: accordion items inside tab panels */
@@ -148,10 +188,13 @@
 .tabs-research .tabs-research-accordion-content {
   padding: 0 16px 16px;
   overflow: hidden;
+  transition: height 0.35s ease;
 }
 
 .tabs-research .tabs-research-accordion-content[aria-hidden='true'] {
-  display: none;
+  height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 /* Tablet/Desktop: larger accordion heading */
