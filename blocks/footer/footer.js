@@ -257,17 +257,6 @@ function buildBackToTop() {
     }
   });
 
-  // Show/hide based on scroll position
-  const toggleVisibility = () => {
-    if (window.scrollY > 300) {
-      btn.classList.add('visible');
-    } else {
-      btn.classList.remove('visible');
-    }
-  };
-  window.addEventListener('scroll', toggleVisibility, { passive: true });
-  toggleVisibility();
-
   return btn;
 }
 

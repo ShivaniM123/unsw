@@ -107,7 +107,7 @@ footer .footer-legal a:hover {
 
 /* ===== Back to Top Button ===== */
 footer .footer-back-to-top {
-  display: none;
+  display: flex;
   position: absolute;
   top: 0;
   right: 16px;
@@ -123,10 +123,6 @@ footer .footer-back-to-top {
   font-weight: 400;
   text-align: center;
   flex-direction: column;
-}
-
-footer .footer-back-to-top.visible {
-  display: flex;
 }
 
 footer .footer-back-to-top img {
