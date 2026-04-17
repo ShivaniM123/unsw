@@ -359,11 +359,12 @@ main .section.yellow-accent::before {
   content: '';
   position: absolute;
   top: -222px;
-  right: -181px;
-  width: 638px;
-  height: 638px;
-  background-color: #ffdc00;
-  clip-path: polygon(13.333% 72.354%, 42.411% 100%, 73.001% 83.001%, 88.059% 18.703%, 71.550% 0%);
+  right: -189px;
+  width: 580px;
+  height: 580px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpolygon points='8,43.4121662 25.4464136,60 43.7984672,49.8005029 52.8354688,11.2215304 42.930188,0' fill='%23ffdc00'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
   z-index: 0;
 }
 
