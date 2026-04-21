@@ -13,7 +13,7 @@
 /* UNSW Design System */
 :root {
   /* UNSW brand colors */
-  --brand-yellow: #ffd600;
+  --brand-yellow: #ffdc00;
   --brand-black: #181716;
   --brand-white: #fff;
   --brand-grey: #737373;
@@ -90,6 +90,7 @@ body {
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-m);
   line-height: 1.75;
+  overflow-x: hidden;
 }
 
 body.appear {
@@ -349,26 +350,38 @@ main .section.highlight {
 /* UNSW yellow accent section */
 main .section.yellow-accent {
   position: relative;
-  background-color: var(--background-color);
+  background-color: transparent;
   margin: 0;
   padding: 40px 0 24px;
-  overflow: hidden;
 }
 
-main .section.yellow-accent::before {
-  content: '';
+/* Background shape container — injected by JS into body */
+.background-shape-container {
   position: absolute;
-  top: -222px;
-  right: -189px;
-  width: 580px;
-  height: 580px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpolygon points='8,43.4121662 25.4464136,60 43.7984672,49.8005029 52.8354688,11.2215304 42.930188,0' fill='%23ffdc00'/%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
-  z-index: 0;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100vw;
+  overflow: hidden;
+  pointer-events: none;
 }
 
-main .section.yellow-accent > div {
+/* Ensure page content sits above the background shape */
+header,
+main,
+footer {
   position: relative;
   z-index: 1;
+}
+
+.background-shape-container .background-shape {
+  fill: var(--brand-yellow);
+  position: absolute;
+  z-index: -1;
+  top: -88px;
+  right: -244px;
+  height: 610px;
+  max-height: 483px;
+  overflow: hidden;
 }

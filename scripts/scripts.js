@@ -187,6 +187,16 @@ async function loadEager(doc) {
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
+
+    // Inject yellow background shape for pages with yellow-accent section
+    if (main.querySelector('.section.yellow-accent')) {
+      const shapeContainer = document.createElement('div');
+      shapeContainer.className = 'background-shape-container';
+      shapeContainer.setAttribute('aria-hidden', 'true');
+      shapeContainer.innerHTML = '<svg class="background-shape" id="background-shape-2" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg"><g><polygon points="8,43.4121662 25.4464136,60 43.7984672,49.8005029 52.8354688,11.2215304 42.930188,0"></polygon></g></svg>';
+      document.body.prepend(shapeContainer);
+    }
+
     document.body.classList.add('appear');
     await loadSection(main.querySelector('.section'), waitForFirstImage);
   }
