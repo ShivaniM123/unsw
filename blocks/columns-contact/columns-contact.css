@@ -26,6 +26,21 @@
   order: 0;
 }
 
+.columns-contact .columns-contact-bio-col h2 {
+  font-family: var(--heading-font-family);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--brand-black);
+  margin: 0 0 16px;
+  line-height: 1.4;
+}
+
+@media (width >= 900px) {
+  .columns-contact .columns-contact-bio-col h2 {
+    font-size: 26px;
+  }
+}
+
 .columns-contact .columns-contact-bio-col p {
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-m);

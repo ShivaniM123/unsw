@@ -332,6 +332,11 @@ main > .section:first-of-type {
   margin-top: 0;
 }
 
+/* Hide section-break <hr> elements left in the DOM */
+main > hr {
+  display: none;
+}
+
 @media (width >= 900px) {
   main > .section > div {
     padding: 0 32px;

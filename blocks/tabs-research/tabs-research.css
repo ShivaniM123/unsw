@@ -55,7 +55,7 @@
 
   .tabs-research .tabs-research-list button {
     position: relative;
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     border: none;
     border-bottom: none;
     border-radius: 0;
