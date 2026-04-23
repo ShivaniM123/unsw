@@ -118,6 +118,17 @@ function buildAutoBlocks(main) {
 
     buildHeroBlock(main);
     buildBreadcrumbBlock(main);
+
+    // Inject yellow pentagon background shape for profile pages
+    const sectionMeta = main.querySelector('.section-metadata');
+    const hasYellowAccent = sectionMeta
+      && sectionMeta.textContent.includes('yellow-accent');
+    if (hasYellowAccent) {
+      const container = document.createElement('div');
+      container.className = 'background-shape-container';
+      container.innerHTML = '<svg viewBox="0 0 60 60"><polygon points="8,43.4121662 25.4464136,60 43.7984672,49.8005029 52.8354688,11.2215304 42.930188,0"/></svg>';
+      document.body.prepend(container);
+    }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
