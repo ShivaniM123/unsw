@@ -98,8 +98,6 @@ body.appear {
 
 header {
   height: var(--nav-height);
-  position: relative;
-  z-index: 2;
 }
 
 @media (width >= 900px) {
@@ -322,8 +320,6 @@ main img {
 /* sections */
 main > .section {
   margin: 40px 0;
-  position: relative;
-  z-index: 2;
 }
 
 main > .section > div {
@@ -373,28 +369,17 @@ main .section.yellow-accent > div {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: -1;
   width: 100%;
-  height: 500px;
+  height: 100vw;
   overflow: hidden;
   pointer-events: none;
 }
 
 .background-shape-container svg {
-  position: absolute;
-  top: -90px;
-  right: -190px;
-  height: 100vh;
-  max-height: 480px;
-  width: auto;
-  aspect-ratio: 1;
   fill: var(--brand-yellow);
-}
-
-@media (width >= 1200px) {
-  .background-shape-container svg {
-    max-height: 520px;
-  }
+  position: absolute;
+  z-index: -1;
 }
 
 /* On pages with background shape, body bg must not cover the shape */
@@ -402,21 +387,10 @@ body:has(.background-shape-container) {
   background-color: transparent;
 }
 
-/* All sections below hero get white background */
-body:has(.background-shape-container) main .section {
-  background-color: var(--background-color);
-}
-
-/* Hero area sections: transparent + no stacking context so yellow shape shows through */
+/* Hero area: transparent so yellow shape behind shows through */
+body:has(.background-shape-container) header .nav-wrapper,
 body:has(.background-shape-container) main .section.breadcrumb-container,
 body:has(.background-shape-container) main .section.yellow-accent {
   background-color: transparent;
-  z-index: auto;
 }
 
-/* Ensure hero area inner content stays above the yellow shape */
-body:has(.background-shape-container) main .section.breadcrumb-container > *,
-body:has(.background-shape-container) main .section.yellow-accent > * {
-  position: relative;
-  z-index: 2;
-}

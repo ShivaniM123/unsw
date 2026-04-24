@@ -126,7 +126,28 @@ function buildAutoBlocks(main) {
     if (hasYellowAccent) {
       const container = document.createElement('div');
       container.className = 'background-shape-container';
-      container.innerHTML = '<svg viewBox="0 0 60 60"><polygon points="8,43.4121662 25.4464136,60 43.7984672,49.8005029 52.8354688,11.2215304 42.930188,0"/></svg>';
+      container.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><polygon points="8,43.4121662 25.4464136,60 43.7984672,49.8005029 52.8354688,11.2215304 42.930188,0"/></svg>';
+      const shapeSvg = container.querySelector('svg');
+      const sizeShape = () => {
+        const w = window.innerWidth;
+        let top; let right; let h; let
+          maxH;
+        if (w < 600) {
+          top = 98; right = -291; h = 582; maxH = Math.round(w * 0.716);
+        } else if (w < 1024) {
+          top = -88; right = Math.round(-243 - (1024 - w) * 0.05);
+          h = 608; maxH = Math.round(w * 0.63);
+        } else {
+          top = -222; h = 1102;
+          maxH = w <= 1280 ? 580 : Math.min(638, Math.round(580 + (w - 1280) * 0.3625));
+          if (w <= 1280) right = -189;
+          else if (w <= 1440) right = Math.round(-189 + (w - 1280) * 0.05);
+          else right = Math.round(-181 + (w - 1440) * 0.283);
+        }
+        shapeSvg.setAttribute('style', `top:${top}px;right:${right}px;height:${h}px;max-height:${maxH}px`);
+      };
+      sizeShape();
+      window.addEventListener('resize', sizeShape);
       document.body.prepend(container);
     }
   } catch (error) {
