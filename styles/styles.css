@@ -328,6 +328,12 @@ main > .section > div {
   padding: 0 24px;
 }
 
+/* columns-profile section needs wider content area to match source */
+body:has(.background-shape-container) main .section.columns-profile-container > div {
+  max-width: none;
+  padding: 0 8%;
+}
+
 main > .section:first-of-type {
   margin-top: 0;
 }
@@ -359,9 +365,9 @@ main .section.yellow-accent {
   padding: 40px 0 24px;
 }
 
+/* stylelint-disable-next-line no-descending-specificity */
 main .section.yellow-accent > div {
   position: relative;
-  z-index: 1;
 }
 
 /* Page-level yellow pentagon background shape container */
@@ -371,7 +377,7 @@ main .section.yellow-accent > div {
   left: 0;
   z-index: -1;
   width: 100%;
-  height: 100vw;
+  height: 1102px;
   overflow: hidden;
   pointer-events: none;
 }
@@ -387,10 +393,10 @@ body:has(.background-shape-container) {
   background-color: transparent;
 }
 
-/* Hero area: transparent so yellow shape behind shows through */
+/* columns-profile area: transparent so yellow shape behind shows through */
 body:has(.background-shape-container) header .nav-wrapper,
 body:has(.background-shape-container) main .section.breadcrumb-container,
-body:has(.background-shape-container) main .section.yellow-accent {
+body:has(.background-shape-container) main .section.columns-profile-container {
   background-color: transparent;
 }
 

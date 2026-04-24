@@ -36,7 +36,8 @@ main > .section.breadcrumb-container > .breadcrumb-wrapper {
   font-family: 'Roboto Mono', RobotoMono, monospace;
   font-size: 14px;
   font-weight: 400;
-  line-height: 20px;
+  line-height: 21px;
+  letter-spacing: 1px;
   color: var(--brand-black);
 }
 
