@@ -389,7 +389,7 @@ main .section.yellow-accent > div {
   z-index: -1;
   top: 98px;
   right: -291px;
-  height: 2400px;
+  height: 100%;
   max-height: 72vw;
 }
 
@@ -398,33 +398,16 @@ main .section.yellow-accent > div {
   .background-shape-container svg {
     top: -88px;
     right: -243px;
-    height: 2400px;
-    max-height: 63vw;
+    max-height: 100vh;
   }
 }
 
-/* Desktop >=1024 */
+/* Desktop */
 @media (width >= 1024px) {
   .background-shape-container svg {
     top: -222px;
-    right: -189px;
-    height: 2400px;
-    max-height: 580px;
-  }
-}
-
-/* Desktop >=1366 */
-@media (width >= 1366px) {
-  .background-shape-container svg {
-    right: -181px;
-    max-height: 638px;
-  }
-}
-
-/* Desktop >=1920 */
-@media (width >= 1920px) {
-  .background-shape-container svg {
-    right: -45px;
+    right: -180px;
+    max-height: 100vh;
   }
 }
 
