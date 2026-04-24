@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Language switcher</title>
+    <link rel="icon" href="data:," />
+    <!-- DA library shell: nexter + flex fill (same pattern as other da.live tools). -->
+    <link rel="stylesheet" href="https://da.live/nx/styles/nexter.css" />
+    <style>
+      html {
+        display: flex;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+        min-width: 100%;
+        margin: 0;
+      }
+    </style>
+    <!-- ./ so assets resolve on content.da.live/.../org/repo/tools/.../this.html -->
+    <link rel="stylesheet" href="./popup.css" />
+    <script src="https://da.live/nx/utils/sdk.js" type="module"></script>
+    <script src="./popup.js" type="module"></script>
+  </head>
+  <body style="display: block; background: var(--bg-page, #eef1f8);">
+    <header class="app-header">
+      <div class="app-header-mark" aria-hidden="true"></div>
+      <h1 class="app-title">Language switcher</h1>
+    </header>
+
+    <main class="app-main">
+      <p id="status" class="status">Loading…</p>
+
+      <section id="langRow" class="lang-card" hidden>
+        <span class="field-label" id="langSelectLabel">Other languages</span>
+        <div class="lang-card-row">
+          <select
+            id="langSelect"
+            class="lang-select"
+            aria-labelledby="langSelectLabel"
+          ></select>
+        </div>
+      </section>
+
+      <section id="previewBlock" class="url-card" hidden>
+        <span class="field-label">Destination URL</span>
+        <p id="preview" class="preview-url"></p>
+      </section>
+
+      <div class="actions-panel" id="actions" hidden>
+        <button type="button" id="open" class="btn btn-primary">
+          Open page for selected language
+        </button>
+        <button type="button" id="openAll" class="btn btn-secondary" hidden>
+          Open all language pages
+        </button>
+      </div>
+    </main>
+  </body>
+</html>
