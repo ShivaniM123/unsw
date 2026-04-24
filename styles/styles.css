@@ -357,12 +357,12 @@ main .section.highlight {
   padding: 40px 0;
 }
 
-/* UNSW yellow accent section */
+/* UNSW yellow accent / columns-profile section */
 main .section.yellow-accent {
   position: relative;
   background-color: transparent;
   margin: 0;
-  padding: 40px 0 24px;
+  padding: 40px 0 48px;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
@@ -377,15 +377,55 @@ main .section.yellow-accent > div {
   left: 0;
   z-index: -1;
   width: 100%;
-  height: 1102px;
+  height: 100%;
   overflow: hidden;
   pointer-events: none;
 }
 
+/* Mobile */
 .background-shape-container svg {
   fill: var(--brand-yellow);
   position: absolute;
   z-index: -1;
+  top: 98px;
+  right: -291px;
+  height: 2400px;
+  max-height: 72vw;
+}
+
+/* Tablet */
+@media (width >= 600px) {
+  .background-shape-container svg {
+    top: -88px;
+    right: -243px;
+    height: 2400px;
+    max-height: 63vw;
+  }
+}
+
+/* Desktop >=1024 */
+@media (width >= 1024px) {
+  .background-shape-container svg {
+    top: -222px;
+    right: -189px;
+    height: 2400px;
+    max-height: 580px;
+  }
+}
+
+/* Desktop >=1366 */
+@media (width >= 1366px) {
+  .background-shape-container svg {
+    right: -181px;
+    max-height: 638px;
+  }
+}
+
+/* Desktop >=1920 */
+@media (width >= 1920px) {
+  .background-shape-container svg {
+    right: -45px;
+  }
 }
 
 /* On pages with background shape, body bg must not cover the shape */

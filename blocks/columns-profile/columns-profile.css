@@ -41,6 +41,8 @@
 
 .columns-profile .columns-profile-text-col {
   order: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Mobile: H1 40px */
@@ -83,12 +85,13 @@
   line-height: 1.5;
 }
 
-/* Follow me row: label + icons inline */
+/* Follow me row: label + icons inline, pushed to bottom */
 .columns-profile .columns-profile-follow-row {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-top: 16px;
+  margin-top: auto;
+  padding-top: 24px;
 }
 
 .columns-profile .columns-profile-follow-row h2 {
