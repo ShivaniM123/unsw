@@ -33,7 +33,8 @@
 
 .columns-profile .columns-profile-image-col img {
   display: block;
-  width: 100%;
+  width: 288px;
+  height: 288px;
   max-width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
@@ -138,8 +139,9 @@
 /* Tablet: 600px+ stacked, larger square image */
 @media (width >= 600px) {
   .columns-profile .columns-profile-image-col img {
-    max-width: 442px;
-    max-height: 442px;
+    width: 442px;
+    height: 442px;
+    max-width: 100%;
   }
 
   .columns-profile .columns-profile-text-col h1 {
@@ -175,10 +177,10 @@
   }
 
   .columns-profile .columns-profile-image-col img {
-    width: 100%;
-    max-width: 340px;
-    max-height: none;
-    aspect-ratio: 3 / 4;
+    width: 300px;
+    height: 300px;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
   }
 

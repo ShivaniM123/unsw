@@ -144,10 +144,12 @@
   }
 
   .columns-contact .columns-contact-bio-col {
-    flex: 1;
+    flex: 1 1 50%;
+    min-width: 0;
   }
 
   .columns-contact .columns-contact-tiles-col {
-    flex: 0 0 400px;
+    flex: 1 1 50%;
+    min-width: 0;
   }
 }

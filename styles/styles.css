@@ -328,8 +328,8 @@ main > .section > div {
   padding: 0 24px;
 }
 
-/* columns-profile section needs wider content area to match source */
-body:has(.background-shape-container) main .section.columns-profile-container > div {
+/* Profile pages: all sections use consistent 8% padding to align text */
+body:has(.background-shape-container) main .section > div {
   max-width: none;
   padding: 0 8%;
 }
@@ -362,7 +362,7 @@ main .section.yellow-accent {
   position: relative;
   background-color: transparent;
   margin: 0;
-  padding: 40px 0 48px;
+  padding: 0 0 48px;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
@@ -397,7 +397,7 @@ main .section.yellow-accent > div {
 @media (width >= 600px) {
   .background-shape-container svg {
     top: -88px;
-    right: -243px;
+    right: -107px;
     height: 608px;
     max-height: 63vw;
   }
@@ -407,17 +407,9 @@ main .section.yellow-accent > div {
 @media (width >= 900px) {
   .background-shape-container svg {
     top: -222px;
-    right: -189px;
-    height: 1102px;
-    max-height: 900px;
-  }
-}
-
-/* Desktop large */
-@media (width >= 1200px) {
-  .background-shape-container svg {
-    right: -140px;
-    max-height: 960px;
+    right: -181px;
+    height: 990px;
+    max-height: none;
   }
 }
 
@@ -433,8 +425,7 @@ body:has(.background-shape-container) {
   background-color: transparent;
 }
 
-/* columns-profile area: transparent so yellow shape behind shows through */
-body:has(.background-shape-container) header .nav-wrapper,
+/* Profile sections: transparent so yellow shape behind shows through */
 body:has(.background-shape-container) main .section.breadcrumb-container,
 body:has(.background-shape-container) main .section.columns-profile-container {
   background-color: transparent;
