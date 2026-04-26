@@ -397,7 +397,7 @@ header nav .nav-search .icon img {
       'tools tools tools tools' auto
       'brand sections . search' 100px / auto 1fr auto auto;
     max-width: 1440px;
-    padding: 0 48px;
+    padding: 0;
     height: auto;
     border-bottom: none;
     position: relative;
@@ -428,7 +428,7 @@ header nav .nav-search .icon img {
     display: flex;
     justify-content: flex-end;
     gap: 0;
-    padding: 12px 0;
+    padding: 12px 48px;
   }
 
   header nav .nav-tools ul li {
@@ -450,7 +450,7 @@ header nav .nav-search .icon img {
   /* Brand - second row left */
   header .nav-brand {
     justify-content: flex-start;
-    padding: 16px 0;
+    padding: 16px 0 16px 48px;
   }
 
   header .nav-logo {
