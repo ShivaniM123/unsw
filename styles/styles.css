@@ -425,9 +425,15 @@ body:has(.background-shape-container) {
   background-color: transparent;
 }
 
-/* Profile sections: transparent so yellow shape behind shows through */
+/* Profile pages: transparent backgrounds so yellow shape shows through */
+body:has(.background-shape-container) header .nav-wrapper,
 body:has(.background-shape-container) main .section.breadcrumb-container,
 body:has(.background-shape-container) main .section.columns-profile-container {
   background-color: transparent;
+}
+
+/* Keep header nav content readable over yellow shape */
+body:has(.background-shape-container) header nav {
+  background-color: var(--brand-white);
 }
 
