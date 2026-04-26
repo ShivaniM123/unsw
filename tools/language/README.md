@@ -14,25 +14,25 @@ In the DA **library** configuration ([setup library](https://docs.da.live/admini
 
 | title | path | experience |
 | ----- | ---- | ----------- |
-| Language switcher | `/tools/language-switcher-da/popup.html` | `dialog` |
+| Language switcher | `/tools/language/popup.html` | `dialog` |
 
 DA resolves that path for the current org/repo (e.g. `shivanim123` / `unsw`) when opening the tool. You do **not** enter `https://content.da.live/shivanim123/unsw/...` in **`path`**; that full URL is not how the library is meant to be configured and will not match how DA lists or loads tools.
 
-**Wrong for this HTML tool:** `https://content.da.live/shivanim123/unsw/tools/language-switcher-da/popup.html`
+**Wrong for this HTML tool:** `https://content.da.live/shivanim123/unsw/tools/language/popup.html`
 
 That URL is **not** where Edge Delivery serves arbitrary repo files. **`content.da.live`** is used for **synced content** (pages, sheets, `docs/library/*.json`, etc.). Your **Blocks / Templates / Tags** rows point at **`…/docs/library/*.json`** on `content.da.live` because those JSON catalogs live there. A **library HTML tool** from the GitHub repo is instead loaded from your **preview host**:
 
-`https://main--<repo>--<org>.aem.page/tools/language-switcher-da/popup.html`
+`https://main--<repo>--<org>.aem.page/tools/language/popup.html`
 
 For `shivanim123` / `unsw` (Helix order is **`main--{repo}--{org}`**):
 
-`https://main--unsw--shivanim123.aem.page/tools/language-switcher-da/popup.html`
+`https://main--unsw--shivanim123.aem.page/tools/language/popup.html`
 
 **Check:** paste that **`.aem.page`** URL in the browser. If it **404s**, the files are not on the **`main`** branch GitHub repo that Code Sync uses (or the path is wrong). Fix GitHub first; **`content.da.live/.../tools/.../popup.html` will never appear** for this setup — that is expected, not a bug in the tool.
 
 **If your CONFIG sheet requires a full URL** for HTML tools (some teams do), use the **`.aem.page`** link above — **not** `content.da.live`.
 
-Optional **icon** column: same preview origin, e.g. `https://main--unsw--shivanim123.aem.page/tools/language-switcher-da/some-icon.svg` (add an SVG in the repo if needed).
+Optional **icon** column: same preview origin, e.g. `https://main--unsw--shivanim123.aem.page/tools/language/some-icon.svg` (add an SVG in the repo if needed).
 
 ## Blank white dialog
 
