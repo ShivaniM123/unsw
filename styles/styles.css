@@ -409,15 +409,15 @@ main .section.yellow-accent > div {
     top: -222px;
     right: -189px;
     height: 1102px;
-    max-height: 580px;
+    max-height: 900px;
   }
 }
 
 /* Desktop large */
 @media (width >= 1200px) {
   .background-shape-container svg {
-    right: -181px;
-    max-height: 638px;
+    right: -140px;
+    max-height: 960px;
   }
 }
 

@@ -177,8 +177,9 @@
   .columns-profile .columns-profile-image-col img {
     width: 100%;
     max-width: 340px;
-    max-height: 340px;
-    aspect-ratio: auto;
+    max-height: none;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
   }
 
   .columns-profile .columns-profile-text-col h1 {
