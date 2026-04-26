@@ -31,24 +31,24 @@ html {
 
 body {
   margin: 0;
-  font: 12px/1.45 var(--font-sans);
+  font: 13px/1.45 var(--font-sans);
   color: var(--text);
   background: var(--shell-bg);
   -webkit-font-smoothing: antialiased;
 }
 
-/* Full iframe: align compact card to the right (DA modal chrome wraps this). */
+/* Full iframe: center the card in DA’s library dialog (host still owns outer chrome). */
 .ls-shell {
   display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   min-height: 100%;
-  padding: 8px 10px 10px 12px;
+  padding: 16px 20px;
 }
 
 .ls-panel {
   width: 100%;
-  max-width: 288px;
+  max-width: 360px;
   background: var(--surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
@@ -59,7 +59,7 @@ body {
 .app-header {
   display: flex;
   align-items: center;
-  padding: 8px 12px;
+  padding: 10px 14px;
   background: var(--surface);
   color: var(--text);
   border-bottom: 1px solid var(--border-subtle);
@@ -69,7 +69,7 @@ body {
   margin: 0;
   flex: 1;
   min-width: 0;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 1.25;
@@ -78,14 +78,14 @@ body {
 .app-main {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 10px 12px 12px;
+  gap: 12px;
+  padding: 12px 14px 14px;
 }
 
 .status {
   margin: 0;
-  padding: 8px 10px;
-  font-size: 12px;
+  padding: 10px 12px;
+  font-size: 13px;
   line-height: 1.45;
   color: var(--text);
   background: #fafafa;
@@ -128,9 +128,9 @@ body {
 .lang-select {
   width: 100%;
   max-width: 100%;
-  padding: 6px 8px;
+  padding: 8px 10px;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 13px;
   line-height: inherit;
   color: var(--text);
   cursor: pointer;
@@ -172,9 +172,9 @@ body {
 
 .preview-url {
   margin: 0;
-  padding: 4px 10px 8px;
+  padding: 6px 12px 10px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.45;
   color: var(--text-muted);
   overflow-wrap: anywhere;
@@ -198,9 +198,9 @@ body {
 
 .btn {
   width: 100%;
-  padding: 8px 10px;
+  padding: 10px 12px;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   line-height: 1.35;
   text-align: center;
