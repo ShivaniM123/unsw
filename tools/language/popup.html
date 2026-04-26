@@ -7,59 +7,62 @@
     <link rel="icon" href="data:," />
     <!-- Library iframe often has no explicit height: avoid % min-height + flex on html (collapses to blank). -->
     <style>
+      /* Shell: let the compact panel sit on the right; min size avoids blank iframe. */
       html {
         margin: 0;
-        min-width: 280px;
-        min-height: 360px;
-        height: auto;
+        min-height: 200px;
+        height: 100%;
         color-scheme: light;
       }
 
       body {
         margin: 0;
-        min-width: 280px;
-        min-height: 360px;
+        min-height: 200px;
+        min-width: 200px;
         width: 100%;
-        height: auto;
+        height: 100%;
       }
     </style>
     <!-- ./ so assets resolve on content.da.live/.../org/repo/tools/.../this.html -->
     <link rel="stylesheet" href="./popup.css" />
   </head>
-  <body style="display: block; background: var(--bg-page, #eef1f8);">
-    <header class="app-header">
-      <div class="app-header-mark" aria-hidden="true"></div>
-      <h1 class="app-title">Language switcher</h1>
-    </header>
+  <body>
+    <div class="ls-shell">
+      <div class="ls-panel" role="region" aria-label="Language switcher">
+        <header class="app-header">
+          <h1 class="app-title">Language</h1>
+        </header>
 
-    <main class="app-main">
-      <p id="status" class="status">Loading…</p>
+        <main class="app-main">
+          <p id="status" class="status">Loading…</p>
 
-      <section id="langRow" class="lang-card" hidden>
-        <span class="field-label" id="langSelectLabel">Other languages</span>
-        <div class="lang-card-row">
-          <select
-            id="langSelect"
-            class="lang-select"
-            aria-labelledby="langSelectLabel"
-          ></select>
-        </div>
-      </section>
+          <section id="langRow" class="lang-card" hidden>
+            <span class="field-label" id="langSelectLabel">Other languages</span>
+            <div class="lang-card-row">
+              <select
+                id="langSelect"
+                class="lang-select"
+                aria-labelledby="langSelectLabel"
+              ></select>
+            </div>
+          </section>
 
-      <section id="previewBlock" class="url-card" hidden>
-        <span class="field-label">Destination URL</span>
-        <p id="preview" class="preview-url"></p>
-      </section>
+          <section id="previewBlock" class="url-card" hidden>
+            <span class="field-label">Destination URL</span>
+            <p id="preview" class="preview-url"></p>
+          </section>
 
-      <div class="actions-panel" id="actions" hidden>
-        <button type="button" id="open" class="btn btn-primary">
-          Open page for selected language
-        </button>
-        <button type="button" id="openAll" class="btn btn-secondary" hidden>
-          Open all language pages
-        </button>
+          <div class="actions-panel" id="actions" hidden>
+            <button type="button" id="open" class="btn btn-primary">
+              Open page for selected language
+            </button>
+            <button type="button" id="openAll" class="btn btn-secondary" hidden>
+              Open all language pages
+            </button>
+          </div>
+        </main>
       </div>
-    </main>
+    </div>
     <!-- Modules at end of body so markup paints before da.live SDK loads (library iframe). -->
     <script src="https://da.live/nx/utils/sdk.js" type="module"></script>
     <script src="./popup.js" type="module"></script>
