@@ -4,7 +4,7 @@
 main > .section.breadcrumb-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  max-width: 1200px;
+  max-width: none;
   margin: 0 auto;
   padding: 12px 16px;
 }
@@ -36,7 +36,8 @@ main > .section.breadcrumb-container > .breadcrumb-wrapper {
   font-family: 'Roboto Mono', RobotoMono, monospace;
   font-size: 14px;
   font-weight: 400;
-  line-height: 20px;
+  line-height: 21px;
+  letter-spacing: 1px;
   color: var(--brand-black);
 }
 
@@ -69,7 +70,6 @@ main > .section.breadcrumb-container > .breadcrumb-wrapper {
 main > .section.breadcrumb-container > .fragment-wrapper,
 main > .section.breadcrumb-container > .default-content-wrapper {
   display: flex;
-  flex-direction: column;
   align-items: flex-end;
   justify-content: center;
   grid-column: 2;
@@ -97,9 +97,29 @@ main > .section.breadcrumb-container > .default-content-wrapper a {
   text-decoration: none;
 }
 
-main > .section.breadcrumb-container > .fragment-wrapper a:hover,
-main > .section.breadcrumb-container > .default-content-wrapper a:hover {
-  opacity: 0.7;
+main > .section.breadcrumb-container > .fragment-wrapper a:nth-child(2):hover,
+main > .section.breadcrumb-container > .default-content-wrapper a:nth-child(2):hover {
+  color: #0077b5;
+}
+
+main > .section.breadcrumb-container > .fragment-wrapper a:nth-child(3):hover,
+main > .section.breadcrumb-container > .default-content-wrapper a:nth-child(3):hover {
+  color: #1877f2;
+}
+
+main > .section.breadcrumb-container > .fragment-wrapper a:nth-child(4):hover,
+main > .section.breadcrumb-container > .default-content-wrapper a:nth-child(4):hover {
+  color: #e4405f;
+}
+
+main > .section.breadcrumb-container > .fragment-wrapper a:nth-child(5):hover,
+main > .section.breadcrumb-container > .default-content-wrapper a:nth-child(5):hover {
+  color: #000;
+}
+
+main > .section.breadcrumb-container > .fragment-wrapper a:nth-child(6):hover,
+main > .section.breadcrumb-container > .default-content-wrapper a:nth-child(6):hover {
+  color: #f00;
 }
 
 main > .section.breadcrumb-container > .fragment-wrapper img,
@@ -117,6 +137,6 @@ main > .section.breadcrumb-container > .default-content-wrapper img {
 
 @media (width >= 900px) {
   main > .section.breadcrumb-container {
-    padding: 12px 32px;
+    padding: 12px 24px 12px 8%;
   }
 }

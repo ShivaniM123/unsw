@@ -27,10 +27,14 @@ export default function decorate(block) {
   // --- Columns-contact variant: Read more/less toggle on bio text ---
   const bioCol = block.querySelector('.columns-contact-bio-col');
   if (bioCol) {
+    const heading = bioCol.querySelector('h2');
     const paragraphs = [...bioCol.querySelectorAll('p')];
     if (paragraphs.length > 2) {
       const wrapper = document.createElement('div');
       wrapper.className = 'columns-contact-bio';
+
+      // Keep heading above the collapsible wrapper
+      if (heading) bioCol.append(heading);
 
       paragraphs.forEach((p) => wrapper.append(p));
       wrapper.classList.add('collapsed');

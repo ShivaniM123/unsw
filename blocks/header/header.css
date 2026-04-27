@@ -397,7 +397,6 @@ header nav .nav-search .icon img {
       'tools tools tools tools' auto
       'brand sections . search' 100px / auto 1fr auto auto;
     max-width: 1440px;
-    padding: 0 48px;
     height: auto;
     border-bottom: none;
     position: relative;
@@ -438,8 +437,11 @@ header nav .nav-search .icon img {
   header nav .nav-tools ul li a {
     color: var(--brand-black);
     padding: 4px 16px;
-    font-size: 12px;
-    font-weight: 700;
+    font-family: 'Roboto Mono', RobotoMono, monospace;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 1px;
   }
 
   header nav .nav-tools .external-icon img,
@@ -458,7 +460,7 @@ header nav .nav-search .icon img {
     height: 64px;
   }
 
-  /* Nav sections - second row center */
+  /* Nav sections - second row right-aligned */
   header nav .nav-sections {
     display: flex;
     visibility: visible;
@@ -505,7 +507,7 @@ header nav .nav-search .icon img {
   header nav .nav-sections > .default-content-wrapper > ul > li > a {
     display: flex;
     align-items: center;
-    padding: 0 32px;
+    padding: 0 20px;
     height: 100px;
     font-size: 16px;
     font-weight: 400;
@@ -530,9 +532,9 @@ header nav .nav-search .icon img {
     color: var(--brand-black);
   }
 
-  /* Search button - second row right, matches main nav height */
+  /* Search button */
   header nav .nav-search button {
-    width: 100px;
+    width: 120px;
     height: 100px;
   }
 
@@ -554,7 +556,7 @@ header nav .nav-search .icon img {
     right: 0;
     background-color: #f5f7fc;
     box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
-    padding: 32px 48px;
+    padding: 32px 8%;
     z-index: 50;
     box-sizing: border-box;
   }
@@ -563,7 +565,7 @@ header nav .nav-search .icon img {
     display: flex;
     gap: 24px;
     background-color: #f5f7fc;
-    padding: 32px 48px;
+    padding: 32px 8%;
   }
 
   header nav .nav-dropdown-cols {
@@ -670,7 +672,7 @@ header nav .nav-search .icon img {
 /* ===== Large Desktop (1200px+) ===== */
 @media (width >= 1200px) {
   header nav .nav-sections > .default-content-wrapper > ul > li > a {
-    padding: 0 32px;
+    padding: 0 24px;
   }
 }
 

@@ -328,8 +328,19 @@ main > .section > div {
   padding: 0 24px;
 }
 
+/* Profile pages: all sections use consistent 8% padding to align text */
+body:has(.background-shape-container) main .section > div {
+  max-width: none;
+  padding: 0 8%;
+}
+
 main > .section:first-of-type {
   margin-top: 0;
+}
+
+/* Hide section-break <hr> elements left in the DOM */
+main > hr {
+  display: none;
 }
 
 @media (width >= 900px) {
@@ -346,29 +357,88 @@ main .section.highlight {
   padding: 40px 0;
 }
 
-/* UNSW yellow accent section */
+/* UNSW yellow accent / columns-profile section */
 main .section.yellow-accent {
   position: relative;
-  background-color: var(--background-color);
+  background-color: transparent;
   margin: 0;
-  padding: 40px 0 24px;
-  overflow: hidden;
+  padding: 40px 0 48px;
 }
 
-main .section.yellow-accent::before {
-  content: '';
-  position: absolute;
-  top: -222px;
-  right: -189px;
-  width: 580px;
-  height: 580px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpolygon points='8,43.4121662 25.4464136,60 43.7984672,49.8005029 52.8354688,11.2215304 42.930188,0' fill='%23ffdc00'/%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
-  z-index: 0;
-}
-
+/* stylelint-disable-next-line no-descending-specificity */
 main .section.yellow-accent > div {
   position: relative;
-  z-index: 1;
 }
+
+/* Page-level yellow pentagon background shape container */
+.background-shape-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 1710px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Mobile */
+.background-shape-container svg {
+  fill: var(--brand-yellow);
+  position: absolute;
+  z-index: -1;
+  top: 98px;
+  right: -291px;
+  height: 582px;
+  max-height: 72vw;
+}
+
+/* Tablet */
+@media (width >= 600px) {
+  .background-shape-container svg {
+    top: -88px;
+    right: -107px;
+    height: 608px;
+    max-height: 63vw;
+  }
+}
+
+/* Desktop */
+@media (width >= 900px) {
+  .background-shape-container svg {
+    top: -222px;
+    right: -181px;
+    height: 1150px;
+    max-height: none;
+  }
+}
+
+/* Wide screens */
+@media (width >= 1920px) {
+  .background-shape-container svg {
+    right: -45px;
+  }
+}
+
+/* On pages with background shape, body bg must not cover the shape */
+body:has(.background-shape-container) {
+  background-color: transparent;
+}
+
+/* Profile pages: transparent backgrounds so yellow shape shows through */
+body:has(.background-shape-container) header .nav-wrapper,
+body:has(.background-shape-container) main .section.breadcrumb-container,
+body:has(.background-shape-container) main .section.columns-profile-container {
+  background-color: transparent;
+}
+
+/* Main nav row gets white bg, top bar stays transparent for polygon */
+body:has(.background-shape-container) header nav {
+  background-color: transparent;
+}
+
+body:has(.background-shape-container) header .nav-brand,
+body:has(.background-shape-container) header .nav-sections {
+  background-color: var(--brand-white);
+}
+
