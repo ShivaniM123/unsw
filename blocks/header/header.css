@@ -397,7 +397,7 @@ header nav .nav-search .icon img {
       'tools tools tools tools' auto
       'brand sections . search' 100px / auto 1fr auto auto;
     max-width: 1440px;
-    padding: 0 8%;
+    padding: 0 24px;
     height: auto;
     border-bottom: none;
     position: relative;
