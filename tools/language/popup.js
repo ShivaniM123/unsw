@@ -100,11 +100,7 @@ function setUi(status, previewUrl, canOpen, actions, opts = {}) {
       : PRIMARY_LABEL_WITH_PICKER;
   openBtn.onclick = () => {
     if (!previewUrl) return;
-    if (actions?.setHref) {
-      actions.setHref(previewUrl);
-    } else {
-      window.open(previewUrl, '_blank', 'noopener,noreferrer');
-    }
+    window.open(previewUrl, '_blank', 'noopener,noreferrer');
     if (typeof actions?.closeLibrary === 'function') {
       actions.closeLibrary();
     }
