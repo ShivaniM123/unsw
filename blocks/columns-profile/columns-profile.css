@@ -53,36 +53,37 @@
   font-weight: 700;
   line-height: 1.5;
   color: var(--brand-black);
-  margin: 0 0 8px;
+  margin: 0;
 }
 
-/* Subtitle "Professor" */
+/* Subtitle "Senior Lecturer" — 16px gap to H1 below */
 .columns-profile .columns-profile-text-col p:first-of-type {
   font-family: var(--heading-font-family);
   font-size: 16px;
   font-weight: 300;
   color: var(--brand-grey);
-  margin: 0 0 4px;
+  margin: 0 0 16px;
   line-height: 1.4;
 }
 
-/* Faculty */
+/* Faculty "Engineering" — 32px gap after H1 */
 .columns-profile .columns-profile-text-col p:nth-of-type(2) {
   font-family: var(--heading-font-family);
   font-size: 20px;
   font-weight: 700;
   color: var(--brand-black);
-  margin: 0 0 4px;
+  margin: 0;
+  padding-top: 32px;
   line-height: 1.5;
 }
 
-/* School */
+/* School "Civil and Environmental Engineering" — 16px gap after Faculty */
 .columns-profile .columns-profile-text-col p:nth-of-type(3) {
   font-family: var(--heading-font-family);
   font-size: 18px;
   font-weight: 300;
   color: var(--brand-grey);
-  margin: 0 0 16px;
+  margin: 16px 0 0;
   line-height: 1.5;
 }
 
@@ -90,7 +91,7 @@
 .columns-profile .columns-profile-follow-row {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 0;
   margin-top: auto;
   padding-top: 24px;
 }
@@ -108,7 +109,7 @@
 .columns-profile .columns-profile-follow-row ul {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -122,8 +123,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 52px;
+  height: 31px;
   color: var(--brand-black);
 }
 
@@ -156,7 +157,7 @@
 /* Desktop: 900px+ side-by-side, text ~68% left + image ~27% right + 48px gap */
 @media (width >= 900px) {
   .columns-profile > div {
-    align-items: flex-start;
+    align-items: stretch;
     flex-direction: row;
     gap: 48px;
   }
@@ -168,6 +169,7 @@
   .columns-profile .columns-profile-text-col {
     flex: 7;
     order: 0;
+    min-height: 360px;
   }
 
   .columns-profile .columns-profile-image-col {

@@ -432,10 +432,13 @@ body:has(.background-shape-container) main .section.columns-profile-container {
   background-color: transparent;
 }
 
-/* Only the main nav row (logo + links + search) gets white background */
+/* Main nav row gets white bg, top bar stays transparent for polygon */
+body:has(.background-shape-container) header nav {
+  background-color: transparent;
+}
+
 body:has(.background-shape-container) header .nav-brand,
-body:has(.background-shape-container) header .nav-sections,
-body:has(.background-shape-container) header .nav-search {
+body:has(.background-shape-container) header .nav-sections {
   background-color: var(--brand-white);
 }
 
