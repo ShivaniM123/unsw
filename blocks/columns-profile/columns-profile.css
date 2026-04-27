@@ -137,6 +137,7 @@
   height: 24px;
 }
 
+
 /* Tablet: 600px+ stacked, larger square image */
 @media (width >= 600px) {
   .columns-profile .columns-profile-image-col img {

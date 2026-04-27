@@ -397,7 +397,7 @@ header nav .nav-search .icon img {
       'tools tools tools tools' auto
       'brand sections . search' 100px / auto 1fr auto auto;
     max-width: 1440px;
-    padding: 0;
+    padding: 0 0 0 8%;
     height: auto;
     border-bottom: none;
     position: relative;
@@ -428,7 +428,7 @@ header nav .nav-search .icon img {
     display: flex;
     justify-content: flex-end;
     gap: 0;
-    padding: 12px 24px;
+    padding: 12px 0;
   }
 
   header nav .nav-tools ul li {
@@ -453,7 +453,7 @@ header nav .nav-search .icon img {
   /* Brand - second row left */
   header .nav-brand {
     justify-content: flex-start;
-    padding: 16px 0 16px 24px;
+    padding: 16px 0;
     border-top: 1px solid #bebebe;
   }
 
@@ -541,7 +541,7 @@ header nav .nav-search .icon img {
   }
 
   header nav .nav-search button {
-    width: 100px;
+    width: 120px;
     height: 100px;
   }
 
