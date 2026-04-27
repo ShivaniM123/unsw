@@ -4,7 +4,7 @@ Document Authoring **library** tool — same behavior as the **DA Language Hoppe
 
 - Reads **`placeholders.json`** and the **`language-switcher`** sheet (see [placeholders](https://docs.da.live/)): tries **`main--{repo}--{org}.aem.page`**, then **`actions.daFetch`** on **`admin.da.live/source/{org}/{repo}/placeholders.json`** if the preview request fails.
 - Uses **`DA_SDK`**: `context.org`, `context.repo` (or `context.site`), and **`context.path`** (site-relative, e.g. `/en/staff/page`) to build the hash URL, then **`parseCurrentPage`**.
-- **Open** uses `actions.setHref` (navigate the DA shell) and `actions.closeLibrary()`; **Open all** opens multiple tabs with `window.open`.
+- **Open page for selected language** opens the destination in a **new tab** via `window.open` and then `actions.closeLibrary()`. **Open all** opens multiple tabs with `window.open`.
 
 ## Library `path` (CONFIG sheet) — use a repo path, not `content.da.live`
 
@@ -36,7 +36,7 @@ Optional **icon** column: same preview origin, e.g. `https://main--unsw--shivani
 
 ## Blank white dialog
 
-If the library opens an **empty** panel after you set **`path`** to `popup.html`, it is often because the iframe has **no height** and styles used **`min-height: 100%`** / **`html { display: flex }`** so the layout **collapsed**. This tool uses a **fixed minimum height** (`360px`) and loads scripts **at the end of `<body>`** so the shell still paints. Sync the latest `popup.html` / `popup.css` and try again.
+If the library opens an **empty** panel after you set **`path`** to `popup.html`, it is often because the iframe has **no height** and percentage-based layout **collapsed**. This tool sets **`html` / `body` height and flex** in **`popup.css`** (including **`min-height: 200px`** on `html`) and loads scripts **at the end of `<body>`** so the shell still paints. Sync the latest `popup.html` / `popup.css` and try again.
 
 ## Inside `popup.html` (CSS / JS)
 
@@ -47,7 +47,7 @@ Use **relative** `./popup.css` and `./popup.js` so that when DA loads the tool f
 | Tags | Language switcher |
 | ---- | ----------------- |
 | Fetches `docs/library/tagging.json` via `daFetch` | Fetches published **`placeholders.json`** (HTTP from `.aem.page`) |
-| Inserts text into the document with `sendText` | Navigates to another locale URL with `setHref` |
+| Inserts text into the document with `sendText` | Opens the locale URL in a **new tab** (`window.open`) |
 | Data: tag keys/labels | Data: locale columns mapping paths under `language-switcher` |
 
 ## Requirements
