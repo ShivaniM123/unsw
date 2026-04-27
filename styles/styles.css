@@ -328,10 +328,10 @@ main > .section > div {
   padding: 0 24px;
 }
 
-/* Profile pages: all sections use consistent padding to align with header logo */
+/* Profile pages: all sections use consistent 8% padding to align text */
 body:has(.background-shape-container) main .section > div {
   max-width: none;
-  padding: 0 24px 0 134px;
+  padding: 0 8%;
 }
 
 main > .section:first-of-type {
@@ -362,7 +362,7 @@ main .section.yellow-accent {
   position: relative;
   background-color: transparent;
   margin: 0;
-  padding: 40px 0 48px;
+  padding: 0 0 48px;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
