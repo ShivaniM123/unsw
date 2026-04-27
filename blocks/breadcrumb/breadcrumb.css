@@ -98,9 +98,29 @@ main > .section.breadcrumb-container > .default-content-wrapper a {
   text-decoration: none;
 }
 
-main > .section.breadcrumb-container > .fragment-wrapper a:hover,
-main > .section.breadcrumb-container > .default-content-wrapper a:hover {
-  opacity: 0.7;
+main > .section.breadcrumb-container > .fragment-wrapper a:nth-child(2):hover,
+main > .section.breadcrumb-container > .default-content-wrapper a:nth-child(2):hover {
+  color: #0077b5;
+}
+
+main > .section.breadcrumb-container > .fragment-wrapper a:nth-child(3):hover,
+main > .section.breadcrumb-container > .default-content-wrapper a:nth-child(3):hover {
+  color: #1877f2;
+}
+
+main > .section.breadcrumb-container > .fragment-wrapper a:nth-child(4):hover,
+main > .section.breadcrumb-container > .default-content-wrapper a:nth-child(4):hover {
+  color: #e4405f;
+}
+
+main > .section.breadcrumb-container > .fragment-wrapper a:nth-child(5):hover,
+main > .section.breadcrumb-container > .default-content-wrapper a:nth-child(5):hover {
+  color: #000;
+}
+
+main > .section.breadcrumb-container > .fragment-wrapper a:nth-child(6):hover,
+main > .section.breadcrumb-container > .default-content-wrapper a:nth-child(6):hover {
+  color: #f00;
 }
 
 main > .section.breadcrumb-container > .fragment-wrapper img,
@@ -118,6 +138,6 @@ main > .section.breadcrumb-container > .default-content-wrapper img {
 
 @media (width >= 900px) {
   main > .section.breadcrumb-container {
-    padding: 12px 8%;
+    padding: 12px 24px 12px 134px;
   }
 }
