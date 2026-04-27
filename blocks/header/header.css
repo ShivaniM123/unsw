@@ -397,7 +397,7 @@ header nav .nav-search .icon img {
       'tools tools tools tools' auto
       'brand sections . search' 100px / auto 1fr auto auto;
     max-width: 1440px;
-    padding: 0 24px;
+    padding: 0;
     height: auto;
     border-bottom: none;
     position: relative;
@@ -428,7 +428,7 @@ header nav .nav-search .icon img {
     display: flex;
     justify-content: flex-end;
     gap: 0;
-    padding: 12px 0;
+    padding: 12px 24px;
   }
 
   header nav .nav-tools ul li {
@@ -453,7 +453,8 @@ header nav .nav-search .icon img {
   /* Brand - second row left */
   header .nav-brand {
     justify-content: flex-start;
-    padding: 16px 0;
+    padding: 16px 0 16px 24px;
+    border-top: 1px solid #bebebe;
   }
 
   header .nav-logo {
@@ -467,6 +468,7 @@ header nav .nav-search .icon img {
     visibility: visible;
     align-items: center;
     justify-content: flex-end;
+    border-top: 1px solid #bebebe;
   }
 
   header nav[aria-expanded='true'] .nav-sections {
@@ -533,15 +535,14 @@ header nav .nav-search .icon img {
     color: var(--brand-black);
   }
 
-  /* Search button - extends to viewport edge like original */
+  /* Search button - flush to right edge */
   header nav .nav-search {
-    margin-right: -24px;
+    border-top: 1px solid #bebebe;
   }
 
   header nav .nav-search button {
-    width: 124px;
+    width: 100px;
     height: 100px;
-    padding-right: 48px;
   }
 
   header nav .nav-search .icon {
