@@ -454,7 +454,6 @@ header nav .nav-search .icon img {
   header .nav-brand {
     justify-content: flex-start;
     padding: 16px 0;
-    border-top: 1px solid #bebebe;
   }
 
   header .nav-logo {
@@ -468,7 +467,6 @@ header nav .nav-search .icon img {
     visibility: visible;
     align-items: center;
     justify-content: flex-end;
-    border-top: 1px solid #bebebe;
   }
 
   header nav[aria-expanded='true'] .nav-sections {
@@ -535,11 +533,7 @@ header nav .nav-search .icon img {
     color: var(--brand-black);
   }
 
-  /* Search button - flush to right edge */
-  header nav .nav-search {
-    border-top: 1px solid #bebebe;
-  }
-
+  /* Search button */
   header nav .nav-search button {
     width: 120px;
     height: 100px;

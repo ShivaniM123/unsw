@@ -111,12 +111,33 @@
   line-height: 1.5;
 }
 
-/* Tablet: 600px+ two-column tiles */
+/* Tablet: 600px+ Phone left, E-mail right (label on top, value below) */
 @media (width >= 600px) {
   .columns-contact .columns-contact-tiles-col {
     grid-template-columns: 1fr 1fr;
-    gap: 32px 16px;
+    grid-template-rows: auto auto;
+    gap: 8px 32px;
     padding: 32px;
+  }
+
+  .columns-contact .columns-contact-tiles-col h3:nth-of-type(1) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .columns-contact .columns-contact-tiles-col p:nth-of-type(1) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .columns-contact .columns-contact-tiles-col h3:nth-of-type(2) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .columns-contact .columns-contact-tiles-col p:nth-of-type(2) {
+    grid-column: 2;
+    grid-row: 2;
   }
 
   /* Location tile spans full width */

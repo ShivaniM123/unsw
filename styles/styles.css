@@ -362,7 +362,7 @@ main .section.yellow-accent {
   position: relative;
   background-color: transparent;
   margin: 0;
-  padding: 0 0 48px;
+  padding: 40px 0 48px;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
