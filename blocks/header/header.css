@@ -533,10 +533,15 @@ header nav .nav-search .icon img {
     color: var(--brand-black);
   }
 
-  /* Search button - second row right, matches main nav height */
+  /* Search button - extends to viewport edge like original */
+  header nav .nav-search {
+    margin-right: -24px;
+  }
+
   header nav .nav-search button {
-    width: 100px;
+    width: 124px;
     height: 100px;
+    padding-right: 48px;
   }
 
   header nav .nav-search .icon {
