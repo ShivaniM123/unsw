@@ -1,8 +1,8 @@
 # Language switcher (DA library tool)
 
-Document Authoring **library** tool — same behavior as the **DA Language Hopper** Chrome extension (`popup.js`, `shared.js`, `placeholders.js`), adapted for **da.live**:
+Document Authoring **library** tool — same behavior as the **DA Language Hopper** Chrome extension, adapted for **da.live**:
 
-- Reads **`placeholders.json`** and the **`language-switcher`** sheet (see [placeholders](https://docs.da.live/)): tries **`main--{repo}--{org}.aem.page`**, then **`actions.daFetch`** on **`admin.da.live/source/{org}/{repo}/placeholders.json`** if the preview request fails.
+- Reads **`/.da/translate-v2.json`** (the same config used by the Locales tool) via **`actions.daFetch`** from **`admin.da.live/source/{org}/{repo}/.da/translate-v2.json`**. The language list comes from `languages.data[]` rows (must contain `location` like `/en`, `/fr`).
 - Uses **`DA_SDK`**: `context.org`, `context.repo` (or `context.site`), and **`context.path`** (site-relative, e.g. `/en/staff/page`) to build the hash URL, then **`parseCurrentPage`**.
 - **Open page for selected language** opens the destination in a **new tab** via `window.open` and then `actions.closeLibrary()`. **Open all** opens multiple tabs with `window.open`.
 
@@ -52,9 +52,12 @@ Use **relative** `./popup.css` and `./popup.js` so that when DA loads the tool f
 
 ## Requirements
 
-1. **`placeholders.json`** published with a **`language-switcher`** tab (same model as the extension).
-2. **`context.path`** must include a **locale** segment as the first folder (e.g. `/en/staff/...` — DA gives site-relative paths; the tool prefixes `/<org>/<repo>` when building the hash URL).
-3. **`SETTINGS`** in `popup.js` — adjust `tier` (`page` vs `live`), `branch`, `target` (`da-edit` vs preview-only), or sheet name if you renamed the tab.
+1. **`/.da/translate-v2.json`** exists and contains a `languages` tab with `data` rows that include at least:
+   - `name` (optional, used for display only)
+   - `location` (required; e.g. `/en`, `/fr`)
+   - `site` (optional; repo override for multi-site setups)
+2. **`context.path`** must include a **language folder** as the first segment (e.g. `/en/staff/...`).
+3. **`SETTINGS`** in `popup.js` — adjust `tier` (`page` vs `live`), `branch`, `target` (`da-edit` vs preview-only).
 
 ## Files
 
