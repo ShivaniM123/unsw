@@ -148,6 +148,21 @@ function buildDest(parsed, org, repo, newSegments, useBranch, tier, target, daVi
   return buildAemPreviewUrl(useBranch, org, repo, newSegments, tier);
 }
 
+/**
+ * Prefer `language-switcher` row match; if none, swap locale and keep the same suffix
+ * (e.g. /fr/newsletter → /en/newsletter). Add a sheet row when EN/FR slugs differ.
+ */
+function resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc) {
+  const fromSheet = resolvePathWithRows(rows, fromLoc, toLoc, afterLoc);
+  if (fromSheet) return fromSheet;
+  const rest = typeof afterLoc === 'string' && afterLoc.startsWith('/')
+    ? afterLoc
+    : afterLoc
+      ? `/${String(afterLoc).replace(/^\//, '')}`
+      : '';
+  return `/${toLoc}${rest}`;
+}
+
 async function main() {
   const { context, actions } = await DA_SDK;
   setUi('Loading placeholders…', null, false, actions, { showLangRow: false });
@@ -254,7 +269,7 @@ async function main() {
     let n = 0;
     for (const toLoc of langKeys) {
       if (toLoc.toLowerCase() === fromLoc.toLowerCase()) continue;
-      if (resolvePathWithRows(rows, fromLoc, toLoc, afterLoc)) n += 1;
+      if (resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc)) n += 1;
     }
     return n;
   }
@@ -263,8 +278,7 @@ async function main() {
     const urls = [];
     for (const toLoc of langKeys) {
       if (toLoc.toLowerCase() === fromLoc.toLowerCase()) continue;
-      const resolvedPath = resolvePathWithRows(rows, fromLoc, toLoc, afterLoc);
-      if (!resolvedPath) continue;
+      const resolvedPath = resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc);
       const newSegments = pathnameToSegments(resolvedPath);
       urls.push(buildDest(parsed, org, repo, newSegments, useBranch, tier, target, daView));
     }
@@ -293,23 +307,7 @@ async function main() {
       return;
     }
 
-    const resolvedPath = resolvePathWithRows(rows, fromLoc, toLoc, afterLoc);
-    if (!resolvedPath) {
-      setUi(
-        `No row maps ${fromLoc} → ${toLoc} for this path. Add or fix the language-switcher sheet.`,
-        null,
-        true,
-        actions,
-        {
-          showLangRow: showLangPicker,
-          openDisabled: true,
-          openPrimaryLabel: primaryLabelSingleTarget(toLoc),
-          ...openAllOpts(),
-        },
-      );
-      return;
-    }
-
+    const resolvedPath = resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc);
     const newSegments = pathnameToSegments(resolvedPath);
     const dest = buildDest(parsed, org, repo, newSegments, useBranch, tier, target, daView);
     setUi('', dest, true, actions, {
