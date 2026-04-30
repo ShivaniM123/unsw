@@ -91,12 +91,42 @@ export function resolvePathWithRows(rows, fromLoc, toLoc, afterLocalePath) {
   return null;
 }
 
-export function buildPlaceholdersUrl(branch, org, repo, tier) {
+/**
+ * @param {string} directoryPrefix path under repo (no leading/trailing slash), or ''
+ */
+export function buildPlaceholdersUrl(branch, org, repo, tier, directoryPrefix = '') {
   const domain = tier === 'live' ? 'aem.live' : 'aem.page';
-  return `https://${branch}--${repo}--${org}.${domain}/placeholders.json`;
+  const base = `https://${branch}--${repo}--${org}.${domain}`;
+  const sub = directoryPrefix ? `${directoryPrefix.replace(/\/$/, '')}/` : '';
+  return `${base}/${sub}placeholders.json`;
 }
 
 const ADMIN_PLACEHOLDERS = 'https://admin.da.live/source';
+
+/**
+ * Directory prefixes to try for `placeholders.json` (repo-relative), newest parent first after root.
+ * Skips the last path segment so a page slug is not used as a folder (e.g. …/en/my-page → try …/en, …, root).
+ * @param {string} [sitePath] DA `context.path` (site-relative), e.g. /arbres-fondationsaudemarspiguet/en/foo
+ * @returns {string[]} ordered unique prefixes, always starting with ''
+ */
+export function buildPlaceholderDirectoryCandidates(sitePath) {
+  const candidates = [''];
+  if (!sitePath || typeof sitePath !== 'string') return candidates;
+  const trimmed = sitePath.replace(/^\/+/, '').replace(/\/+$/, '');
+  if (!trimmed) return candidates;
+  const parts = trimmed.split('/').filter(Boolean);
+  const maxDepth = parts.length > 1 ? parts.length - 1 : parts.length;
+  for (let i = 0; i < maxDepth; i += 1) {
+    candidates.push(parts.slice(0, i + 1).join('/'));
+  }
+  return [...new Set(candidates)];
+}
+
+function sheetHasLanguageColumns(json, sheetName) {
+  const { rows } = extractLanguageSwitcherRows(json, sheetName);
+  if (!rows.length) return false;
+  return detectLocaleColumnKeys(rows).length > 0;
+}
 
 /**
  * @param {string} branch
@@ -105,31 +135,71 @@ const ADMIN_PLACEHOLDERS = 'https://admin.da.live/source';
  * @param {string} tier
  * @param {string} [sheetName]
  * @param {object | null} [actions] DA SDK actions (`daFetch`) when preview fetch fails.
+ * @param {string} [sitePath] site-relative path from DA context — used to find nested `…/placeholders.json`
  */
-export async function fetchLanguageSwitcherRows(branch, org, repo, tier, sheetName = DEFAULT_SHEET, actions = null) {
-  const previewUrl = buildPlaceholdersUrl(branch, org, repo, tier);
-
+export async function fetchLanguageSwitcherRows(
+  branch,
+  org,
+  repo,
+  tier,
+  sheetName = DEFAULT_SHEET,
+  actions = null,
+  sitePath = '',
+) {
+  /* eslint-disable no-await-in-loop -- try each candidate placeholders URL in order */
   const parseRows = async (resp, sourceLabel) => {
     if (!resp.ok) throw new Error(`${sourceLabel} HTTP ${resp.status}`);
     const json = await resp.json();
+    if (!sheetHasLanguageColumns(json, sheetName)) {
+      throw new Error('no language-switcher columns');
+    }
     return { rows: extractLanguageSwitcherRows(json, sheetName).rows, url: sourceLabel };
   };
 
-  try {
-    const resp = await fetch(previewUrl, { credentials: 'omit' });
-    if (resp.ok) return await parseRows(resp, previewUrl);
-  } catch {
-    /* fall through */
+  const dirs = buildPlaceholderDirectoryCandidates(sitePath);
+  const errors = [];
+
+  for (const dir of dirs) {
+    const previewUrl = buildPlaceholdersUrl(branch, org, repo, tier, dir);
+    try {
+      const resp = await fetch(previewUrl, { credentials: 'omit' });
+      if (resp.ok) {
+        try {
+          return await parseRows(resp, previewUrl);
+        } catch (e) {
+          errors.push(`${previewUrl}: ${e.message}`);
+        }
+      } else {
+        errors.push(`${previewUrl}: HTTP ${resp.status}`);
+      }
+    } catch (e) {
+      errors.push(`${previewUrl}: ${e.message}`);
+    }
+
+    if (actions?.daFetch) {
+      const adminPath = dir ? `${dir}/placeholders.json` : 'placeholders.json';
+      const adminUrl = `${ADMIN_PLACEHOLDERS}/${org}/${repo}/${adminPath}`;
+      try {
+        const resp = await actions.daFetch(adminUrl);
+        if (resp.ok) {
+          try {
+            return await parseRows(resp, adminUrl);
+          } catch (e) {
+            errors.push(`${adminUrl}: ${e.message}`);
+          }
+        } else {
+          errors.push(`${adminUrl}: HTTP ${resp.status}`);
+        }
+      } catch (e) {
+        errors.push(`${adminUrl}: ${e.message}`);
+      }
+    }
   }
 
-  if (actions?.daFetch) {
-    const adminUrl = `${ADMIN_PLACEHOLDERS}/${org}/${repo}/placeholders.json`;
-    const resp = await actions.daFetch(adminUrl);
-    return parseRows(resp, adminUrl);
-  }
-
+  const summary = errors.length ? ` Tried: ${errors.slice(0, 4).join('; ')}${errors.length > 4 ? '…' : ''}` : '';
+  /* eslint-enable no-await-in-loop */
   throw new Error(
-    'Could not load placeholders.json. Use a logged-in da.live session or publish preview.',
+    `Could not load placeholders.json with "${sheetName}" language columns.${summary}`,
   );
 }
 
