@@ -18,8 +18,6 @@ In the DA **library** configuration ([setup library](https://docs.da.live/admini
 
 DA resolves that path for the current org/repo (e.g. `shivanim123` / `unsw`) when opening the tool. You do **not** enter `https://content.da.live/shivanim123/unsw/...` in **`path`**; that full URL is not how the library is meant to be configured and will not match how DA lists or loads tools.
 
-**Wrong for this HTML tool:** `https://content.da.live/shivanim123/unsw/tools/language/popup.html`
-
 That URL is **not** where Edge Delivery serves arbitrary repo files. **`content.da.live`** is used for **synced content** (pages, sheets, `docs/library/*.json`, etc.). Your **Blocks / Templates / Tags** rows point at **`…/docs/library/*.json`** on `content.da.live` because those JSON catalogs live there. A **library HTML tool** from the GitHub repo is instead loaded from your **preview host**:
 
 `https://main--<repo>--<org>.aem.page/tools/language/popup.html`
@@ -46,9 +44,9 @@ Use **relative** `./popup.css` and `./popup.js` so that when DA loads the tool f
 
 | Tags | Language switcher |
 | ---- | ----------------- |
-| Fetches `docs/library/tagging.json` via `daFetch` | Fetches published **`placeholders.json`** (HTTP from `.aem.page`) |
+| Fetches `docs/library/tagging.json` via `daFetch` | Fetches **`/.da/translate-v2.json`** via `daFetch` |
 | Inserts text into the document with `sendText` | Opens the locale URL in a **new tab** (`window.open`) |
-| Data: tag keys/labels | Data: locale columns mapping paths under `language-switcher` |
+| Data: tag keys/labels | Data: languages list from `languages.data[]` |
 
 ## Requirements
 
@@ -65,4 +63,3 @@ Use **relative** `./popup.css` and `./popup.js` so that when DA loads the tool f
 - `popup.js` — orchestration (was Chrome `popup.js` logic)
 - `popup.css` — styles (same as extension `popup.css`, slightly wider `max-width` for dialog)
 - `shared.js` — URL parsing / `buildDaHashUrl` / `buildAemPreviewUrl` (+ `contextToDaUrl` for DA)
-- `placeholders.js` — sheet parsing and `fetchLanguageSwitcherRows` (preview fetch + `daFetch` fallback)
