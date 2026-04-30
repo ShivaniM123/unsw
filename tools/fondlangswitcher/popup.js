@@ -155,11 +155,14 @@ function buildDest(parsed, org, repo, newSegments, useBranch, tier, target, daVi
 function resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc) {
   const fromSheet = resolvePathWithRows(rows, fromLoc, toLoc, afterLoc);
   if (fromSheet) return fromSheet;
-  const rest = typeof afterLoc === 'string' && afterLoc.startsWith('/')
-    ? afterLoc
-    : afterLoc
-      ? `/${String(afterLoc).replace(/^\//, '')}`
-      : '';
+  let rest = '';
+  if (typeof afterLoc === 'string' && afterLoc.length > 0) {
+    if (afterLoc.startsWith('/')) {
+      rest = afterLoc;
+    } else {
+      rest = `/${afterLoc.replace(/^\//, '')}`;
+    }
+  }
   return `/${toLoc}${rest}`;
 }
 
