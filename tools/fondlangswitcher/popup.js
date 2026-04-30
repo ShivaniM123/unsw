@@ -231,7 +231,20 @@ async function main() {
   }
 
   const useBranch = parsed.kind === 'aem' ? parsed.branch : branch;
-  const sitePath = context.path || '';
+  /** Library iframe often omits `context.path`; hash segments are always after org/repo. */
+  const sitePath = (() => {
+    let p = typeof context.path === 'string' ? context.path.trim() : '';
+    const prefix = `/${org}/${repo}`;
+    if (p === prefix || p.startsWith(`${prefix}/`)) {
+      p = p.slice(prefix.length);
+      if (p && !p.startsWith('/')) p = `/${p}`;
+    }
+    if (!p && segments.length) {
+      p = `/${segments.join('/')}`;
+    }
+    if (p && !p.startsWith('/')) p = `/${p}`;
+    return p;
+  })();
 
   let rows;
   try {
