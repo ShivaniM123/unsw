@@ -117,13 +117,42 @@ function canonLocale(segment, keys) {
   return keys.find((k) => k.toLowerCase() === segment.toLowerCase()) ?? null;
 }
 
-async function loadPlaceholderRows(org, repo, branch, tier, sheetName, ttlMs, actions) {
-  const cacheKey = `ph:${org}:${repo}:${branch}:${tier}:${sheetName}`;
+function cachePathKey(sitePath) {
+  const s = (sitePath || '').replace(/^\/+|\/+$/g, '').replace(/\//g, '>');
+  return s || 'root';
+}
+
+async function loadPlaceholderRows(org, repo, branch, tier, sheetName, ttlMs, actions, sitePath) {
+  const pathKey = cachePathKey(sitePath);
+  const cacheKey = `ph:${org}:${repo}:${branch}:${tier}:${sheetName}:${pathKey}`;
   const cached = readCache(cacheKey);
   if (cached) return cached;
-  const { rows } = await fetchLanguageSwitcherRows(branch, org, repo, tier, sheetName, actions);
+  const { rows } = await fetchLanguageSwitcherRows(
+    branch,
+    org,
+    repo,
+    tier,
+    sheetName,
+    actions,
+    sitePath || '',
+  );
   writeCache(cacheKey, rows, Number(ttlMs) || 300000);
   return rows;
+}
+
+/** First segment that matches a language column (paths like …/site/en/page). */
+function findLocaleSegmentIndex(segments, langKeys) {
+  const set = new Set(langKeys.map((k) => k.toLowerCase()));
+  for (let i = 0; i < segments.length; i += 1) {
+    if (set.has(segments[i].toLowerCase())) return i;
+  }
+  return -1;
+}
+
+/** Keep folders before locale + tail from resolved `/lang/...`. */
+function mergeResolvedSegments(locIndex, segments, resolvedPath) {
+  const tail = pathnameToSegments(resolvedPath);
+  return [...segments.slice(0, locIndex), ...tail];
 }
 
 function fillLangSelect(keys, currentKey) {
@@ -202,8 +231,7 @@ async function main() {
   }
 
   const useBranch = parsed.kind === 'aem' ? parsed.branch : branch;
-  const afterLoc = pathAfterLocale(segments);
-  const urlSeg = segments[0];
+  const sitePath = context.path || '';
 
   let rows;
   try {
@@ -215,6 +243,7 @@ async function main() {
       placeholderSheetName || DEFAULT_SHEET,
       Number(placeholderCacheTtlMs) || 300000,
       actions,
+      sitePath,
     );
   } catch (e) {
     setUi(`Could not load placeholders.json (${e.message}).`, null, false, actions);
@@ -232,6 +261,19 @@ async function main() {
     return;
   }
 
+  const locIndex = findLocaleSegmentIndex(segments, langKeys);
+  if (locIndex < 0) {
+    setUi(
+      `No folder in this path matches a language column (${langKeys.join(', ')}).`,
+      null,
+      false,
+      actions,
+    );
+    return;
+  }
+  const urlSeg = segments[locIndex];
+  const afterLoc = pathAfterLocale(segments.slice(locIndex));
+
   const showLangPicker = langKeys.length >= 3;
 
   if (langKeys.length === 1) {
@@ -246,7 +288,7 @@ async function main() {
       );
       return;
     }
-    const newSegments = [only, ...segments.slice(1)];
+    const newSegments = [...segments.slice(0, locIndex), only, ...segments.slice(locIndex + 1)];
     const dest = buildDest(parsed, org, repo, newSegments, useBranch, tier, target, daView);
     setUi('', dest, true, actions, {
       showLangRow: false,
@@ -282,7 +324,7 @@ async function main() {
     for (const toLoc of langKeys) {
       if (toLoc.toLowerCase() === fromLoc.toLowerCase()) continue;
       const resolvedPath = resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc);
-      const newSegments = pathnameToSegments(resolvedPath);
+      const newSegments = mergeResolvedSegments(locIndex, segments, resolvedPath);
       urls.push(buildDest(parsed, org, repo, newSegments, useBranch, tier, target, daView));
     }
     for (const u of urls) {
@@ -311,7 +353,7 @@ async function main() {
     }
 
     const resolvedPath = resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc);
-    const newSegments = pathnameToSegments(resolvedPath);
+    const newSegments = mergeResolvedSegments(locIndex, segments, resolvedPath);
     const dest = buildDest(parsed, org, repo, newSegments, useBranch, tier, target, daView);
     setUi('', dest, true, actions, {
       showLangRow: showLangPicker,

@@ -8,7 +8,7 @@ Library dialog that opens **localized DA pages** using the **`language-switcher`
 - Columns are **locale keys** (`en`, `fr`, …); cell values are **paths starting with `/`** (path without the leading locale segment in the sheet model).
 - Resolves **from → to** using the sheet first; if **no row matches** the current path (e.g. missing `/newsletter`), the tool **falls back** to the same slug under the target locale (`/fr/newsletter` → `/en/newsletter`). For **different slugs per language**, add a row to the sheet so the correct target path is used.
 
-Load order: preview `placeholders.json` from **`main--{repo}--{org}.aem.page`**, then **`actions.daFetch`** on `admin.da.live/source/{org}/{repo}/placeholders.json` if preview fails.
+**Where it loads:** tries repo root `placeholders.json`, then each **prefix folder** of the current page’s **`context.path`** (e.g. `/site/en/page` → `…/site/placeholders.json`, then `…/site/en/placeholders.json`). Uses the first response that has a usable **`language-switcher`** tab. Preview **`main--{repo}--{org}.aem.page`**, then **`daFetch`** on **`admin.da.live/source/{org}/{repo}/…/placeholders.json`** per candidate.
 
 ## Library registration
 
