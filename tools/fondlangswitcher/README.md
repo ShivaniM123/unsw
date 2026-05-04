@@ -18,10 +18,6 @@ Library dialog that opens **localized DA pages** using the **`language-switcher`
 
 See [setup library](https://docs.da.live/administrators/guides/setup-library#config-sheet).
 
-## UI
-
-Uses Spectrum tokens from `https://da.live/nx/public/sl/styles.css` plus `popup.css` (blue primary, gray surfaces).
-
 ## Files
 
 | File | Role |
