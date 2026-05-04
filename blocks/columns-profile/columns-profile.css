@@ -193,8 +193,6 @@
   .columns-profile .columns-profile-image-col img {
     width: 300px;
     height: auto;
-    width: 340px;
-    height: 340px;
     max-width: 100%;
     aspect-ratio: auto;
     object-fit: cover;
