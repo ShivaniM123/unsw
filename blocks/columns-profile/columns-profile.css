@@ -66,24 +66,35 @@
   line-height: 1.4;
 }
 
-/* Faculty "Engineering" — 32px gap after H1 */
-.columns-profile .columns-profile-text-col p:nth-of-type(2) {
+/* Qualifications — 16px grey body text */
+.columns-profile .columns-profile-text-col .profile-qualifications {
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  font-weight: 400;
+  color: var(--brand-grey);
+  margin: 0 0 20px;
+  padding-top: 0;
+  line-height: 1.75;
+}
+
+/* Faculty — 24px bold black heading */
+.columns-profile .columns-profile-text-col .profile-faculty {
   font-family: var(--heading-font-family);
   font-size: 20px;
   font-weight: 700;
   color: var(--brand-black);
-  margin: 0;
+  margin: 0 0 16px;
   padding-top: 32px;
   line-height: 1.5;
 }
 
-/* School "Civil and Environmental Engineering" — 16px gap after Faculty */
-.columns-profile .columns-profile-text-col p:nth-of-type(3) {
+/* School — 18px light grey */
+.columns-profile .columns-profile-text-col .profile-school {
   font-family: var(--heading-font-family);
   font-size: 18px;
   font-weight: 300;
   color: var(--brand-grey);
-  margin: 16px 0 0;
+  margin: 0 0 16px;
   line-height: 1.5;
 }
 
@@ -180,10 +191,10 @@
   }
 
   .columns-profile .columns-profile-image-col img {
-    width: 340px;
-    height: 340px;
+    width: 300px;
+    height: auto;
     max-width: 100%;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: auto;
     object-fit: cover;
   }
 
@@ -192,7 +203,7 @@
     margin-bottom: 16px;
   }
 
-  .columns-profile .columns-profile-text-col p:nth-of-type(2) {
+  .columns-profile .columns-profile-text-col .profile-faculty {
     font-size: 24px;
   }
 }

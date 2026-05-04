@@ -23,9 +23,28 @@ export default function decorate(block) {
     if (colDivs[1]) colDivs[1].classList.add('columns-profile-image-col');
   }
 
-  // --- Wrap "Follow me" heading + icon list into inline row ---
+  // --- Classify paragraphs after H1 based on count ---
   const textCol = block.querySelector('.columns-profile-text-col');
   if (textCol) {
+    const h1 = textCol.querySelector('h1');
+    if (h1) {
+      const afterH1 = [];
+      let el = h1.nextElementSibling;
+      while (el && el.tagName === 'P') {
+        afterH1.push(el);
+        el = el.nextElementSibling;
+      }
+      if (afterH1.length >= 3) {
+        afterH1[0].classList.add('profile-qualifications');
+        afterH1[1].classList.add('profile-faculty');
+        afterH1[2].classList.add('profile-school');
+      } else if (afterH1.length === 2) {
+        afterH1[0].classList.add('profile-faculty');
+        afterH1[1].classList.add('profile-school');
+      }
+    }
+
+    // --- Wrap "Follow me" heading + icon list into inline row ---
     const followH2 = textCol.querySelector('h2');
     const iconList = textCol.querySelector('ul');
     if (followH2 && iconList) {
