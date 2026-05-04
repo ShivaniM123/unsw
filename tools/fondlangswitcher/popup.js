@@ -112,6 +112,10 @@ function setUi(status, previewUrl, canOpen, actions, opts = {}) {
     showOpenAll && typeof opts.openAllClick === 'function' ? opts.openAllClick : null;
 }
 
+function setPanelTwoLanguagesMode(isTwo) {
+  document.querySelector('.ls-panel')?.classList.toggle('ls-panel-two-languages', Boolean(isTwo));
+}
+
 function canonLocale(segment, keys) {
   if (!segment || !keys?.length) return null;
   return keys.find((k) => k.toLowerCase() === segment.toLowerCase()) ?? null;
@@ -197,6 +201,7 @@ function resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc) {
 
 async function main() {
   const { context, actions } = await DA_SDK;
+  setPanelTwoLanguagesMode(false);
   setUi('Loading placeholders…', null, false, actions, { showLangRow: false });
 
   const pageUrl = contextToDaUrl({
@@ -264,6 +269,7 @@ async function main() {
   }
 
   const langKeys = detectLocaleColumnKeys(rows);
+  setPanelTwoLanguagesMode(langKeys.length === 2);
   if (langKeys.length === 0) {
     setUi(
       'No path columns found in language-switcher (values should start with /, e.g. en, fr).',
