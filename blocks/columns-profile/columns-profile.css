@@ -179,22 +179,22 @@
   }
 
   .columns-profile .columns-profile-text-col {
-    flex: 0 1 750px;
+    flex: 7;
     order: 0;
     min-height: 360px;
   }
 
   .columns-profile .columns-profile-image-col {
-    flex: 0 0 300px;
+    flex: 3;
     order: 1;
     justify-content: flex-end;
   }
 
   .columns-profile .columns-profile-image-col img {
     width: 300px;
-    height: 300px;
+    height: auto;
     max-width: 100%;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: auto;
     object-fit: cover;
   }
 
