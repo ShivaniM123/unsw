@@ -72,9 +72,12 @@ function setUi(status, previewUrl, canOpen, actions, opts = {}) {
   const showLangRow = opts.showLangRow === true;
   const showOpenAll = opts.showOpenAll === true;
   const openAllDisabled = opts.openAllDisabled === true;
+  const sourceUrlText = typeof opts.sourceUrl === 'string' ? opts.sourceUrl : '';
   const statusEl = document.getElementById('status');
   const previewEl = document.getElementById('preview');
   const previewBlock = document.getElementById('previewBlock');
+  const sourceBlock = document.getElementById('sourceBlock');
+  const sourceEl = document.getElementById('sourceUrl');
   const actionsEl = document.getElementById('actions');
   const langRow = document.getElementById('langRow');
   const openBtn = document.getElementById('open');
@@ -83,6 +86,14 @@ function setUi(status, previewUrl, canOpen, actions, opts = {}) {
   statusEl.textContent = status;
   statusEl.hidden = !String(status || '').trim() && Boolean(previewUrl);
   langRow.hidden = !showLangRow;
+
+  if (sourceUrlText.trim() && sourceBlock && sourceEl) {
+    sourceBlock.hidden = false;
+    sourceEl.value = sourceUrlText;
+  } else if (sourceBlock) {
+    sourceBlock.hidden = true;
+    if (sourceEl) sourceEl.value = '';
+  }
 
   if (previewUrl) {
     previewBlock.hidden = false;
@@ -202,7 +213,6 @@ function resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc) {
 async function main() {
   const { context, actions } = await DA_SDK;
   setPanelTwoLanguagesMode(false);
-  setUi('Loading placeholders…', null, false, actions, { showLangRow: false });
 
   const pageUrl = contextToDaUrl({
     org: context.org,
@@ -220,9 +230,12 @@ async function main() {
     return;
   }
 
+  const uiSrc = { sourceUrl: pageUrl };
+  setUi('Loading placeholders…', null, false, actions, { showLangRow: false, ...uiSrc });
+
   const parsed = parseCurrentPage(pageUrl);
   if (!parsed) {
-    setUi('Could not parse this page (need /org/repo/locale/… in context.path).', null, false, actions);
+    setUi('Could not parse this page (need /org/repo/locale/… in context.path).', null, false, actions, uiSrc);
     return;
   }
 
@@ -231,7 +244,7 @@ async function main() {
   const segments = [...parsed.segments];
 
   if (!segments.length) {
-    setUi('Path must include a locale folder after org/repo.', null, false, actions);
+    setUi('Path must include a locale folder after org/repo.', null, false, actions, uiSrc);
     return;
   }
 
@@ -264,7 +277,7 @@ async function main() {
       sitePath,
     );
   } catch (e) {
-    setUi(`Could not load placeholders.json (${e.message}).`, null, false, actions);
+    setUi(`Could not load placeholders.json (${e.message}).`, null, false, actions, uiSrc);
     return;
   }
 
@@ -276,6 +289,7 @@ async function main() {
       null,
       false,
       actions,
+      uiSrc,
     );
     return;
   }
@@ -287,6 +301,7 @@ async function main() {
       null,
       false,
       actions,
+      uiSrc,
     );
     return;
   }
@@ -304,6 +319,7 @@ async function main() {
         null,
         false,
         actions,
+        uiSrc,
       );
       return;
     }
@@ -312,6 +328,7 @@ async function main() {
     setUi('', dest, true, actions, {
       showLangRow: false,
       openPrimaryLabel: primaryLabelSingleTarget(only),
+      ...uiSrc,
     });
     return;
   }
@@ -323,6 +340,7 @@ async function main() {
       null,
       false,
       actions,
+      uiSrc,
     );
     return;
   }
@@ -367,6 +385,7 @@ async function main() {
         openDisabled: true,
         openPrimaryLabel: PRIMARY_LABEL_WITH_PICKER,
         ...openAllOpts(),
+        ...uiSrc,
       });
       return;
     }
@@ -381,6 +400,7 @@ async function main() {
         ? PRIMARY_LABEL_WITH_PICKER
         : primaryLabelSingleTarget(toLoc),
       ...openAllOpts(),
+      ...uiSrc,
     });
   };
 
