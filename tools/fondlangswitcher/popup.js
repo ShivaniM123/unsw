@@ -90,7 +90,7 @@ function setUi(status, previewUrl, canOpen, actions, opts = {}) {
   const previewEl = document.getElementById('preview');
   const previewBlock = document.getElementById('previewBlock');
   const sourceBlock = document.getElementById('sourceBlock');
-  const sourceEl = sourceBlock?.querySelector?.('.preview-url-input');
+  const sourceEl = document.getElementById('da-source-url-field');
   const actionsEl = document.getElementById('actions');
   const langRow = document.getElementById('langRow');
   const openBtn = document.getElementById('open');
@@ -102,10 +102,10 @@ function setUi(status, previewUrl, canOpen, actions, opts = {}) {
 
   if (sourceUrlText && sourceBlock && sourceEl) {
     sourceBlock.hidden = false;
-    sourceEl.value = sourceUrlText;
+    sourceEl.textContent = sourceUrlText;
   } else if (sourceBlock) {
     sourceBlock.hidden = true;
-    if (sourceEl) sourceEl.value = '';
+    if (sourceEl) sourceEl.textContent = '';
   }
 
   if (previewUrl) {
