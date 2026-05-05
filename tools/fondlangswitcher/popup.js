@@ -70,13 +70,22 @@ function writeCache(cacheKey, rows, ttlMs) {
   }
 }
 
+/** String for UI — `contextToDaUrl` returns a `URL`, not a string. */
+function normalizeDisplayUrl(u) {
+  if (u == null || u === '') return '';
+  if (typeof u === 'string') return u.trim();
+  if (typeof u === 'object' && typeof u.href === 'string') return u.href.trim();
+  return String(u).trim();
+}
+
 function setUi(status, previewUrl, canOpen, actions, opts = {}) {
   const { openDisabled = false } = opts;
   const showLangRow = opts.showLangRow === true;
   const showOpenAll = opts.showOpenAll === true;
   const openAllDisabled = opts.openAllDisabled === true;
-  const explicitSource = typeof opts.sourceUrl === 'string' ? opts.sourceUrl.trim() : '';
-  const sourceUrlText = explicitSource || resolvedDaPageUrl.trim();
+  const explicitSource = normalizeDisplayUrl(opts.sourceUrl);
+  const resolvedStr = normalizeDisplayUrl(resolvedDaPageUrl);
+  const sourceUrlText = explicitSource || resolvedStr;
   const statusEl = document.getElementById('status');
   const previewEl = document.getElementById('preview');
   const previewBlock = document.getElementById('previewBlock');
@@ -235,8 +244,9 @@ async function main() {
     return;
   }
 
-  resolvedDaPageUrl = pageUrl;
-  const uiSrc = { sourceUrl: pageUrl };
+  const pageHref = pageUrl.href;
+  resolvedDaPageUrl = pageHref;
+  const uiSrc = { sourceUrl: pageHref };
   setUi('Loading placeholders…', null, false, actions, { showLangRow: false, ...uiSrc });
 
   const parsed = parseCurrentPage(pageUrl);
