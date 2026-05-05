@@ -79,26 +79,17 @@ function normalizeDisplayUrl(u) {
 }
 
 /**
- * Open one or more URLs each in its own tab/window (never reuses the same named window).
- * Uses `window.top` when available so behavior matches library iframe + multi-tab expectations.
+ * Open one or more URLs in new tabs (`_blank`). Uses the iframe’s `window.open` only — calling
+ * `window.top.open` can throw (cross-origin parent) or fail in sandboxed embeds and break clicks.
  * @param {string[]} urls
  */
 function openUrlsInNewTabs(urls) {
   const list = urls.filter(Boolean);
   if (!list.length) return;
 
-  let openerWin = window;
-  try {
-    if (window.top && window.top !== window) {
-      openerWin = window.top;
-    }
-  } catch {
-    /* cross-origin top — stay on window */
-  }
-
-  list.forEach((href, i) => {
-    const winName = `da-lang-hopper-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 10)}`;
-    openerWin.open(href, winName, 'noopener,noreferrer');
+  list.forEach((href) => {
+    const url = typeof href === 'string' ? href : String(href);
+    window.open(url, '_blank', 'noopener,noreferrer');
   });
 }
 
