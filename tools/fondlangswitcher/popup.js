@@ -78,6 +78,30 @@ function normalizeDisplayUrl(u) {
   return String(u).trim();
 }
 
+/**
+ * Open one or more URLs each in its own tab/window (never reuses the same named window).
+ * Uses `window.top` when available so behavior matches library iframe + multi-tab expectations.
+ * @param {string[]} urls
+ */
+function openUrlsInNewTabs(urls) {
+  const list = urls.filter(Boolean);
+  if (!list.length) return;
+
+  let openerWin = window;
+  try {
+    if (window.top && window.top !== window) {
+      openerWin = window.top;
+    }
+  } catch {
+    /* cross-origin top — stay on window */
+  }
+
+  list.forEach((href, i) => {
+    const winName = `da-lang-hopper-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 10)}`;
+    openerWin.open(href, winName, 'noopener,noreferrer');
+  });
+}
+
 function setUi(status, previewUrl, canOpen, actions, opts = {}) {
   const { openDisabled = false } = opts;
   const showLangRow = opts.showLangRow === true;
@@ -124,9 +148,11 @@ function setUi(status, previewUrl, canOpen, actions, opts = {}) {
       : PRIMARY_LABEL_WITH_PICKER;
   openBtn.onclick = () => {
     if (!previewUrl) return;
-    window.open(previewUrl, '_blank', 'noopener,noreferrer');
+    openUrlsInNewTabs([previewUrl]);
     if (typeof actions?.closeLibrary === 'function') {
-      actions.closeLibrary();
+      window.setTimeout(() => {
+        actions.closeLibrary();
+      }, 300);
     }
   };
 
@@ -177,7 +203,7 @@ function findLocaleSegmentIndex(segments, langKeys) {
   return -1;
 }
 
-/** Keep folders before locale + tail from resolved `/lang/...`. */
+/** Keep folders before locale + tail from resolved `/lang/…`. */
 function mergeResolvedSegments(locIndex, segments, resolvedPath) {
   const tail = pathnameToSegments(resolvedPath);
   return [...segments.slice(0, locIndex), ...tail];
@@ -380,16 +406,16 @@ async function main() {
       const newSegments = mergeResolvedSegments(locIndex, segments, resolvedPath);
       urls.push(buildDest(parsed, org, repo, newSegments, useBranch, tier, target, daView));
     }
-    for (const u of urls) {
-      window.open(u, '_blank', 'noopener,noreferrer');
-    }
+    openUrlsInNewTabs(urls);
     if (urls.length && typeof actions?.closeLibrary === 'function') {
-      actions.closeLibrary();
+      window.setTimeout(() => {
+        actions.closeLibrary();
+      }, 300);
     }
   }
 
   const openAllOpts = () => ({
-    showOpenAll: langKeys.length > 2,
+    showOpenAll: langKeys.length > 1,
     openAllDisabled: countResolvableOtherLocales() === 0,
     openAllClick: openAllLanguagePages,
   });
