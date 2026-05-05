@@ -19,6 +19,9 @@ import {
 
 const PRIMARY_LABEL_WITH_PICKER = 'Open page for selected language';
 
+/** Current document URL from `contextToDaUrl` — fallback so Source URL shows even if `opts.sourceUrl` is omitted. */
+let resolvedDaPageUrl = '';
+
 /** @param {string} targetLocale locale column id (e.g. fr, zh-cn) */
 function primaryLabelSingleTarget(targetLocale) {
   return `Open page in ${targetLocale}`;
@@ -72,12 +75,13 @@ function setUi(status, previewUrl, canOpen, actions, opts = {}) {
   const showLangRow = opts.showLangRow === true;
   const showOpenAll = opts.showOpenAll === true;
   const openAllDisabled = opts.openAllDisabled === true;
-  const sourceUrlText = typeof opts.sourceUrl === 'string' ? opts.sourceUrl : '';
+  const explicitSource = typeof opts.sourceUrl === 'string' ? opts.sourceUrl.trim() : '';
+  const sourceUrlText = explicitSource || resolvedDaPageUrl.trim();
   const statusEl = document.getElementById('status');
   const previewEl = document.getElementById('preview');
   const previewBlock = document.getElementById('previewBlock');
   const sourceBlock = document.getElementById('sourceBlock');
-  const sourceEl = document.getElementById('sourceUrl');
+  const sourceEl = sourceBlock?.querySelector?.('.preview-url-input');
   const actionsEl = document.getElementById('actions');
   const langRow = document.getElementById('langRow');
   const openBtn = document.getElementById('open');
@@ -87,7 +91,7 @@ function setUi(status, previewUrl, canOpen, actions, opts = {}) {
   statusEl.hidden = !String(status || '').trim() && Boolean(previewUrl);
   langRow.hidden = !showLangRow;
 
-  if (sourceUrlText.trim() && sourceBlock && sourceEl) {
+  if (sourceUrlText && sourceBlock && sourceEl) {
     sourceBlock.hidden = false;
     sourceEl.value = sourceUrlText;
   } else if (sourceBlock) {
@@ -221,6 +225,7 @@ async function main() {
     view: pickDaView(context),
   });
   if (!pageUrl) {
+    resolvedDaPageUrl = '';
     setUi(
       'Missing page context (org, repo, path). Open this tool from the Library while a document page is open.',
       null,
@@ -230,6 +235,7 @@ async function main() {
     return;
   }
 
+  resolvedDaPageUrl = pageUrl;
   const uiSrc = { sourceUrl: pageUrl };
   setUi('Loading placeholders…', null, false, actions, { showLangRow: false, ...uiSrc });
 

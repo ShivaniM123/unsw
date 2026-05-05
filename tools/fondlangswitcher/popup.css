@@ -86,7 +86,7 @@ body {
   gap: 0;
   padding: 0;
   background: var(--surface);
-  border-bottom: 4px solid var(--accent-structural);
+  border-bottom: 2px solid var(--border-quiet);
 }
 
 .app-header-accent {
@@ -284,36 +284,24 @@ body {
   transform: scale(0.995);
 }
 
-/* Primary: DA-style blue; secondary: neutral outline */
-.btn-primary {
-  color: black;
+/* Primary + “Open all language pages”: same DA blue fill and structural accent hover */
+.btn-primary,
+.btn-secondary {
+  color: #fff;
+  background-color: var(--s2-blue-900, #0265dc);
+  border-color: var(--s2-blue-900, #0265dc);
 }
 
-.btn-primary:hover:not(:disabled) {
+.btn-primary:hover:not(:disabled),
+.btn-secondary:hover:not(:disabled) {
   background-color: var(--accent-structural);
   border-color: var(--accent-structural);
   color: #fff;
 }
 
-.btn-primary:active:not(:disabled) {
-  filter: brightness(0.94);
-}
-
-.btn-secondary {
-  color: var(--text);
-  background-color: var(--surface);
-  border-color: var(--border-default);
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background-color: var(--surface-raised);
-  border-color: var(--accent-structural);
-  color: var(--accent-structural);
-}
-
+.btn-primary:active:not(:disabled),
 .btn-secondary:active:not(:disabled) {
-  background-color: var(--surface-sunken);
-  border-color: var(--text-muted);
+  filter: brightness(0.94);
 }
 
 .btn-error {
