@@ -220,25 +220,6 @@ body {
   background: var(--surface-sunken);
 }
 
-/* Read-only field; matches Destination URL block */
-.preview-url-input {
-  display: block;
-  width: 100%;
-  margin: 0;
-  padding: 8px 14px 12px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  line-height: 1.55;
-  color: var(--text-secondary);
-  overflow-wrap: anywhere;
-  word-break: normal;
-  background: var(--surface-sunken);
-  border: none;
-  border-radius: 0;
-  outline: none;
-  cursor: default;
-}
-
 .actions-panel {
   display: flex;
   flex-direction: column;
@@ -287,9 +268,8 @@ body {
 /* Primary + “Open all language pages”: same DA blue fill and structural accent hover */
 .btn-primary,
 .btn-secondary {
-  color: #fff;
-  background-color: var(--s2-blue-900, #0265dc);
-  border-color: var(--s2-blue-900, #0265dc);
+  color: black;
+ 
 }
 
 .btn-primary:hover:not(:disabled),
