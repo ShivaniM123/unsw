@@ -406,7 +406,7 @@ async function main() {
   }
 
   const openAllOpts = () => ({
-    showOpenAll: langKeys.length > 1,
+    showOpenAll: langKeys.length > 2,
     openAllDisabled: countResolvableOtherLocales() === 0,
     openAllClick: openAllLanguagePages,
   });

@@ -7,7 +7,7 @@ A library dialog for Adobe Document Authoring (DA) that switches between **local
 - **Sheet-driven languages**: Columns such as `en`, `fr`, `ko` come from the loaded `placeholders.json`; add a column and `/…` path values to support a new locale folder.
 - **Smart path resolution**: Uses `language-switcher` rows first (longest matching base wins), then falls back to swapping the locale segment and keeping the same slug suffix when no row matches.
 - **Source and destination URLs**: Shows the current document URL and the computed target URL with wrapping for long paths.
-- **Open one or all**: Primary button opens the selected language in a **new tab** (same path as “Open all”). **Open all language pages** appears whenever there is **more than one** locale column so every other locale opens in its **own** tab.
+- **Open one or all**: Primary button opens the selected language in a **new tab**. **Open all language pages** appears only when there are **three or more** locale columns (so there is more than one “other” language to open at once). With exactly **two** languages, use the primary button—the extra control would only duplicate that single jump.
 - **Library context**: Reads DA SDK `context` (`org`, `repo` / `site`, `path`, `view`); if `path` is missing in the iframe, falls back to hash segments after `org/repo`.
 - **Fetches placeholders**: Preview host (`main--{repo}--{org}.aem.page`), then optional `daFetch` to `admin.da.live/source/.../placeholders.json` per candidate folder.
 
