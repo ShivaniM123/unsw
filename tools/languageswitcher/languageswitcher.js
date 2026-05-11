@@ -197,16 +197,13 @@ function buildDest(parsed, org, repo, newSegments, useBranch, tier, target, daVi
 }
 
 function resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc) {
-  return (
-    resolvePathWithRows(rows, fromLoc, toLoc, afterLoc) ||
-    `/${toLoc}${
-      typeof afterLoc === 'string' && afterLoc.length
-        ? afterLoc.startsWith('/')
-          ? afterLoc
-          : `/${afterLoc.replace(/^\//, '')}`
-        : ''
-    }`
-  );
+  const fromSheet = resolvePathWithRows(rows, fromLoc, toLoc, afterLoc);
+  if (fromSheet) return fromSheet;
+  let rest = '';
+  if (typeof afterLoc === 'string' && afterLoc.length > 0) {
+    rest = afterLoc.startsWith('/') ? afterLoc : `/${afterLoc.replace(/^\//, '')}`;
+  }
+  return `/${toLoc}${rest}`;
 }
 
 function resolveSitePath(contextPath, org, repo, segments) {
@@ -247,8 +244,9 @@ async function main() {
 
   resolvedDaPageUrl = pageUrl.href;
   const uiSrc = { sourceUrl: pageUrl.href };
-  const show = (status, previewUrl, canOpen, extra = {}) =>
-    setUi(ui, status, previewUrl, canOpen, actions, { ...uiSrc, ...extra });
+  const show = (status, previewUrl, canOpen, extra = {}) => {
+    return setUi(ui, status, previewUrl, canOpen, actions, { ...uiSrc, ...extra });
+  };
 
   show('Loading placeholders…', null, false, { showLangRow: false });
 
@@ -345,8 +343,8 @@ async function main() {
     return pathCache.get(k);
   };
 
-  const urlForLocale = (toLoc) =>
-    buildDest(
+  const urlForLocale = (toLoc) => {
+    return buildDest(
       parsed,
       org,
       repo,
@@ -356,6 +354,7 @@ async function main() {
       target,
       daView,
     );
+  };
 
   const openAllOpts = () => ({
     showOpenAll: langKeys.length > 2,
