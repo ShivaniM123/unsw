@@ -382,6 +382,8 @@ main .section.yellow-accent > div {
   pointer-events: none;
 }
 
+/* Staff pages: polygon (default) — large shape behind profile */
+
 /* Mobile */
 .background-shape-container svg {
   fill: var(--brand-yellow);
@@ -425,10 +427,11 @@ body:has(.background-shape-container) {
   background-color: transparent;
 }
 
-/* Profile pages: transparent backgrounds so yellow shape shows through */
+/* Profile/News pages: transparent backgrounds so yellow shape shows through */
 body:has(.background-shape-container) header .nav-wrapper,
 body:has(.background-shape-container) main .section.breadcrumb-container,
-body:has(.background-shape-container) main .section.columns-profile-container {
+body:has(.background-shape-container) main .section.columns-profile-container,
+body:has(.background-shape-container) main .section.columns-container {
   background-color: transparent;
 }
 
@@ -440,5 +443,10 @@ body:has(.background-shape-container) header nav {
 body:has(.background-shape-container) header .nav-brand,
 body:has(.background-shape-container) header .nav-sections {
   background-color: var(--brand-white);
+}
+
+/* News pages: container clips polygon at hero section boundary (~700px on original) */
+body:has(.columns-container) .background-shape-container {
+  height: 700px;
 }
 

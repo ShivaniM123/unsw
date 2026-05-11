@@ -40,14 +40,23 @@ export default async function decorate(block) {
   ol.append(homeLi);
 
   // Middle crumbs from path segments (all except last)
-  for (let i = 0; i < segments.length - 1; i += 1) {
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-    a.href = `/${segments.slice(0, i + 1).join('/')}`;
-    a.textContent = formatSegment(segments[i]);
-    li.append(a);
-    addSeparator(li);
-    ol.append(li);
+  // If more than 2 middle segments, collapse into "..."
+  const middleSegments = segments.slice(0, -1);
+  if (middleSegments.length > 2) {
+    const ellipsisLi = document.createElement('li');
+    ellipsisLi.textContent = '...';
+    addSeparator(ellipsisLi);
+    ol.append(ellipsisLi);
+  } else {
+    for (let i = 0; i < middleSegments.length; i += 1) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = `/${segments.slice(0, i + 1).join('/')}`;
+      a.textContent = formatSegment(middleSegments[i]);
+      li.append(a);
+      addSeparator(li);
+      ol.append(li);
+    }
   }
 
   // Last crumb (current page - no link)
