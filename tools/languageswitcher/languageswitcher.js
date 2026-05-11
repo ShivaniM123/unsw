@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unresolved, max-len, operator-linebreak, object-curly-newline */
-/* eslint-disable no-restricted-syntax, no-continue, prefer-destructuring */
+/* eslint-disable no-restricted-syntax, no-continue, prefer-destructuring, no-console */
 import DA_SDK from 'https://da.live/nx/utils/sdk.js';
 import {
   parseCurrentPage,
@@ -7,7 +7,7 @@ import {
   buildDaHashUrl,
   pathnameToSegments,
   contextToDaUrl,
-} from './shared.js';
+} from './locale-url-helper.js';
 import {
   fetchLanguageSwitcherRows,
   resolvePathWithRows,
@@ -68,7 +68,7 @@ function writeCache(key, rows, ttlMs) {
   try {
     sessionStorage.setItem(key, JSON.stringify({ rows, expires: Date.now() + ttlMs }));
   } catch {
-    /* ignore */
+    /* sessionStorage unavailable */
   }
 }
 
@@ -399,7 +399,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  // eslint-disable-next-line no-console
   console.error(err);
   const el = document.getElementById('status');
   if (el) {
