@@ -10,29 +10,29 @@ Language Switcher is for same-page, different-language navigation. It helps auth
 
 ## Features
 
-1. **🌐 Automatic Locale Detection**
+1. **Automatic Locale Detection**
   * Detects the current language (like en, fr) directly from the page URL.
     This helps the plugin understand which version of the page you’re currently on.
 
-2. **🔍 Smart Path Resolution**
+2. **Smart Path Resolution**
   * Matches the current page path with entries in placeholders.json.
     Finds the correct equivalent page in the selected language automatically.
 
-3. **📂 Language Picker UI**
+3. **Language Picker UI**
   * Provides a dropdown where users can select the target language. 
     Makes switching languages easy without editing URLs manually.
 
-4. **🌍 Open Selected/All Languages**
+4. **Open Selected/All Languages**
   * Selected Langauge Page: Opens the same page in the language chosen by the user.
     All Language Pages: Opens all available language versions of the current page at once.
 
-5. **🔁 Intelligent Fallback Navigation**
+5. **Intelligent Fallback Navigation**
   * If no mapping is found in placeholders.json, the plugin falls back to updating only the locale in the URL while preserving the existing path.
 
 
 ## How to Use
 
-1. Add the plugin to your DA tools directory (already present as tools/languageswitcher/).
+1. Add the plugin under `tools/languageswitcher/` (`languageswitcher.html`, `languageswitcher.js`, `languageswitcher.css`, `placeholders.js`, `locale-url-helper.js`, optional `icons/`).
 2. A published **`placeholders.json`** in repo that includes a **`language-switcher`** sheet. Example:
 
 ![Example UI:](placeholders.png)
@@ -53,7 +53,7 @@ tools/languageswitcher/
 ├── languageswitcher.js     # Core logic (UI + navigation handling)
 ├── languageswitcher.css    # Layout and styling
 ├── placeholders.js         # Fetch placeholders.json, Implements the core language resolution logic.
-├── shared.js               # Shared utilities (DA / preview URL builders, helpers) 
+├── locale-url-helper.js    # Shared utilities (DA / preview URL builders, helpers) 
 ├── icons/
 │   └── language-icon.svg   # library icon
 └── README.md               # Documentation

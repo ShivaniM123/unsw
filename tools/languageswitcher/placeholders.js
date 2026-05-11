@@ -1,10 +1,5 @@
 /* eslint-disable import/no-unresolved, max-len, no-restricted-syntax, no-continue */
 
-/**
- * Reads multi-sheet `placeholders.json` and the `language-switcher` tab:
- * rows with columns named by locale (e.g. en, fr) mapping path-without-locale.
- */
-
 const DEFAULT_SHEET = 'language-switcher';
 
 function normalizeSheetPath(p) {
@@ -16,17 +11,11 @@ function normalizeSheetPath(p) {
   return s;
 }
 
-/** @param {string[]} segments [locale, ...rest] */
 export function pathAfterLocale(segments) {
   if (segments.length < 2) return '';
   return normalizeSheetPath(`/${segments.slice(1).join('/')}`);
 }
 
-/**
- * @param {unknown} json
- * @param {string} sheetName
- * @returns {{ rows: Record<string, string>[] }}
- */
 export function extractLanguageSwitcherRows(json, sheetName) {
   if (!json || typeof json !== 'object') return { rows: [] };
 
@@ -42,10 +31,6 @@ export function extractLanguageSwitcherRows(json, sheetName) {
   return { rows: [] };
 }
 
-/**
- * Column names in language-switcher that hold path strings (e.g. en, fr, zh-cn).
- * Uses any row that has a non-empty string value starting with "/".
- */
 export function detectLocaleColumnKeys(rows) {
   const keys = new Set();
   for (const row of rows) {
@@ -59,14 +44,6 @@ export function detectLocaleColumnKeys(rows) {
   return [...keys].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 }
 
-/**
- * Match current path (without leading locale) to a row; build full pathname with target locale.
- * @param {Record<string, string>[]} rows
- * @param {string} fromLoc
- * @param {string} toLoc
- * @param {string} afterLocalePath normalized path after locale, e.g. /fondation-pour-les-arbres-news
- * @returns {string | null} pathname starting with /{toLoc}/...
- */
 export function resolvePathWithRows(rows, fromLoc, toLoc, afterLocalePath) {
   const p = normalizeSheetPath(afterLocalePath);
   const fromKey = fromLoc;
@@ -93,9 +70,6 @@ export function resolvePathWithRows(rows, fromLoc, toLoc, afterLocalePath) {
   return null;
 }
 
-/**
- * @param {string} directoryPrefix path under repo (no leading/trailing slash), or ''
- */
 export function buildPlaceholdersUrl(branch, org, repo, tier, directoryPrefix = '') {
   const domain = tier === 'live' ? 'aem.live' : 'aem.page';
   const base = `https://${branch}--${repo}--${org}.${domain}`;
@@ -105,12 +79,6 @@ export function buildPlaceholdersUrl(branch, org, repo, tier, directoryPrefix = 
 
 const ADMIN_PLACEHOLDERS = 'https://admin.da.live/source';
 
-/**
- * Repo-relative directory prefixes to try for `placeholders.json`, from `context.path`.
- * Omits the last segment so a page slug is not used as a folder.
- * @param {string} [sitePath] e.g. /arbres-fondationsaudemarspiguet/en/my-page
- * @returns {string[]}
- */
 export function buildPlaceholderDirectoryCandidates(sitePath) {
   const candidates = [''];
   if (!sitePath || typeof sitePath !== 'string') return candidates;
@@ -130,15 +98,6 @@ function sheetHasLanguageColumns(json, sheetName) {
   return detectLocaleColumnKeys(rows).length > 0;
 }
 
-/**
- * @param {string} branch
- * @param {string} org
- * @param {string} repo
- * @param {string} tier
- * @param {string} [sheetName]
- * @param {object | null} [actions] DA SDK actions (`daFetch`) when preview fetch fails.
- * @param {string} [sitePath] DA `context.path` — used to probe nested `…/placeholders.json`
- */
 export async function fetchLanguageSwitcherRows(
   branch,
   org,
@@ -148,7 +107,7 @@ export async function fetchLanguageSwitcherRows(
   actions = null,
   sitePath = '',
 ) {
-  /* eslint-disable no-await-in-loop -- sequential candidate URLs */
+  /* eslint-disable no-await-in-loop */
   const parseRows = async (resp, sourceLabel) => {
     if (!resp.ok) throw new Error(`${sourceLabel} HTTP ${resp.status}`);
     const json = await resp.json();

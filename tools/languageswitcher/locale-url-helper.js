@@ -1,15 +1,8 @@
 /* eslint-disable import/no-unresolved, max-len, object-curly-newline */
 
-/**
- * URL parsing aligned with da-live `pathDetails.js`:
- * - Hash path: #/org/repo/rest/of/path
- * - Preview: https://main--{repo}--{org}.aem.page|live/...
- */
-
 const DA_HOSTS = ['da.live', 'www.da.live', 'stage.da.live'];
 const DA_VIEWS = new Set(['edit', 'sheet', 'browse', 'config', 'media']);
 
-/** @param {string} hash */
 export function extractHashPath(hash) {
   if (!hash) return null;
   const parts = hash.split('#');
@@ -17,10 +10,6 @@ export function extractHashPath(hash) {
   return hashPath || null;
 }
 
-/**
- * @param {URL} url
- * @returns {{ kind: 'da', view: string, org: string, repo: string, segments: string[] } | { kind: 'aem', branch: string, org: string, repo: string, segments: string[] } | null}
- */
 export function parseCurrentPage(url) {
   const host = url.hostname.toLowerCase();
 
@@ -56,17 +45,10 @@ export function buildDaHashUrl(view, org, repo, pathSegments) {
   return `https://da.live/${view}#/${org}/${repo}${rest}`;
 }
 
-/** @param {string} pathname must start with / */
 export function pathnameToSegments(pathname) {
   return pathname.replace(/^\//, '').split('/').filter(Boolean);
 }
 
-/**
- * Build a da.live URL from DA SDK context for parseCurrentPage().
- * context.path is site-relative (e.g. /en/staff/page), not /org/repo/en/… — see jump-links / meta-id tools.
- * @param {{ path?: string, view?: string, org?: string, repo?: string, site?: string }} context
- * @returns {URL | null}
- */
 export function contextToDaUrl(context) {
   const repo = context?.repo || context?.site;
   if (!context?.path || !context.org || !repo) return null;
@@ -74,9 +56,7 @@ export function contextToDaUrl(context) {
   const view = viewRaw.replace(/^\//, '').split('/')[0] || 'edit';
   let path = context.path.startsWith('/') ? context.path : `/${context.path}`;
   const prefix = `/${context.org}/${repo}`;
-  if (path === prefix || path.startsWith(`${prefix}/`)) {
-    /* already full hash path */
-  } else {
+  if (path !== prefix && !path.startsWith(`${prefix}/`)) {
     path = `${prefix}${path}`;
   }
   return new URL(`https://da.live/${view}#${path}`);
