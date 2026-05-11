@@ -1,7 +1,7 @@
 {
-  "type": "da",
-  "contentHostUrl": "https://content.da.live/shivanim123/unsw/",
+  "type": "doc",
   "libraryUrl": "https://main--sta-boilerplate--aemdemos.aem.page/tools/sidekick/library.json",
+  "contentHostUrl": "https://content.da.live/shivanim123/unsw/",
   "previewOrg": "shivanim123",
   "previewSite": "unsw"
 }
