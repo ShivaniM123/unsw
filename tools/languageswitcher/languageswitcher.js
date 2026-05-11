@@ -1,5 +1,4 @@
-/* eslint-disable import/no-unresolved, max-len */
-/* eslint-disable operator-linebreak, object-curly-newline */
+/* eslint-disable import/no-unresolved, max-len, operator-linebreak, object-curly-newline */
 /* eslint-disable no-restricted-syntax, no-continue, prefer-destructuring */
 import DA_SDK from 'https://da.live/nx/utils/sdk.js';
 import {
@@ -18,16 +17,8 @@ import {
 } from './placeholders.js';
 
 const PRIMARY_LABEL_WITH_PICKER = 'Open page for selected language';
-
-/** Current document URL from `contextToDaUrl` — fallback so Source URL shows even if `opts.sourceUrl` is omitted. */
 let resolvedDaPageUrl = '';
 
-/** @param {string} targetLocale locale column id (e.g. fr, zh-cn) */
-function primaryLabelSingleTarget(targetLocale) {
-  return `Open page in ${targetLocale}`;
-}
-
-/** Sheet name, branch, preview tier, etc. Language list comes from placeholders `language-switcher`. */
 const SETTINGS = {
   tier: 'page',
   branch: 'main',
@@ -41,15 +32,29 @@ const DA_VIEWS = new Set(['edit', 'sheet', 'browse', 'config', 'media']);
 
 function pickDaView(context) {
   const v = context?.view;
-  if (typeof v === 'string' && DA_VIEWS.has(v.replace(/^\//, '').split('/')[0])) {
-    return v.replace(/^\//, '').split('/')[0];
-  }
-  return SETTINGS.daView;
+  if (typeof v !== 'string') return SETTINGS.daView;
+  const head = v.replace(/^\//, '').split('/')[0];
+  return DA_VIEWS.has(head) ? head : SETTINGS.daView;
 }
 
-function readCache(cacheKey) {
+function getUi() {
+  return {
+    statusEl: document.getElementById('status'),
+    previewEl: document.getElementById('preview'),
+    previewBlock: document.getElementById('previewBlock'),
+    sourceBlock: document.getElementById('sourceBlock'),
+    sourceEl: document.getElementById('da-source-url-field'),
+    actionsEl: document.getElementById('actions'),
+    langRow: document.getElementById('langRow'),
+    langSelect: document.getElementById('langSelect'),
+    openBtn: document.getElementById('open'),
+    openAllBtn: document.getElementById('openAll'),
+  };
+}
+
+function readCache(key) {
   try {
-    const raw = sessionStorage.getItem(cacheKey);
+    const raw = sessionStorage.getItem(key);
     if (!raw) return null;
     const entry = JSON.parse(raw);
     if (entry?.expires > Date.now() && Array.isArray(entry.rows)) return entry.rows;
@@ -59,97 +64,72 @@ function readCache(cacheKey) {
   return null;
 }
 
-function writeCache(cacheKey, rows, ttlMs) {
+function writeCache(key, rows, ttlMs) {
   try {
-    sessionStorage.setItem(
-      cacheKey,
-      JSON.stringify({ rows, expires: Date.now() + ttlMs }),
-    );
+    sessionStorage.setItem(key, JSON.stringify({ rows, expires: Date.now() + ttlMs }));
   } catch {
     /* ignore */
   }
 }
 
-/** String for UI — `contextToDaUrl` returns a `URL`, not a string. */
-function normalizeDisplayUrl(u) {
+function displayUrl(u) {
   if (u == null || u === '') return '';
   if (typeof u === 'string') return u.trim();
   if (typeof u === 'object' && typeof u.href === 'string') return u.href.trim();
   return String(u).trim();
 }
 
-/**
- * Open one or more URLs in new tabs (`_blank`). Uses the iframe’s `window.open` only — calling
- * `window.top.open` can throw (cross-origin parent) or fail in sandboxed embeds and break clicks.
- * @param {string[]} urls
- */
 function openUrlsInNewTabs(urls) {
-  const list = urls.filter(Boolean);
-  if (!list.length) return;
-
-  list.forEach((href) => {
-    const url = typeof href === 'string' ? href : String(href);
-    window.open(url, '_blank', 'noopener,noreferrer');
+  urls.filter(Boolean).forEach((href) => {
+    window.open(typeof href === 'string' ? href : String(href), '_blank', 'noopener,noreferrer');
   });
 }
 
-function setUi(status, previewUrl, canOpen, actions, opts = {}) {
-  const { openDisabled = false } = opts;
+function scheduleCloseLibrary(actions) {
+  if (typeof actions?.closeLibrary === 'function') window.setTimeout(() => actions.closeLibrary(), 300);
+}
+
+function setUi(ui, status, previewUrl, canOpen, actions, opts = {}) {
   const showLangRow = opts.showLangRow === true;
   const showOpenAll = opts.showOpenAll === true;
-  const openAllDisabled = opts.openAllDisabled === true;
-  const explicitSource = normalizeDisplayUrl(opts.sourceUrl);
-  const resolvedStr = normalizeDisplayUrl(resolvedDaPageUrl);
-  const sourceUrlText = explicitSource || resolvedStr;
-  const statusEl = document.getElementById('status');
-  const previewEl = document.getElementById('preview');
-  const previewBlock = document.getElementById('previewBlock');
-  const sourceBlock = document.getElementById('sourceBlock');
-  const sourceEl = document.getElementById('da-source-url-field');
-  const actionsEl = document.getElementById('actions');
-  const langRow = document.getElementById('langRow');
-  const openBtn = document.getElementById('open');
-  const openAllBtn = document.getElementById('openAll');
+  const sourceUrlText = displayUrl(opts.sourceUrl) || displayUrl(resolvedDaPageUrl);
 
-  statusEl.textContent = status;
-  statusEl.hidden = !String(status || '').trim() && Boolean(previewUrl);
-  langRow.hidden = !showLangRow;
+  ui.statusEl.textContent = status;
+  ui.statusEl.hidden = !String(status || '').trim() && Boolean(previewUrl);
+  ui.langRow.hidden = !showLangRow;
 
-  if (sourceUrlText && sourceBlock && sourceEl) {
-    sourceBlock.hidden = false;
-    sourceEl.textContent = sourceUrlText;
-  } else if (sourceBlock) {
-    sourceBlock.hidden = true;
-    if (sourceEl) sourceEl.textContent = '';
+  if (sourceUrlText) {
+    ui.sourceBlock.hidden = false;
+    ui.sourceEl.textContent = sourceUrlText;
+  } else {
+    ui.sourceBlock.hidden = true;
+    ui.sourceEl.textContent = '';
   }
 
   if (previewUrl) {
-    previewBlock.hidden = false;
-    previewEl.textContent = previewUrl;
+    ui.previewBlock.hidden = false;
+    ui.previewEl.textContent = previewUrl;
   } else {
-    previewBlock.hidden = true;
+    ui.previewBlock.hidden = true;
+    ui.previewEl.textContent = '';
   }
 
-  actionsEl.hidden = !(canOpen || showOpenAll);
-  openBtn.hidden = !canOpen;
-  openBtn.disabled = !canOpen || openDisabled;
-  openBtn.textContent =
+  ui.actionsEl.hidden = !(canOpen || showOpenAll);
+  ui.openBtn.hidden = !canOpen;
+  ui.openBtn.disabled = !canOpen || opts.openDisabled === true;
+  ui.openBtn.textContent =
     typeof opts.openPrimaryLabel === 'string' && opts.openPrimaryLabel.trim()
       ? opts.openPrimaryLabel.trim()
       : PRIMARY_LABEL_WITH_PICKER;
-  openBtn.onclick = () => {
+  ui.openBtn.onclick = () => {
     if (!previewUrl) return;
     openUrlsInNewTabs([previewUrl]);
-    if (typeof actions?.closeLibrary === 'function') {
-      window.setTimeout(() => {
-        actions.closeLibrary();
-      }, 300);
-    }
+    scheduleCloseLibrary(actions);
   };
 
-  openAllBtn.hidden = !showOpenAll;
-  openAllBtn.disabled = openAllDisabled;
-  openAllBtn.onclick =
+  ui.openAllBtn.hidden = !showOpenAll;
+  ui.openAllBtn.disabled = false;
+  ui.openAllBtn.onclick =
     showOpenAll && typeof opts.openAllClick === 'function' ? opts.openAllClick : null;
 }
 
@@ -168,8 +148,7 @@ function cachePathKey(sitePath) {
 }
 
 async function loadPlaceholderRows(org, repo, branch, tier, sheetName, ttlMs, actions, sitePath) {
-  const pathKey = cachePathKey(sitePath);
-  const cacheKey = `ph:${org}:${repo}:${branch}:${tier}:${sheetName}:${pathKey}`;
+  const cacheKey = `ph:${org}:${repo}:${branch}:${tier}:${sheetName}:${cachePathKey(sitePath)}`;
   const cached = readCache(cacheKey);
   if (cached) return cached;
   const { rows } = await fetchLanguageSwitcherRows(
@@ -185,7 +164,6 @@ async function loadPlaceholderRows(org, repo, branch, tier, sheetName, ttlMs, ac
   return rows;
 }
 
-/** First segment that matches a language column (paths like …/site/en/page). */
 function findLocaleSegmentIndex(segments, langKeys) {
   const set = new Set(langKeys.map((k) => k.toLowerCase()));
   for (let i = 0; i < segments.length; i += 1) {
@@ -194,54 +172,58 @@ function findLocaleSegmentIndex(segments, langKeys) {
   return -1;
 }
 
-/** Keep folders before locale + tail from resolved `/lang/…`. */
 function mergeResolvedSegments(locIndex, segments, resolvedPath) {
-  const tail = pathnameToSegments(resolvedPath);
-  return [...segments.slice(0, locIndex), ...tail];
+  return [...segments.slice(0, locIndex), ...pathnameToSegments(resolvedPath)];
 }
 
-function fillLangSelect(keys, currentKey) {
-  const sel = document.getElementById('langSelect');
+function fillLangSelect(sel, keys, currentKey) {
   sel.replaceChildren();
   const others = keys.filter((k) => k.toLowerCase() !== currentKey.toLowerCase());
-  for (const k of others) {
+  others.forEach((k) => {
     const o = document.createElement('option');
     o.value = k;
     o.textContent = k;
     sel.appendChild(o);
-  }
+  });
   if (others.length) sel.value = others[0];
 }
 
 function buildDest(parsed, org, repo, newSegments, useBranch, tier, target, daView) {
-  const openOnDa = parsed.kind === 'da' || target === 'da-edit';
-  if (openOnDa) {
+  if (parsed.kind === 'da' || target === 'da-edit') {
     const view = parsed.kind === 'da' ? parsed.view : daView;
     return buildDaHashUrl(view, org, repo, newSegments);
   }
   return buildAemPreviewUrl(useBranch, org, repo, newSegments, tier);
 }
 
-/**
- * Prefer `language-switcher` row match; if none, swap locale and keep the same suffix
- * (e.g. /fr/newsletter → /en/newsletter). Add a sheet row when EN/FR slugs differ.
- */
 function resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc) {
-  const fromSheet = resolvePathWithRows(rows, fromLoc, toLoc, afterLoc);
-  if (fromSheet) return fromSheet;
-  let rest = '';
-  if (typeof afterLoc === 'string' && afterLoc.length > 0) {
-    if (afterLoc.startsWith('/')) {
-      rest = afterLoc;
-    } else {
-      rest = `/${afterLoc.replace(/^\//, '')}`;
-    }
+  return (
+    resolvePathWithRows(rows, fromLoc, toLoc, afterLoc) ||
+    `/${toLoc}${
+      typeof afterLoc === 'string' && afterLoc.length
+        ? afterLoc.startsWith('/')
+          ? afterLoc
+          : `/${afterLoc.replace(/^\//, '')}`
+        : ''
+    }`
+  );
+}
+
+function resolveSitePath(contextPath, org, repo, segments) {
+  let p = typeof contextPath === 'string' ? contextPath.trim() : '';
+  const prefix = `/${org}/${repo}`;
+  if (p === prefix || p.startsWith(`${prefix}/`)) {
+    p = p.slice(prefix.length);
+    if (p && !p.startsWith('/')) p = `/${p}`;
   }
-  return `/${toLoc}${rest}`;
+  if (!p && segments.length) p = `/${segments.join('/')}`;
+  if (p && !p.startsWith('/')) p = `/${p}`;
+  return p;
 }
 
 async function main() {
   const { context, actions } = await DA_SDK;
+  const ui = getUi();
   setPanelTwoLanguagesMode(false);
 
   const pageUrl = contextToDaUrl({
@@ -250,9 +232,11 @@ async function main() {
     path: context.path,
     view: pickDaView(context),
   });
+
   if (!pageUrl) {
     resolvedDaPageUrl = '';
     setUi(
+      ui,
       'Missing page context (org, repo, path). Open this tool from the Library while a document page is open.',
       null,
       false,
@@ -261,14 +245,16 @@ async function main() {
     return;
   }
 
-  const pageHref = pageUrl.href;
-  resolvedDaPageUrl = pageHref;
-  const uiSrc = { sourceUrl: pageHref };
-  setUi('Loading placeholders…', null, false, actions, { showLangRow: false, ...uiSrc });
+  resolvedDaPageUrl = pageUrl.href;
+  const uiSrc = { sourceUrl: pageUrl.href };
+  const show = (status, previewUrl, canOpen, extra = {}) =>
+    setUi(ui, status, previewUrl, canOpen, actions, { ...uiSrc, ...extra });
+
+  show('Loading placeholders…', null, false, { showLangRow: false });
 
   const parsed = parseCurrentPage(pageUrl);
   if (!parsed) {
-    setUi('Could not parse this page (need /org/repo/locale/… in context.path).', null, false, actions, uiSrc);
+    show('Could not parse this page (need /org/repo/locale/… in context.path).', null, false);
     return;
   }
 
@@ -277,25 +263,12 @@ async function main() {
   const segments = [...parsed.segments];
 
   if (!segments.length) {
-    setUi('Path must include a locale folder after org/repo.', null, false, actions, uiSrc);
+    show('Path must include a locale folder after org/repo.', null, false);
     return;
   }
 
   const useBranch = parsed.kind === 'aem' ? parsed.branch : branch;
-  /** Library iframe often omits `context.path`; hash segments are always after org/repo. */
-  const sitePath = (() => {
-    let p = typeof context.path === 'string' ? context.path.trim() : '';
-    const prefix = `/${org}/${repo}`;
-    if (p === prefix || p.startsWith(`${prefix}/`)) {
-      p = p.slice(prefix.length);
-      if (p && !p.startsWith('/')) p = `/${p}`;
-    }
-    if (!p && segments.length) {
-      p = `/${segments.join('/')}`;
-    }
-    if (p && !p.startsWith('/')) p = `/${p}`;
-    return p;
-  })();
+  const sitePath = resolveSitePath(context.path, org, repo, segments);
 
   let rows;
   try {
@@ -310,149 +283,125 @@ async function main() {
       sitePath,
     );
   } catch (e) {
-    setUi(`Could not load placeholders.json (${e.message}).`, null, false, actions, uiSrc);
+    show(`Could not load placeholders.json (${e.message}).`, null, false);
     return;
   }
 
   const langKeys = detectLocaleColumnKeys(rows);
   setPanelTwoLanguagesMode(langKeys.length === 2);
-  if (langKeys.length === 0) {
-    setUi(
+
+  if (!langKeys.length) {
+    show(
       'No path columns found in language-switcher (values should start with /, e.g. en, fr).',
       null,
       false,
-      actions,
-      uiSrc,
     );
     return;
   }
 
   const locIndex = findLocaleSegmentIndex(segments, langKeys);
   if (locIndex < 0) {
-    setUi(
-      `No folder in this path matches a language column (${langKeys.join(', ')}).`,
-      null,
-      false,
-      actions,
-      uiSrc,
-    );
+    show(`No folder in this path matches a language column (${langKeys.join(', ')}).`, null, false);
     return;
   }
+
   const urlSeg = segments[locIndex];
   const afterLoc = pathAfterLocale(segments.slice(locIndex));
-
   const showLangPicker = langKeys.length >= 3;
 
   if (langKeys.length === 1) {
-    document.getElementById('langRow').hidden = true;
+    ui.langRow.hidden = true;
     const [only] = langKeys;
     if (urlSeg.toLowerCase() === only.toLowerCase()) {
-      setUi(
+      show(
         `Already on ${only}. Add another language column to map paths, or open a page in a different locale folder.`,
         null,
         false,
-        actions,
-        uiSrc,
       );
       return;
     }
-    const newSegments = [...segments.slice(0, locIndex), only, ...segments.slice(locIndex + 1)];
-    const dest = buildDest(parsed, org, repo, newSegments, useBranch, tier, target, daView);
-    setUi('', dest, true, actions, {
+    const newSeg = [...segments.slice(0, locIndex), only, ...segments.slice(locIndex + 1)];
+    show('', buildDest(parsed, org, repo, newSeg, useBranch, tier, target, daView), true, {
       showLangRow: false,
-      openPrimaryLabel: primaryLabelSingleTarget(only),
-      ...uiSrc,
+      openPrimaryLabel: `Open page in ${only}`,
     });
     return;
   }
 
   const fromLoc = canonLocale(urlSeg, langKeys);
   if (!fromLoc) {
-    setUi(
+    show(
       `This page’s locale folder is "${urlSeg}" but placeholders only define: ${langKeys.join(', ')}.`,
       null,
       false,
-      actions,
-      uiSrc,
     );
     return;
   }
 
-  const sel = document.getElementById('langSelect');
+  const pathCache = new Map();
+  const getResolvedPath = (toLoc) => {
+    const k = toLoc.toLowerCase();
+    if (!pathCache.has(k)) pathCache.set(k, resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc));
+    return pathCache.get(k);
+  };
 
-  function countResolvableOtherLocales() {
-    let n = 0;
-    for (const toLoc of langKeys) {
-      if (toLoc.toLowerCase() === fromLoc.toLowerCase()) continue;
-      if (resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc)) n += 1;
-    }
-    return n;
-  }
-
-  function openAllLanguagePages() {
-    const urls = [];
-    for (const toLoc of langKeys) {
-      if (toLoc.toLowerCase() === fromLoc.toLowerCase()) continue;
-      const resolvedPath = resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc);
-      const newSegments = mergeResolvedSegments(locIndex, segments, resolvedPath);
-      urls.push(buildDest(parsed, org, repo, newSegments, useBranch, tier, target, daView));
-    }
-    openUrlsInNewTabs(urls);
-    if (urls.length && typeof actions?.closeLibrary === 'function') {
-      window.setTimeout(() => {
-        actions.closeLibrary();
-      }, 300);
-    }
-  }
+  const urlForLocale = (toLoc) =>
+    buildDest(
+      parsed,
+      org,
+      repo,
+      mergeResolvedSegments(locIndex, segments, getResolvedPath(toLoc)),
+      useBranch,
+      tier,
+      target,
+      daView,
+    );
 
   const openAllOpts = () => ({
     showOpenAll: langKeys.length > 2,
-    openAllDisabled: countResolvableOtherLocales() === 0,
-    openAllClick: openAllLanguagePages,
+    openAllClick: () => {
+      const urls = langKeys
+        .filter((to) => to.toLowerCase() !== fromLoc.toLowerCase())
+        .map(urlForLocale);
+      openUrlsInNewTabs(urls);
+      if (urls.length) scheduleCloseLibrary(actions);
+    },
   });
 
   const applyDestination = (toLoc) => {
     if (toLoc.toLowerCase() === fromLoc.toLowerCase()) {
-      setUi('Choose a language different from the current page.', null, true, actions, {
+      show('Choose a language different from the current page.', null, true, {
         showLangRow: showLangPicker,
         openDisabled: true,
         openPrimaryLabel: PRIMARY_LABEL_WITH_PICKER,
         ...openAllOpts(),
-        ...uiSrc,
       });
       return;
     }
-
-    const resolvedPath = resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc);
-    const newSegments = mergeResolvedSegments(locIndex, segments, resolvedPath);
-    const dest = buildDest(parsed, org, repo, newSegments, useBranch, tier, target, daView);
-    setUi('', dest, true, actions, {
+    show('', urlForLocale(toLoc), true, {
       showLangRow: showLangPicker,
-      openDisabled: false,
       openPrimaryLabel: showLangPicker
         ? PRIMARY_LABEL_WITH_PICKER
-        : primaryLabelSingleTarget(toLoc),
+        : `Open page in ${toLoc}`,
       ...openAllOpts(),
-      ...uiSrc,
     });
   };
 
   if (showLangPicker) {
-    fillLangSelect(langKeys, fromLoc);
-    sel.addEventListener('change', () => applyDestination(sel.value));
-    applyDestination(sel.value);
+    fillLangSelect(ui.langSelect, langKeys, fromLoc);
+    ui.langSelect.addEventListener('change', () => applyDestination(ui.langSelect.value));
+    applyDestination(ui.langSelect.value);
   } else {
-    const other = langKeys.find((k) => k.toLowerCase() !== fromLoc.toLowerCase());
-    applyDestination(other);
+    applyDestination(langKeys.find((k) => k.toLowerCase() !== fromLoc.toLowerCase()));
   }
 }
 
 main().catch((err) => {
   // eslint-disable-next-line no-console
   console.error(err);
-  const statusEl = document.getElementById('status');
-  if (statusEl) {
-    statusEl.textContent = `Error: ${err.message || String(err)}`;
-    statusEl.hidden = false;
+  const el = document.getElementById('status');
+  if (el) {
+    el.textContent = `Error: ${err.message || String(err)}`;
+    el.hidden = false;
   }
 });

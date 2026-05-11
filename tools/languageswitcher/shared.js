@@ -29,11 +29,7 @@ export function parseCurrentPage(url) {
     if (!DA_VIEWS.has(view)) return null;
     const hashPath = extractHashPath(url.hash);
     if (!hashPath || hashPath.startsWith('/old_hash') || hashPath.startsWith('/access_token')) return null;
-    const segments = hashPath
-      .replace(/^\//, '')
-      .split('/')
-      .map((s) => s.trim())
-      .filter(Boolean);
+    const segments = hashPath.replace(/^\//, '').split('/').filter(Boolean);
     if (segments.length < 3) return null;
     const [org, repo, ...rest] = segments;
     return { kind: 'da', view, org, repo, segments: rest };
