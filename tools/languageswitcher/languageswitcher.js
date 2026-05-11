@@ -244,9 +244,14 @@ async function main() {
 
   resolvedDaPageUrl = pageUrl.href;
   const uiSrc = { sourceUrl: pageUrl.href };
-  const show = (status, previewUrl, canOpen, extra = {}) => {
-    return setUi(ui, status, previewUrl, canOpen, actions, { ...uiSrc, ...extra });
-  };
+  const show = (status, previewUrl, canOpen, extra = {}) => setUi(
+    ui,
+    status,
+    previewUrl,
+    canOpen,
+    actions,
+    { ...uiSrc, ...extra },
+  );
 
   show('Loading placeholders…', null, false, { showLangRow: false });
 
@@ -343,18 +348,16 @@ async function main() {
     return pathCache.get(k);
   };
 
-  const urlForLocale = (toLoc) => {
-    return buildDest(
-      parsed,
-      org,
-      repo,
-      mergeResolvedSegments(locIndex, segments, getResolvedPath(toLoc)),
-      useBranch,
-      tier,
-      target,
-      daView,
-    );
-  };
+  const urlForLocale = (toLoc) => buildDest(
+    parsed,
+    org,
+    repo,
+    mergeResolvedSegments(locIndex, segments, getResolvedPath(toLoc)),
+    useBranch,
+    tier,
+    target,
+    daView,
+  );
 
   const openAllOpts = () => ({
     showOpenAll: langKeys.length > 2,
