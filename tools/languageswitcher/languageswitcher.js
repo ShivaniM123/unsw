@@ -72,6 +72,27 @@ function writeCache(key, rows, ttlMs) {
   }
 }
 
+function lastTargetKey(org, repo, fromLoc) {
+  return `ls:lastTarget:${org}:${repo}:${String(fromLoc).toLowerCase()}`;
+}
+
+function readLastTargetLocale(org, repo, fromLoc) {
+  try {
+    const v = sessionStorage.getItem(lastTargetKey(org, repo, fromLoc));
+    return v && typeof v === 'string' ? v.trim() : '';
+  } catch {
+    return '';
+  }
+}
+
+function writeLastTargetLocale(org, repo, fromLoc, toLoc) {
+  try {
+    sessionStorage.setItem(lastTargetKey(org, repo, fromLoc), toLoc);
+  } catch {
+    /* sessionStorage unavailable */
+  }
+}
+
 function displayUrl(u) {
   if (u == null || u === '') return '';
   if (typeof u === 'string') return u.trim();
@@ -176,7 +197,7 @@ function mergeResolvedSegments(locIndex, segments, resolvedPath) {
   return [...segments.slice(0, locIndex), ...pathnameToSegments(resolvedPath)];
 }
 
-function fillLangSelect(sel, keys, currentKey) {
+function fillLangSelect(sel, keys, currentKey, org, repo) {
   sel.replaceChildren();
   const others = keys.filter((k) => k.toLowerCase() !== currentKey.toLowerCase());
   others.forEach((k) => {
@@ -185,7 +206,12 @@ function fillLangSelect(sel, keys, currentKey) {
     o.textContent = k;
     sel.appendChild(o);
   });
-  if (others.length) sel.value = others[0];
+  if (!others.length) return;
+  const remembered = readLastTargetLocale(org, repo, currentKey);
+  const match = remembered
+    ? others.find((k) => k.toLowerCase() === remembered.toLowerCase())
+    : null;
+  sel.value = match || others[0];
 }
 
 function buildDest(parsed, org, repo, newSegments, useBranch, tier, target, daView) {
@@ -390,8 +416,12 @@ async function main() {
   };
 
   if (showLangPicker) {
-    fillLangSelect(ui.langSelect, langKeys, fromLoc);
-    ui.langSelect.addEventListener('change', () => applyDestination(ui.langSelect.value));
+    fillLangSelect(ui.langSelect, langKeys, fromLoc, org, repo);
+    ui.langSelect.addEventListener('change', () => {
+      const v = ui.langSelect.value;
+      writeLastTargetLocale(org, repo, fromLoc, v);
+      applyDestination(v);
+    });
     applyDestination(ui.langSelect.value);
   } else {
     applyDestination(langKeys.find((k) => k.toLowerCase() !== fromLoc.toLowerCase()));
