@@ -73,19 +73,21 @@ export function resolvePathWithRows(rows, fromLoc, toLoc, afterLocalePath) {
   const toKey = toLoc;
 
   const sorted = rows
-    .filter((r) => r[fromKey])
-    .sort((a, b) => normalizeSheetPath(b[fromKey]).length - normalizeSheetPath(a[fromKey]).length);
+    .filter((r) => r && typeof r === 'object' && r[fromKey])
+    .map((row) => {
+      const base = normalizeSheetPath(row[fromKey]);
+      return { row, base, len: base.length };
+    })
+    .filter((x) => x.base)
+    .sort((a, b) => b.len - a.len);
 
-  for (const row of sorted) {
-    const base = normalizeSheetPath(row[fromKey]);
-    if (!base) continue;
+  for (const { row, base, len } of sorted) {
     const baseSlash = `${base}/`;
     if (p === base || p.startsWith(baseSlash)) {
       const targetBase = normalizeSheetPath(row[toKey]);
       if (!targetBase) return null;
-      const suffix = p.length > base.length ? p.slice(base.length) : '';
-      const merged = normalizeSheetPath(`${targetBase}${suffix}`);
-      return `/${toLoc}${merged}`;
+      const suffix = p.length > len ? p.slice(len) : '';
+      return `/${toLoc}${normalizeSheetPath(`${targetBase}${suffix}`)}`;
     }
   }
   return null;
@@ -159,40 +161,35 @@ export async function fetchLanguageSwitcherRows(
   const dirs = buildPlaceholderDirectoryCandidates(sitePath);
   const errors = [];
 
-  for (const dir of dirs) {
-    const previewUrl = buildPlaceholdersUrl(branch, org, repo, tier, dir);
+  const trySource = async (label, getResp) => {
     try {
-      const resp = await fetch(previewUrl, { credentials: 'omit' });
-      if (resp.ok) {
-        try {
-          return await parseRows(resp, previewUrl);
-        } catch (e) {
-          errors.push(`${previewUrl}: ${e.message}`);
-        }
-      } else {
-        errors.push(`${previewUrl}: HTTP ${resp.status}`);
+      const resp = await getResp();
+      if (!resp.ok) {
+        errors.push(`${label}: HTTP ${resp.status}`);
+        return null;
+      }
+      try {
+        return await parseRows(resp, label);
+      } catch (e) {
+        errors.push(`${label}: ${e.message}`);
+        return null;
       }
     } catch (e) {
-      errors.push(`${previewUrl}: ${e.message}`);
+      errors.push(`${label}: ${e.message}`);
+      return null;
     }
+  };
+
+  for (const dir of dirs) {
+    const previewUrl = buildPlaceholdersUrl(branch, org, repo, tier, dir);
+    const ok = await trySource(previewUrl, () => fetch(previewUrl, { credentials: 'omit' }));
+    if (ok) return ok;
 
     if (actions?.daFetch) {
       const adminPath = dir ? `${dir}/placeholders.json` : 'placeholders.json';
       const adminUrl = `${ADMIN_PLACEHOLDERS}/${org}/${repo}/${adminPath}`;
-      try {
-        const resp = await actions.daFetch(adminUrl);
-        if (resp.ok) {
-          try {
-            return await parseRows(resp, adminUrl);
-          } catch (e) {
-            errors.push(`${adminUrl}: ${e.message}`);
-          }
-        } else {
-          errors.push(`${adminUrl}: HTTP ${resp.status}`);
-        }
-      } catch (e) {
-        errors.push(`${adminUrl}: ${e.message}`);
-      }
+      const adminOk = await trySource(adminUrl, () => actions.daFetch(adminUrl));
+      if (adminOk) return adminOk;
     }
   }
 
