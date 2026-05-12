@@ -181,6 +181,10 @@ function mergeResolvedSegments(locIndex, segments, resolvedPath) {
 
 let langComboboxOutsideCloseWired = false;
 let langMenuResizeListener = null;
+let langMenuCloseTimer = null;
+
+/** Must match `.lang-select-menu` transition duration (close cleanup runs after paint). */
+const LANG_MENU_TRANSITION_MS = 200;
 
 function initLangCombobox(ui, keys, currentKey, onPickLocale) {
   const others = keys.filter((k) => k.toLowerCase() !== currentKey.toLowerCase());
@@ -192,17 +196,33 @@ function initLangCombobox(ui, keys, currentKey, onPickLocale) {
     return;
   }
 
+  const finishClose = () => {
+    langMenuCloseTimer = null;
+    ui.langMenu.style.cssText = '';
+    if (ui.langMenu.parentNode === document.body) {
+      ui.langCombobox.appendChild(ui.langMenu);
+    }
+    ui.langMenu.setAttribute('aria-hidden', 'true');
+  };
+
   const closeMenu = () => {
     if (langMenuResizeListener) {
       window.removeEventListener('resize', langMenuResizeListener);
       langMenuResizeListener = null;
     }
-    ui.langMenu.hidden = true;
     ui.langTrigger.setAttribute('aria-expanded', 'false');
-    ui.langMenu.style.cssText = '';
-    if (ui.langMenu.parentNode === document.body) {
-      ui.langCombobox.appendChild(ui.langMenu);
+    const wasOpen = ui.langMenu.classList.contains('lang-select-menu-open');
+    ui.langMenu.classList.remove('lang-select-menu-open');
+    clearTimeout(langMenuCloseTimer);
+    langMenuCloseTimer = null;
+    if (!wasOpen) {
+      finishClose();
+      return;
     }
+    const delay = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ? 0
+      : LANG_MENU_TRANSITION_MS;
+    langMenuCloseTimer = setTimeout(finishClose, delay);
   };
 
   const placeMenuBelowTrigger = () => {
@@ -219,23 +239,28 @@ function initLangCombobox(ui, keys, currentKey, onPickLocale) {
     s.right = 'auto';
     s.marginTop = '0';
     s.marginBottom = '0';
-    s.transform = 'none';
     s.maxHeight = `${maxH}px`;
     s.zIndex = '2147483647';
   };
 
   const openMenu = () => {
-    ui.langMenu.hidden = false;
+    clearTimeout(langMenuCloseTimer);
+    langMenuCloseTimer = null;
     ui.langTrigger.setAttribute('aria-expanded', 'true');
+    ui.langMenu.setAttribute('aria-hidden', 'false');
     ui.langMenu.scrollTop = 0;
+    ui.langMenu.classList.remove('lang-select-menu-open');
     if (ui.langMenu.parentNode !== document.body) {
       document.body.appendChild(ui.langMenu);
     }
-    const sync = () => {
+    const afterPlace = () => {
       placeMenuBelowTrigger();
+      requestAnimationFrame(() => {
+        ui.langMenu.classList.add('lang-select-menu-open');
+      });
     };
     requestAnimationFrame(() => {
-      requestAnimationFrame(sync);
+      requestAnimationFrame(afterPlace);
     });
     if (langMenuResizeListener) window.removeEventListener('resize', langMenuResizeListener);
     langMenuResizeListener = placeMenuBelowTrigger;
@@ -263,7 +288,7 @@ function initLangCombobox(ui, keys, currentKey, onPickLocale) {
   });
 
   const onDocPointerDown = (e) => {
-    if (ui.langMenu.hidden) return;
+    if (ui.langTrigger.getAttribute('aria-expanded') !== 'true') return;
     const t = e.target;
     if (ui.langCombobox.contains(t) || ui.langMenu.contains(t)) return;
     closeMenu();
@@ -271,8 +296,8 @@ function initLangCombobox(ui, keys, currentKey, onPickLocale) {
 
   ui.langTrigger.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (ui.langMenu.hidden) openMenu();
-    else closeMenu();
+    if (ui.langTrigger.getAttribute('aria-expanded') === 'true') closeMenu();
+    else openMenu();
   });
 
   if (!langComboboxOutsideCloseWired) {
@@ -281,7 +306,7 @@ function initLangCombobox(ui, keys, currentKey, onPickLocale) {
       'keydown',
       (e) => {
         if (e.key !== 'Escape') return;
-        if (!ui.langMenu.hidden) closeMenu();
+        if (ui.langTrigger.getAttribute('aria-expanded') === 'true') closeMenu();
       },
       true,
     );
