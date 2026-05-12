@@ -72,7 +72,7 @@ body {
   border: 4px solid var(--accent-structural);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-elevated);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .app-header {
@@ -158,9 +158,18 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+  position: relative;
 }
 
-.lang-select {
+.lang-combobox {
+  position: relative;
+  width: 100%;
+}
+
+.lang-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
   max-width: 100%;
   padding: 9px 12px;
@@ -169,20 +178,72 @@ body {
   line-height: 1.35;
   color: var(--text);
   cursor: pointer;
+  text-align: left;
   background-color: var(--surface);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-sm);
   transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
-.lang-select:hover {
+.lang-select-trigger:hover {
   border-color: var(--text-disabled);
 }
 
-.lang-select:focus {
+.lang-select-trigger:focus {
   border-color: var(--border-focus);
   outline: 2px solid transparent;
   outline-offset: 1px;
+}
+
+.lang-select-trigger:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 1px;
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--focus-ring);
+}
+
+.lang-select-value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lang-select-menu {
+  z-index: 100000;
+  max-height: 200px;
+  min-width: 0;
+  margin: 0;
+  padding: 4px 0;
+  overflow-y: auto;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-elevated);
+}
+
+.lang-select-menu[hidden] {
+  display: none !important;
+}
+
+.lang-select-option {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+}
+
+.lang-select-option:hover {
+  background: var(--surface-raised);
 }
 
 .url-card {
@@ -293,7 +354,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .btn,
-  .lang-select {
+  .lang-select-trigger {
     transition: none;
   }
 
