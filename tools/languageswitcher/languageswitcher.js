@@ -46,7 +46,10 @@ function getUi() {
     sourceEl: document.getElementById('da-source-url-field'),
     actionsEl: document.getElementById('actions'),
     langRow: document.getElementById('langRow'),
-    langSelect: document.getElementById('langSelect'),
+    langCombobox: document.getElementById('langCombobox'),
+    langTrigger: document.getElementById('langSelectTrigger'),
+    langMenu: document.getElementById('langSelectMenu'),
+    langValue: document.getElementById('langSelectValue'),
     openBtn: document.getElementById('open'),
     openAllBtn: document.getElementById('openAll'),
   };
@@ -67,27 +70,6 @@ function readCache(key) {
 function writeCache(key, rows, ttlMs) {
   try {
     sessionStorage.setItem(key, JSON.stringify({ rows, expires: Date.now() + ttlMs }));
-  } catch {
-    /* sessionStorage unavailable */
-  }
-}
-
-function lastTargetKey(org, repo, fromLoc) {
-  return `ls:lastTarget:${org}:${repo}:${String(fromLoc).toLowerCase()}`;
-}
-
-function readLastTargetLocale(org, repo, fromLoc) {
-  try {
-    const v = sessionStorage.getItem(lastTargetKey(org, repo, fromLoc));
-    return v && typeof v === 'string' ? v.trim() : '';
-  } catch {
-    return '';
-  }
-}
-
-function writeLastTargetLocale(org, repo, fromLoc, toLoc) {
-  try {
-    sessionStorage.setItem(lastTargetKey(org, repo, fromLoc), toLoc);
   } catch {
     /* sessionStorage unavailable */
   }
@@ -197,21 +179,117 @@ function mergeResolvedSegments(locIndex, segments, resolvedPath) {
   return [...segments.slice(0, locIndex), ...pathnameToSegments(resolvedPath)];
 }
 
-function fillLangSelect(sel, keys, currentKey, org, repo) {
-  sel.replaceChildren();
+let langComboboxOutsideCloseWired = false;
+let langMenuResizeListener = null;
+
+function initLangCombobox(ui, keys, currentKey, onPickLocale) {
   const others = keys.filter((k) => k.toLowerCase() !== currentKey.toLowerCase());
+  const first = others[0];
+  if (!first) return;
+
+  if (!ui.langCombobox || !ui.langTrigger || !ui.langMenu) {
+    onPickLocale(first);
+    return;
+  }
+
+  const closeMenu = () => {
+    if (langMenuResizeListener) {
+      window.removeEventListener('resize', langMenuResizeListener);
+      langMenuResizeListener = null;
+    }
+    ui.langMenu.hidden = true;
+    ui.langTrigger.setAttribute('aria-expanded', 'false');
+    ui.langMenu.style.cssText = '';
+    if (ui.langMenu.parentNode === document.body) {
+      ui.langCombobox.appendChild(ui.langMenu);
+    }
+  };
+
+  const placeMenuBelowTrigger = () => {
+    const r = ui.langTrigger.getBoundingClientRect();
+    const gap = 4;
+    const spaceBelow = window.innerHeight - r.bottom - gap - 8;
+    const maxH = Math.max(100, spaceBelow);
+    const s = ui.langMenu.style;
+    s.position = 'fixed';
+    s.left = `${r.left}px`;
+    s.width = `${r.width}px`;
+    s.top = `${r.bottom + gap}px`;
+    s.bottom = 'auto';
+    s.right = 'auto';
+    s.marginTop = '0';
+    s.marginBottom = '0';
+    s.transform = 'none';
+    s.maxHeight = `${maxH}px`;
+    s.zIndex = '2147483647';
+  };
+
+  const openMenu = () => {
+    ui.langMenu.hidden = false;
+    ui.langTrigger.setAttribute('aria-expanded', 'true');
+    ui.langMenu.scrollTop = 0;
+    if (ui.langMenu.parentNode !== document.body) {
+      document.body.appendChild(ui.langMenu);
+    }
+    const sync = () => {
+      placeMenuBelowTrigger();
+    };
+    requestAnimationFrame(() => {
+      requestAnimationFrame(sync);
+    });
+    if (langMenuResizeListener) window.removeEventListener('resize', langMenuResizeListener);
+    langMenuResizeListener = placeMenuBelowTrigger;
+    window.addEventListener('resize', placeMenuBelowTrigger, { passive: true });
+  };
+
+  const setTriggerLabel = (loc) => {
+    if (ui.langValue) ui.langValue.textContent = loc;
+  };
+
+  ui.langMenu.replaceChildren();
   others.forEach((k) => {
-    const o = document.createElement('option');
-    o.value = k;
-    o.textContent = k;
-    sel.appendChild(o);
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'lang-select-option';
+    b.setAttribute('role', 'option');
+    b.textContent = k;
+    b.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      closeMenu();
+      setTriggerLabel(k);
+      onPickLocale(k);
+    });
+    ui.langMenu.appendChild(b);
   });
-  if (!others.length) return;
-  const remembered = readLastTargetLocale(org, repo, currentKey);
-  const match = remembered
-    ? others.find((k) => k.toLowerCase() === remembered.toLowerCase())
-    : null;
-  sel.value = match || others[0];
+
+  const onDocPointerDown = (e) => {
+    if (ui.langMenu.hidden) return;
+    const t = e.target;
+    if (ui.langCombobox.contains(t) || ui.langMenu.contains(t)) return;
+    closeMenu();
+  };
+
+  ui.langTrigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (ui.langMenu.hidden) openMenu();
+    else closeMenu();
+  });
+
+  if (!langComboboxOutsideCloseWired) {
+    document.addEventListener('pointerdown', onDocPointerDown, true);
+    document.addEventListener(
+      'keydown',
+      (e) => {
+        if (e.key !== 'Escape') return;
+        if (!ui.langMenu.hidden) closeMenu();
+      },
+      true,
+    );
+    langComboboxOutsideCloseWired = true;
+  }
+
+  setTriggerLabel(first);
+  onPickLocale(first);
 }
 
 function buildDest(parsed, org, repo, newSegments, useBranch, tier, target, daView) {
@@ -416,13 +494,7 @@ async function main() {
   };
 
   if (showLangPicker) {
-    fillLangSelect(ui.langSelect, langKeys, fromLoc, org, repo);
-    ui.langSelect.addEventListener('change', () => {
-      const v = ui.langSelect.value;
-      writeLastTargetLocale(org, repo, fromLoc, v);
-      applyDestination(v);
-    });
-    applyDestination(ui.langSelect.value);
+    initLangCombobox(ui, langKeys, fromLoc, applyDestination);
   } else {
     applyDestination(langKeys.find((k) => k.toLowerCase() !== fromLoc.toLowerCase()));
   }

@@ -25,12 +25,25 @@
 
           <section id="langRow" class="lang-card" hidden>
             <span class="field-label" id="langSelectLabel">Other languages</span>
-            <div class="lang-card-row">
-              <select
-                id="langSelect"
-                class="lang-select"
+            <div class="lang-combobox" id="langCombobox">
+              <button
+                type="button"
+                id="langSelectTrigger"
+                class="lang-select-trigger"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-controls="langSelectMenu"
                 aria-labelledby="langSelectLabel"
-              ></select>
+              >
+                <span class="lang-select-value" id="langSelectValue"></span>
+              </button>
+              <div
+                id="langSelectMenu"
+                class="lang-select-menu"
+                role="listbox"
+                aria-labelledby="langSelectLabel"
+                hidden
+              ></div>
             </div>
           </section>
 
