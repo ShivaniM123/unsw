@@ -209,6 +209,10 @@ body {
 }
 
 .lang-select-menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
   z-index: 100000;
   max-height: 200px;
   min-width: 0;
@@ -220,10 +224,26 @@ body {
   border: 1px solid var(--border-default);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-elevated);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s cubic-bezier(0.2, 0.85, 0.25, 1);
 }
 
-.lang-select-menu[hidden] {
-  display: none !important;
+.lang-select-menu.lang-select-menu-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lang-select-menu {
+    transition-duration: 0.01ms;
+  }
 }
 
 .lang-select-option {
@@ -244,6 +264,7 @@ body {
 
 .lang-select-option:hover {
   background: var(--surface-raised);
+  background: color-mix(in srgb, var(--accent-structural) 15%, var(--surface));
 }
 
 .url-card {
