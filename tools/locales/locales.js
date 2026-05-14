@@ -15,6 +15,23 @@ import {
 const sl = await getStyle('https://da.live/nx/public/sl/styles.css');
 const styles = await getStyle(import.meta.url);
 
+function liveUrlsJoinFromLangs(langs) {
+  const urls = langs.map((lang) => lang.aemStatus?.live?.url).filter(Boolean);
+  return urls.length ? urls.join('\n') : '';
+}
+
+/** Clipboard only; call from a user gesture before long awaits. */
+async function copyPlainTextToClipboard(text) {
+  try {
+    const type = 'text/plain';
+    const clipboardItem = new ClipboardItem({ [type]: [text] });
+    await navigator.clipboard.write([clipboardItem]);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 class NxLocales extends LitElement {
   static properties = {
     _langs: { state: true },
@@ -98,26 +115,6 @@ class NxLocales extends LitElement {
     };
   }
 
-  _liveUrlsJoinFromLangs(langs) {
-    const urls = langs.map((lang) => lang.aemStatus?.live?.url).filter(Boolean);
-    return urls.length ? urls.join('\n') : '';
-  }
-
-  /**
-   * Clipboard API only. Call from a user gesture (e.g. publish click) before long awaits.
-   */
-  async _copyPlainTextToClipboard(text) {
-    try {
-      const type = 'text/plain';
-      const clipboardItem = new ClipboardItem({ [type]: [text] });
-      await navigator.clipboard.write([clipboardItem]);
-      return true;
-    } catch (err) {
-      console.error('Clipboard copy failed:', err);
-      return false;
-    }
-  }
-
   _afterPublishComplete(published, didPreCopy) {
     if (!published?.length) {
       setTimeout(() => { this._message = undefined; }, 2500);
@@ -149,7 +146,7 @@ class NxLocales extends LitElement {
    */
   async _handlePublishCopyClick(joined) {
     const urlCount = joined.split('\n').length;
-    const ok = await this._copyPlainTextToClipboard(joined);
+    const ok = await copyPlainTextToClipboard(joined);
     if (!ok) {
       this._message = {
         text: 'Could not copy automatically. Select the URLs below and copy (Ctrl/Cmd+C).',
@@ -169,10 +166,10 @@ class NxLocales extends LitElement {
       : items;
     const langsToPublish = publishLangs.filter((lang) => lang.aemStatus);
     const pageList = langsToPublish.map((lang) => ({ path: this.getPage(lang).newAEMFullPath }));
-    const preJoined = this._liveUrlsJoinFromLangs(langsToPublish);
+    const preJoined = liveUrlsJoinFromLangs(langsToPublish);
     let didPreCopy = false;
     if (preJoined) {
-      didPreCopy = await this._copyPlainTextToClipboard(preJoined);
+      didPreCopy = await copyPlainTextToClipboard(preJoined);
     }
     this._message = { text: 'Publishing ...' };
     const published = await publishPages(pageList);
@@ -183,7 +180,7 @@ class NxLocales extends LitElement {
     const preJoined = item.aemStatus?.live?.url || '';
     let didPreCopy = false;
     if (preJoined) {
-      didPreCopy = await this._copyPlainTextToClipboard(preJoined);
+      didPreCopy = await copyPlainTextToClipboard(preJoined);
     }
     this._message = { text: 'Publishing ...' };
     const published = await publishPages([{ path: item.newAEMFullPath }]);
