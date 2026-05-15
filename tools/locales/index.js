@@ -139,6 +139,7 @@ export async function copyPage(sourcePath, destPath) {
 }
 
 export async function publishPages(pages) {
+  console.log('Publishing pages', pages);
   const { token } = getContext();
   const opts = { method: 'POST', headers: { Authorization: `Bearer ${token}` } };
 
