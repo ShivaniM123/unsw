@@ -17,11 +17,19 @@ import {
 } from './placeholders.js';
 import {
   loadTranslateSwitchConfig,
+  findCurrentTranslateTarget,
+  buildTranslatePagePath,
+  translatePathToSegments,
   findLocaleSegmentIndex as findTranslateSegmentIndex,
-  siteForTargetKey,
 } from './translate-v2.js';
 
 const PRIMARY_LABEL_WITH_PICKER = 'Open page for selected language';
+
+/** Shown when neither translate-v2.json nor placeholders.json is usable. */
+const NEITHER_CONFIG_MSG =
+  'Neither /.da/translate-v2.json nor placeholders.json (language-switcher sheet) is available. '
+  + 'Configure at least one — see tools/languageswitcher/README.md in your site repository.';
+
 let resolvedDaPageUrl = '';
 
 const SETTINGS = {
@@ -451,7 +459,7 @@ async function main() {
     { ...uiSrc, ...extra },
   );
 
-  show('Loading language configuration…', null, false, { showLangRow: false });
+  show('Loading languages…', null, false, { showLangRow: false });
 
   const parsed = parseCurrentPage(pageUrl);
   if (!parsed) {
@@ -483,10 +491,13 @@ async function main() {
     token,
   });
 
-  if (translateConfig?.keys?.length) {
+  // Primary: translate-v2.json — path.replace(found.location, target.location) like Locales getPage()
+  if (translateConfig.status === 'ok') {
     const { targets, keys: langKeys } = translateConfig;
-    const locIndex = findTranslateSegmentIndex(segments, langKeys);
-    if (locIndex < 0) {
+    const contextPath = typeof context.path === 'string' ? context.path : '';
+    const found = findCurrentTranslateTarget(targets, contextPath);
+
+    if (!found) {
       show(
         `No folder in this path matches translate-v2 languages (${langKeys.join(', ')}).`,
         null,
@@ -495,12 +506,15 @@ async function main() {
       return;
     }
 
-    const urlSeg = segments[locIndex];
-    const fromLoc = canonLocale(urlSeg, langKeys);
+    const fromLoc = found.key;
 
     const urlForLocale = (toLoc) => {
-      const newSegments = [...segments.slice(0, locIndex), toLoc, ...segments.slice(locIndex + 1)];
-      const destRepo = siteForTargetKey(targets, toLoc, repo);
+      const destLang = targets.find((t) => t.key.toLowerCase() === toLoc.toLowerCase());
+      if (!destLang) return null;
+      const newPath = buildTranslatePagePath(contextPath, found, destLang);
+      if (!newPath) return null;
+      const destRepo = destLang.site || repo;
+      const newSegments = translatePathToSegments(newPath, org, destRepo);
       return buildDest(parsed, org, destRepo, newSegments, useBranch, tier, target, daView);
     };
 
@@ -508,7 +522,12 @@ async function main() {
     return;
   }
 
-  const translateError = translateConfig?.error;
+  if (translateConfig.status === 'invalid') {
+    show(translateConfig.error || 'Could not use /.da/translate-v2.json.', null, false);
+    return;
+  }
+
+  // Fallback: placeholders.json only when translate-v2 sheet does not exist (404)
   const sitePath = resolveSitePath(context.path, org, repo, segments);
 
   let rows;
@@ -523,23 +542,14 @@ async function main() {
       actions,
       sitePath,
     );
-  } catch (e) {
-    const translatePart = translateError ? `${translateError}. ` : '';
-    show(
-      `${translatePart}Could not load placeholders.json (${e.message}).`,
-      null,
-      false,
-    );
+  } catch {
+    show(NEITHER_CONFIG_MSG, null, false);
     return;
   }
 
   const langKeys = detectLocaleColumnKeys(rows);
   if (!langKeys.length) {
-    show(
-      'No languages found in translate-v2.json or placeholders language-switcher sheet.',
-      null,
-      false,
-    );
+    show(NEITHER_CONFIG_MSG, null, false);
     return;
   }
 
