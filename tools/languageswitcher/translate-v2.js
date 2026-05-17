@@ -68,6 +68,40 @@ export function buildSwitchTargets(sheet, defaultSite) {
 }
 
 /**
+ * Find current language/locale in path (same as Locales findInLang).
+ * Longest location wins so /en-ae matches before /en.
+ *
+ * @param {Array<{ location: string }>} targets
+ * @param {string} path DA context.path (site-relative or /org/repo/…)
+ */
+export function findCurrentTranslateTarget(targets, path) {
+  if (!path || !targets?.length) return null;
+  const normalized = path.startsWith('/') ? path : `/${path}`;
+  const sorted = [...targets].sort(
+    (a, b) => (String(b.location).length) - (String(a.location).length),
+  );
+  return sorted.find((t) => {
+    const loc = String(t.location || '').trim();
+    if (!loc) return false;
+    const prefix = loc.startsWith('/') ? loc : `/${loc}`;
+    return normalized === prefix || normalized.startsWith(`${prefix}/`);
+  }) ?? null;
+}
+
+/**
+ * Same as Locales getPage(): path.replace(found.location, target.location)
+ *
+ * @param {string} currentPath
+ * @param {{ location: string }} found
+ * @param {{ location: string }} target
+ * @returns {string|null}
+ */
+export function buildTranslatePagePath(currentPath, found, target) {
+  if (!currentPath || !found?.location || !target?.location) return null;
+  return currentPath.replace(found.location, target.location);
+}
+
+/**
  * @param {string[]} segments path after org/repo
  * @param {string[]} langKeys
  * @returns {number}
@@ -79,6 +113,23 @@ export function findLocaleSegmentIndex(segments, langKeys) {
     if (set.has(segments[i].toLowerCase())) return i;
   }
   return -1;
+}
+
+/**
+ * @param {string} path path after replace (site-relative or full)
+ * @param {string} org
+ * @param {string} repo
+ * @returns {string[]}
+ */
+export function translatePathToSegments(path, org, repo) {
+  let p = (path || '').trim();
+  if (!p) return [];
+  if (!p.startsWith('/')) p = `/${p}`;
+  const prefix = `/${org}/${repo}`;
+  if (p === prefix || p.startsWith(`${prefix}/`)) {
+    return p.slice(prefix.length).replace(/^\//, '').split('/').filter(Boolean);
+  }
+  return p.replace(/^\//, '').split('/').filter(Boolean);
 }
 
 /**
@@ -104,11 +155,17 @@ async function fetchTranslateSheet(url, token, actions) {
 }
 
 /**
- * @param {string} org
- * @param {string} repo
- * @param {object|null} actions DA SDK actions (daFetch)
- * @param {{ ttlMs?: number, global?: string|null, token?: string|null }} options
- * @returns {Promise<{ targets?: object[], keys?: string[], error?: string }>}
+ * Load translate-v2.json (same source as Locales plugin).
+ *
+ * @returns {Promise<{
+ *   status: 'ok'|'missing'|'invalid',
+ *   targets?: object[],
+ *   keys?: string[],
+ *   error?: string,
+ * }>}
+ *   - ok: sheet exists with languages → use locale swap only; never placeholders
+ *   - missing: sheet not found (404) → caller may fall back to placeholders
+ *   - invalid: sheet exists but unusable → show error; never placeholders
  */
 export async function loadTranslateSwitchConfig(org, repo, actions, options = {}) {
   const { ttlMs = 300000, global: globalOverride, token } = options;
@@ -119,8 +176,8 @@ export async function loadTranslateSwitchConfig(org, repo, actions, options = {}
     const raw = sessionStorage.getItem(cacheKey);
     if (raw) {
       const entry = JSON.parse(raw);
-      if (entry?.expires > Date.now() && Array.isArray(entry.targets) && entry.targets.length) {
-        return { targets: entry.targets, keys: entry.keys };
+      if (entry?.expires > Date.now() && entry.status === 'ok' && entry.keys?.length) {
+        return { status: 'ok', targets: entry.targets, keys: entry.keys };
       }
     }
   } catch {
@@ -134,24 +191,37 @@ export async function loadTranslateSwitchConfig(org, repo, actions, options = {}
   try {
     resp = await fetchTranslateSheet(url, token, actions);
   } catch (e) {
-    return { error: `${LANG_CONF} fetch failed (${e.message})` };
+    return { status: 'invalid', error: `${LANG_CONF} fetch failed (${e.message})` };
+  }
+
+  if (resp?.status === 404) {
+    return { status: 'missing' };
   }
 
   if (!resp?.ok) {
-    return { error: `${LANG_CONF} HTTP ${resp?.status ?? 'failed'} (${url})` };
+    return {
+      status: 'invalid',
+      error: `${LANG_CONF} HTTP ${resp.status} (${url})`,
+    };
   }
 
   let sheet;
   try {
     sheet = await resp.json();
   } catch {
-    return { error: `${LANG_CONF} response is not valid JSON` };
+    return { status: 'invalid', error: `${LANG_CONF} response is not valid JSON` };
+  }
+
+  const hasLanguagesTab = Boolean(sheet?.languages);
+  if (!hasLanguagesTab) {
+    return { status: 'missing' };
   }
 
   const targets = buildSwitchTargets(sheet, repo);
   if (!targets.length) {
     return {
-      error: `${LANG_CONF} loaded but has no languages.data rows with "location" (e.g. /en, /fr)`,
+      status: 'invalid',
+      error: `${LANG_CONF} exists but has no languages.data rows with "location" (e.g. /en, /fr)`,
     };
   }
 
@@ -159,13 +229,15 @@ export async function loadTranslateSwitchConfig(org, repo, actions, options = {}
   try {
     sessionStorage.setItem(
       cacheKey,
-      JSON.stringify({ targets, keys, expires: Date.now() + Number(ttlMs) }),
+      JSON.stringify({
+        status: 'ok', targets, keys, expires: Date.now() + Number(ttlMs),
+      }),
     );
   } catch {
     /* sessionStorage unavailable */
   }
 
-  return { targets, keys };
+  return { status: 'ok', targets, keys };
 }
 
 export { LANG_CONF };
