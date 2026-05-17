@@ -91,12 +91,24 @@ export function siteForTargetKey(targets, key, defaultSite) {
   return found?.site || defaultSite;
 }
 
+async function fetchTranslateSheet(url, token, actions) {
+  if (token) {
+    const authed = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+    if (authed.ok) return authed;
+  }
+  if (actions?.daFetch) {
+    const viaDa = await actions.daFetch(url);
+    if (viaDa?.ok) return viaDa;
+  }
+  return fetch(url, { credentials: 'omit' });
+}
+
 /**
  * @param {string} org
  * @param {string} repo
  * @param {object|null} actions DA SDK actions (daFetch)
  * @param {{ ttlMs?: number, global?: string|null, token?: string|null }} options
- * @returns {Promise<{ targets: object[], keys: string[] }|null>}
+ * @returns {Promise<{ targets?: object[], keys?: string[], error?: string }>}
  */
 export async function loadTranslateSwitchConfig(org, repo, actions, options = {}) {
   const { ttlMs = 300000, global: globalOverride, token } = options;
@@ -119,24 +131,29 @@ export async function loadTranslateSwitchConfig(org, repo, actions, options = {}
   const url = `${ADMIN_SOURCE}${configPath}${LANG_CONF}`;
 
   let resp;
-  if (actions?.daFetch) {
-    resp = await actions.daFetch(url);
-  } else {
-    const fetchOpts = token ? { headers: { Authorization: `Bearer ${token}` } } : { credentials: 'omit' };
-    resp = await fetch(url, fetchOpts);
+  try {
+    resp = await fetchTranslateSheet(url, token, actions);
+  } catch (e) {
+    return { error: `${LANG_CONF} fetch failed (${e.message})` };
   }
 
-  if (!resp?.ok) return null;
+  if (!resp?.ok) {
+    return { error: `${LANG_CONF} HTTP ${resp?.status ?? 'failed'} (${url})` };
+  }
 
   let sheet;
   try {
     sheet = await resp.json();
   } catch {
-    return null;
+    return { error: `${LANG_CONF} response is not valid JSON` };
   }
 
   const targets = buildSwitchTargets(sheet, repo);
-  if (!targets.length) return null;
+  if (!targets.length) {
+    return {
+      error: `${LANG_CONF} loaded but has no languages.data rows with "location" (e.g. /en, /fr)`,
+    };
+  }
 
   const keys = targets.map((t) => t.key);
   try {
