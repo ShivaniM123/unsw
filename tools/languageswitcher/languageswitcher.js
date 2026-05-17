@@ -508,6 +508,7 @@ async function main() {
     return;
   }
 
+  const translateError = translateConfig?.error;
   const sitePath = resolveSitePath(context.path, org, repo, segments);
 
   let rows;
@@ -523,8 +524,9 @@ async function main() {
       sitePath,
     );
   } catch (e) {
+    const translatePart = translateError ? `${translateError}. ` : '';
     show(
-      `Could not load /.da/translate-v2.json or placeholders.json (${e.message}).`,
+      `${translatePart}Could not load placeholders.json (${e.message}).`,
       null,
       false,
     );
