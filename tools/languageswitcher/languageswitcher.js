@@ -15,6 +15,11 @@ import {
   DEFAULT_SHEET,
   detectLocaleColumnKeys,
 } from './placeholders.js';
+import {
+  loadTranslateSwitchConfig,
+  findLocaleSegmentIndex as findTranslateSegmentIndex,
+  siteForTargetKey,
+} from './translate-v2.js';
 
 const PRIMARY_LABEL_WITH_PICKER = 'Open page for selected language';
 let resolvedDaPageUrl = '';
@@ -26,6 +31,7 @@ const SETTINGS = {
   daView: 'edit',
   placeholderSheetName: DEFAULT_SHEET,
   placeholderCacheTtlMs: 300000,
+  translateCacheTtlMs: 300000,
 };
 
 const DA_VIEWS = new Set(['edit', 'sheet', 'browse', 'config', 'media']);
@@ -167,12 +173,34 @@ async function loadPlaceholderRows(org, repo, branch, tier, sheetName, ttlMs, ac
   return rows;
 }
 
-function findLocaleSegmentIndex(segments, langKeys) {
-  const set = new Set(langKeys.map((k) => k.toLowerCase()));
-  for (let i = 0; i < segments.length; i += 1) {
-    if (set.has(segments[i].toLowerCase())) return i;
+function buildDest(parsed, org, repo, newSegments, useBranch, tier, target, daView) {
+  if (parsed.kind === 'da' || target === 'da-edit') {
+    const view = parsed.kind === 'da' ? parsed.view : daView;
+    return buildDaHashUrl(view, org, repo, newSegments);
   }
-  return -1;
+  return buildAemPreviewUrl(useBranch, org, repo, newSegments, tier);
+}
+
+function resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc) {
+  const fromSheet = resolvePathWithRows(rows, fromLoc, toLoc, afterLoc);
+  if (fromSheet) return fromSheet;
+  let rest = '';
+  if (typeof afterLoc === 'string' && afterLoc.length > 0) {
+    rest = afterLoc.startsWith('/') ? afterLoc : `/${afterLoc.replace(/^\//, '')}`;
+  }
+  return `/${toLoc}${rest}`;
+}
+
+function resolveSitePath(contextPath, org, repo, segments) {
+  let p = typeof contextPath === 'string' ? contextPath.trim() : '';
+  const prefix = `/${org}/${repo}`;
+  if (p === prefix || p.startsWith(`${prefix}/`)) {
+    p = p.slice(prefix.length);
+    if (p && !p.startsWith('/')) p = `/${p}`;
+  }
+  if (!p && segments.length) p = `/${segments.join('/')}`;
+  if (p && !p.startsWith('/')) p = `/${p}`;
+  return p;
 }
 
 function mergeResolvedSegments(locIndex, segments, resolvedPath) {
@@ -317,176 +345,39 @@ function initLangCombobox(ui, keys, currentKey, onPickLocale) {
   onPickLocale(first);
 }
 
-function buildDest(parsed, org, repo, newSegments, useBranch, tier, target, daView) {
-  if (parsed.kind === 'da' || target === 'da-edit') {
-    const view = parsed.kind === 'da' ? parsed.view : daView;
-    return buildDaHashUrl(view, org, repo, newSegments);
-  }
-  return buildAemPreviewUrl(useBranch, org, repo, newSegments, tier);
-}
-
-function resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc) {
-  const fromSheet = resolvePathWithRows(rows, fromLoc, toLoc, afterLoc);
-  if (fromSheet) return fromSheet;
-  let rest = '';
-  if (typeof afterLoc === 'string' && afterLoc.length > 0) {
-    rest = afterLoc.startsWith('/') ? afterLoc : `/${afterLoc.replace(/^\//, '')}`;
-  }
-  return `/${toLoc}${rest}`;
-}
-
-function resolveSitePath(contextPath, org, repo, segments) {
-  let p = typeof contextPath === 'string' ? contextPath.trim() : '';
-  const prefix = `/${org}/${repo}`;
-  if (p === prefix || p.startsWith(`${prefix}/`)) {
-    p = p.slice(prefix.length);
-    if (p && !p.startsWith('/')) p = `/${p}`;
-  }
-  if (!p && segments.length) p = `/${segments.join('/')}`;
-  if (p && !p.startsWith('/')) p = `/${p}`;
-  return p;
-}
-
-async function main() {
-  const { context, actions } = await DA_SDK;
-  const ui = getUi();
-  setPanelTwoLanguagesMode(false);
-
-  const pageUrl = contextToDaUrl({
-    org: context.org,
-    repo: context.repo || context.site,
-    path: context.path,
-    view: pickDaView(context),
-  });
-
-  if (!pageUrl) {
-    resolvedDaPageUrl = '';
-    setUi(
-      ui,
-      'Missing page context (org, repo, path). Open this tool from the Library while a document page is open.',
-      null,
-      false,
-      actions,
-    );
-    return;
-  }
-
-  resolvedDaPageUrl = pageUrl.href;
-  const uiSrc = { sourceUrl: pageUrl.href };
-  const show = (status, previewUrl, canOpen, extra = {}) => setUi(
-    ui,
-    status,
-    previewUrl,
-    canOpen,
-    actions,
-    { ...uiSrc, ...extra },
-  );
-
-  show('Loading placeholders…', null, false, { showLangRow: false });
-
-  const parsed = parseCurrentPage(pageUrl);
-  if (!parsed) {
-    show('Could not parse this page (need /org/repo/locale/… in context.path).', null, false);
-    return;
-  }
-
-  const { tier, branch, target, daView, placeholderSheetName, placeholderCacheTtlMs } = SETTINGS;
-  const { org, repo } = parsed;
-  const segments = [...parsed.segments];
-
-  if (!segments.length) {
-    show('Path must include a locale folder after org/repo.', null, false);
-    return;
-  }
-
-  const useBranch = parsed.kind === 'aem' ? parsed.branch : branch;
-  const sitePath = resolveSitePath(context.path, org, repo, segments);
-
-  let rows;
-  try {
-    rows = await loadPlaceholderRows(
-      org,
-      repo,
-      useBranch,
-      tier,
-      placeholderSheetName || DEFAULT_SHEET,
-      Number(placeholderCacheTtlMs) || 300000,
-      actions,
-      sitePath,
-    );
-  } catch (e) {
-    show(`Could not load placeholders.json (${e.message}).`, null, false);
-    return;
-  }
-
-  const langKeys = detectLocaleColumnKeys(rows);
+/**
+ * Shared UI once langKeys and urlForLocale are defined.
+ */
+function runLanguageSwitcher(ui, actions, show, langKeys, fromLoc, urlForLocale, configLabel) {
   setPanelTwoLanguagesMode(langKeys.length === 2);
-
-  if (!langKeys.length) {
-    show(
-      'No path columns found in language-switcher (values should start with /, e.g. en, fr).',
-      null,
-      false,
-    );
-    return;
-  }
-
-  const locIndex = findLocaleSegmentIndex(segments, langKeys);
-  if (locIndex < 0) {
-    show(`No folder in this path matches a language column (${langKeys.join(', ')}).`, null, false);
-    return;
-  }
-
-  const urlSeg = segments[locIndex];
-  const afterLoc = pathAfterLocale(segments.slice(locIndex));
   const showLangPicker = langKeys.length >= 3;
 
   if (langKeys.length === 1) {
     ui.langRow.hidden = true;
     const [only] = langKeys;
-    if (urlSeg.toLowerCase() === only.toLowerCase()) {
+    if (fromLoc && fromLoc.toLowerCase() === only.toLowerCase()) {
       show(
-        `Already on ${only}. Add another language column to map paths, or open a page in a different locale folder.`,
+        `Already on ${only}. Add another language in ${configLabel}, or open a page in a different locale folder.`,
         null,
         false,
       );
       return;
     }
-    const newSeg = [...segments.slice(0, locIndex), only, ...segments.slice(locIndex + 1)];
-    show('', buildDest(parsed, org, repo, newSeg, useBranch, tier, target, daView), true, {
+    show('', urlForLocale(only), true, {
       showLangRow: false,
       openPrimaryLabel: `Open page in ${only}`,
     });
     return;
   }
 
-  const fromLoc = canonLocale(urlSeg, langKeys);
   if (!fromLoc) {
     show(
-      `This page’s locale folder is "${urlSeg}" but placeholders only define: ${langKeys.join(', ')}.`,
+      `This page’s locale folder does not match any language defined in ${configLabel} (${langKeys.join(', ')}).`,
       null,
       false,
     );
     return;
   }
-
-  const pathCache = new Map();
-  const getResolvedPath = (toLoc) => {
-    const k = toLoc.toLowerCase();
-    if (!pathCache.has(k)) pathCache.set(k, resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc));
-    return pathCache.get(k);
-  };
-
-  const urlForLocale = (toLoc) => buildDest(
-    parsed,
-    org,
-    repo,
-    mergeResolvedSegments(locIndex, segments, getResolvedPath(toLoc)),
-    useBranch,
-    tier,
-    target,
-    daView,
-  );
 
   const openAllOpts = () => ({
     showOpenAll: langKeys.length > 2,
@@ -523,6 +414,162 @@ async function main() {
   } else {
     applyDestination(langKeys.find((k) => k.toLowerCase() !== fromLoc.toLowerCase()));
   }
+}
+
+async function main() {
+  const { context, actions, token } = await DA_SDK;
+  const ui = getUi();
+  setPanelTwoLanguagesMode(false);
+
+  const pageUrl = contextToDaUrl({
+    org: context.org,
+    repo: context.repo || context.site,
+    path: context.path,
+    view: pickDaView(context),
+  });
+
+  if (!pageUrl) {
+    resolvedDaPageUrl = '';
+    setUi(
+      ui,
+      'Missing page context (org, repo, path). Open this tool from the Library while a document page is open.',
+      null,
+      false,
+      actions,
+    );
+    return;
+  }
+
+  resolvedDaPageUrl = pageUrl.href;
+  const uiSrc = { sourceUrl: pageUrl.href };
+  const show = (status, previewUrl, canOpen, extra = {}) => setUi(
+    ui,
+    status,
+    previewUrl,
+    canOpen,
+    actions,
+    { ...uiSrc, ...extra },
+  );
+
+  show('Loading language configuration…', null, false, { showLangRow: false });
+
+  const parsed = parseCurrentPage(pageUrl);
+  if (!parsed) {
+    show('Could not parse this page (need /org/repo/locale/… in context.path).', null, false);
+    return;
+  }
+
+  const {
+    tier,
+    branch,
+    target,
+    daView,
+    placeholderSheetName,
+    placeholderCacheTtlMs,
+    translateCacheTtlMs,
+  } = SETTINGS;
+  const { org, repo } = parsed;
+  const segments = [...parsed.segments];
+
+  if (!segments.length) {
+    show('Path must include a locale folder after org/repo.', null, false);
+    return;
+  }
+
+  const useBranch = parsed.kind === 'aem' ? parsed.branch : branch;
+
+  const translateConfig = await loadTranslateSwitchConfig(org, repo, actions, {
+    ttlMs: Number(translateCacheTtlMs) || 300000,
+    token,
+  });
+
+  if (translateConfig?.keys?.length) {
+    const { targets, keys: langKeys } = translateConfig;
+    const locIndex = findTranslateSegmentIndex(segments, langKeys);
+    if (locIndex < 0) {
+      show(
+        `No folder in this path matches translate-v2 languages (${langKeys.join(', ')}).`,
+        null,
+        false,
+      );
+      return;
+    }
+
+    const urlSeg = segments[locIndex];
+    const fromLoc = canonLocale(urlSeg, langKeys);
+
+    const urlForLocale = (toLoc) => {
+      const newSegments = [...segments.slice(0, locIndex), toLoc, ...segments.slice(locIndex + 1)];
+      const destRepo = siteForTargetKey(targets, toLoc, repo);
+      return buildDest(parsed, org, destRepo, newSegments, useBranch, tier, target, daView);
+    };
+
+    runLanguageSwitcher(ui, actions, show, langKeys, fromLoc, urlForLocale, '/.da/translate-v2.json');
+    return;
+  }
+
+  const sitePath = resolveSitePath(context.path, org, repo, segments);
+
+  let rows;
+  try {
+    rows = await loadPlaceholderRows(
+      org,
+      repo,
+      useBranch,
+      tier,
+      placeholderSheetName || DEFAULT_SHEET,
+      Number(placeholderCacheTtlMs) || 300000,
+      actions,
+      sitePath,
+    );
+  } catch (e) {
+    show(
+      `Could not load /.da/translate-v2.json or placeholders.json (${e.message}).`,
+      null,
+      false,
+    );
+    return;
+  }
+
+  const langKeys = detectLocaleColumnKeys(rows);
+  if (!langKeys.length) {
+    show(
+      'No languages found in translate-v2.json or placeholders language-switcher sheet.',
+      null,
+      false,
+    );
+    return;
+  }
+
+  const locIndex = findTranslateSegmentIndex(segments, langKeys);
+  if (locIndex < 0) {
+    show(`No folder in this path matches a language column (${langKeys.join(', ')}).`, null, false);
+    return;
+  }
+
+  const urlSeg = segments[locIndex];
+  const afterLoc = pathAfterLocale(segments.slice(locIndex));
+  const fromLoc = canonLocale(urlSeg, langKeys);
+
+  const pathCache = new Map();
+  const getResolvedPath = (toLoc) => {
+    const k = toLoc.toLowerCase();
+    if (!pathCache.has(k)) pathCache.set(k, resolvePathWithFallback(rows, fromLoc, toLoc, afterLoc));
+    return pathCache.get(k);
+  };
+
+  const urlForLocale = (toLoc) => buildDest(
+    parsed,
+    org,
+    repo,
+    mergeResolvedSegments(locIndex, segments, getResolvedPath(toLoc)),
+    useBranch,
+    tier,
+    target,
+    daView,
+  );
+
+  runLanguageSwitcher(ui, actions, show, langKeys, fromLoc, urlForLocale, 'placeholders.json');
 }
 
 main().catch((err) => {
