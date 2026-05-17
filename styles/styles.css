@@ -377,7 +377,7 @@ main .section.yellow-accent > div {
   left: 0;
   z-index: -1;
   width: 100%;
-  height: 720px;
+  height: 760px;
   overflow: hidden;
   pointer-events: none;
 }
@@ -459,7 +459,14 @@ body:has(.background-shape-container) main .section .default-content-wrapper p {
   line-height: 28px;
 }
 
+/* News article body: constrain text width, left-aligned with hero title */
+body:has(.background-shape-container) main .section:not(.yellow-accent, .breadcrumb-container) > .default-content-wrapper p,
+body:has(.background-shape-container) main .section:not(.yellow-accent, .breadcrumb-container) > .default-content-wrapper h4 {
+  max-width: 870px;
+}
+
 /* Lead/intro paragraph: first paragraph in article body uses Clancy light */
+/* stylelint-disable-next-line no-descending-specificity */
 body:has(.background-shape-container) main .section:not(.yellow-accent, .breadcrumb-container) .default-content-wrapper > p:first-child {
   font-family: var(--heading-font-family);
   font-size: 22px;
@@ -467,14 +474,10 @@ body:has(.background-shape-container) main .section:not(.yellow-accent, .breadcr
   line-height: 32px;
 }
 
+/* stylelint-disable-next-line no-descending-specificity */
 body:has(.background-shape-container) main .section .default-content-wrapper h4 {
   font-size: 24px;
   line-height: 36px;
   margin: 32px 0;
-}
-
-/* News article body: constrain text width on wide screens */
-body:has(.background-shape-container) main .section:not(.yellow-accent, .breadcrumb-container) .default-content-wrapper {
-  max-width: 870px;
 }
 
