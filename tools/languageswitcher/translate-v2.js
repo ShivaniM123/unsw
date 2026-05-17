@@ -64,9 +64,7 @@ export function buildSwitchTargets(sheet, defaultSite) {
   for (const entry of [...langs, ...regional]) {
     if (!byKey.has(entry.key.toLowerCase())) byKey.set(entry.key.toLowerCase(), entry);
   }
-  return [...byKey.values()].sort((a, b) =>
-    a.key.localeCompare(b.key, undefined, { sensitivity: 'base' }),
-  );
+  return [...byKey.values()].sort((a, b) => a.key.localeCompare(b.key, undefined, { sensitivity: 'base' }));
 }
 
 /**
