@@ -270,21 +270,21 @@
   }
 
   .columns-profile:not(:has(.profile-faculty)) .columns-profile-text-col {
-    flex: 4;
+    flex: 1;
     order: 0;
-    min-height: auto;
+    min-height: 393px;
     max-width: none;
     padding: 0;
   }
 
   .columns-profile:not(:has(.profile-faculty)) .columns-profile-text-col h1 {
-    font-size: 48px;
-    line-height: 72px;
-    margin: 0 0 24px;
+    font-size: 61px;
+    line-height: 1.48;
+    margin: 0 0 32px;
   }
 
   .columns-profile:not(:has(.profile-faculty)) .columns-profile-image-col {
-    flex: 5;
+    flex: 1;
     order: 1;
     justify-content: flex-end;
   }
