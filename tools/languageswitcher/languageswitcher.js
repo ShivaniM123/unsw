@@ -27,8 +27,7 @@ const PRIMARY_LABEL_WITH_PICKER = 'Open page for selected language';
 
 /** Shown when neither translate-v2.json nor placeholders.json is usable. */
 const NEITHER_CONFIG_MSG =
-  'Neither /.da/translate-v2.json nor placeholders.json (language-switcher sheet) is available. '
-  + 'Configure at least one — see tools/languageswitcher/README.md in your site repository.';
+  'Neither translate-v2 nor placeholders is present. Refer to README (tools/languageswitcher/README.md).';
 
 let resolvedDaPageUrl = '';
 
@@ -109,18 +108,21 @@ function scheduleCloseLibrary(actions) {
 function setUi(ui, status, previewUrl, canOpen, actions, opts = {}) {
   const showLangRow = opts.showLangRow === true;
   const showOpenAll = opts.showOpenAll === true;
-  const sourceUrlText = displayUrl(opts.sourceUrl) || displayUrl(resolvedDaPageUrl);
+  const hideSource = opts.hideSource === true;
+  const sourceUrlText = hideSource
+    ? ''
+    : (displayUrl(opts.sourceUrl) || displayUrl(resolvedDaPageUrl));
 
   ui.statusEl.textContent = status;
   ui.statusEl.hidden = !String(status || '').trim() && Boolean(previewUrl);
   ui.langRow.hidden = !showLangRow;
 
-  if (sourceUrlText) {
-    ui.sourceBlock.hidden = false;
-    ui.sourceEl.textContent = sourceUrlText;
-  } else {
+  if (hideSource || !sourceUrlText) {
     ui.sourceBlock.hidden = true;
     ui.sourceEl.textContent = '';
+  } else {
+    ui.sourceBlock.hidden = false;
+    ui.sourceEl.textContent = sourceUrlText;
   }
 
   if (previewUrl) {
@@ -543,13 +545,13 @@ async function main() {
       sitePath,
     );
   } catch {
-    show(NEITHER_CONFIG_MSG, null, false);
+    show(NEITHER_CONFIG_MSG, null, false, { hideSource: true });
     return;
   }
 
   const langKeys = detectLocaleColumnKeys(rows);
   if (!langKeys.length) {
-    show(NEITHER_CONFIG_MSG, null, false);
+    show(NEITHER_CONFIG_MSG, null, false, { hideSource: true });
     return;
   }
 
