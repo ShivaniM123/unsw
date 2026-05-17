@@ -362,7 +362,7 @@ main .section.yellow-accent {
   position: relative;
   background-color: transparent;
   margin: 0;
-  padding: 40px 0 48px;
+  padding: 32px 0 64px;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
@@ -448,5 +448,22 @@ body:has(.background-shape-container) header .nav-sections {
 /* News pages: container clips polygon at hero section boundary (~700px on original) */
 body:has(.columns-container) .background-shape-container {
   height: 700px;
+}
+
+/* News article body content: tighter paragraph spacing to match original */
+body:has(.background-shape-container) main .section .default-content-wrapper p {
+  margin: 0 0 20px;
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  line-height: 28px;
+}
+
+body:has(.background-shape-container) main .section .default-content-wrapper h4 {
+  margin: 29px 0;
+}
+
+/* News article body: constrain text width on wide screens */
+body:has(.background-shape-container) main .section:not(.yellow-accent, .breadcrumb-container) .default-content-wrapper {
+  max-width: 1000px;
 }
 
