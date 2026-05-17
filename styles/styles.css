@@ -13,7 +13,7 @@
 /* UNSW Design System */
 :root {
   /* UNSW brand colors */
-  --brand-yellow: #ffd600;
+  --brand-yellow: #ffdc00;
   --brand-black: #181716;
   --brand-white: #fff;
   --brand-grey: #737373;
@@ -362,7 +362,7 @@ main .section.yellow-accent {
   position: relative;
   background-color: transparent;
   margin: 0;
-  padding: 32px 0 64px;
+  padding: 48px 0 80px;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
@@ -377,7 +377,7 @@ main .section.yellow-accent > div {
   left: 0;
   z-index: -1;
   width: 100%;
-  height: 700px;
+  height: 720px;
   overflow: hidden;
   pointer-events: none;
 }
