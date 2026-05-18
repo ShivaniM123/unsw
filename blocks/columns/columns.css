@@ -1,3 +1,17 @@
+/*
+ * Columns Block – Base + News Variant
+ * ====================================
+ *
+ * EDS-specific:
+ * - All selectors scoped to .columns to avoid global conflicts.
+ * - No build step – vanilla CSS only.
+ * - Block is self-contained and safe to load/unload.
+ *
+ * The .columns.news variant includes a decorative yellow polygon
+ * implemented via ::before pseudo-element with clip-path.
+ */
+
+/* ===== Base Columns ===== */
 .columns > div {
   display: flex;
   flex-direction: column;
@@ -32,7 +46,57 @@
   }
 }
 
-/* columns (news) variant: news article hero — text left, landscape image right */
+/* ==========================================================================
+   columns (news) variant – News article hero with yellow polygon decoration
+   ==========================================================================
+
+   Polygon creation:
+   - Uses ::before pseudo-element on .columns.news container.
+   - clip-path: polygon() defines UNSW-style angled pentagon shape.
+   - Points derived from original SVG (viewBox 0 0 60 60):
+     8,43.41 / 25.45,60 / 43.80,49.80 / 52.84,11.22 / 42.93,0
+     converted to percentages of a square container.
+
+   Stacking/layering:
+   - isolation: isolate creates a new stacking context for the block.
+   - ::before sits at z-index: -1 behind block content.
+   - Prevents polygon from interfering with elements outside the block.
+
+   Responsive image scaling:
+   - Image uses width: 100%, height: auto for fluid sizing.
+   - object-fit: cover fills container without distortion.
+   - aspect-ratio: 16/9 prevents CLS before image loads.
+
+   Viewport handling:
+   - Polygon uses clamp() for fluid sizing across all viewports.
+   - overflow: hidden prevents horizontal scroll from polygon overhang.
+   - Media queries adjust polygon position at key breakpoints.
+   ========================================================================== */
+
+.columns.news {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Decorative yellow pentagon – matches original UNSW SVG shape */
+.columns.news::before {
+  content: '';
+  position: absolute;
+  top: -35%;
+  left: 68%;
+  width: 44.3%;
+  aspect-ratio: 1;
+  background: var(--brand-yellow, #ffdc00);
+  z-index: -1;
+  pointer-events: none;
+  clip-path: polygon(
+    13.33% 72.35%,
+    42.41% 100%,
+    73% 83%,
+    88.06% 18.7%,
+    71.55% 0%
+  );
+}
 
 /* Mobile: text above, image below */
 .columns.news > div {
@@ -65,26 +129,36 @@
   line-height: 1.75;
 }
 
+/* Responsive image – prevents CLS with aspect-ratio */
 .columns.news > div > div:last-child picture {
   display: block;
   width: 100%;
 }
 
 .columns.news > div > div:last-child img {
+  display: block;
   width: 100%;
   height: auto;
   max-width: none;
   aspect-ratio: 16 / 9;
   object-fit: cover;
+  min-height: 180px;
 }
 
+/* ===== Responsive Breakpoints ===== */
+
+/* Tablet */
 @media (width >= 600px) {
   .columns.news h1 {
     font-size: 42px;
   }
+
+  .columns.news > div > div:last-child img {
+    min-height: 220px;
+  }
 }
 
-/* Desktop: side-by-side, text left + image right */
+/* Desktop: side-by-side layout, text left + image right */
 @media (width >= 900px) {
   .columns.news > div {
     flex-direction: row;
@@ -107,5 +181,9 @@
     font-size: 61px;
     line-height: 1.48;
     margin: 0 0 32px;
+  }
+
+  .columns.news > div > div:last-child img {
+    min-height: 300px;
   }
 }

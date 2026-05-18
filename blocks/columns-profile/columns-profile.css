@@ -210,7 +210,37 @@
    News article hero variant
    When columns-profile has no .profile-faculty (news pages vs staff profiles),
    display as single-column stacked layout matching original UNSW news design.
+   Includes decorative yellow polygon via ::before pseudo-element.
    ========================================================================== */
+
+/* Yellow pentagon decoration – matches original UNSW SVG shape */
+.columns-profile:not(:has(.profile-faculty)) {
+  position: relative;
+  isolation: isolate;
+}
+
+.section.yellow-accent.columns-profile-container {
+  overflow: hidden;
+}
+
+.columns-profile:not(:has(.profile-faculty))::before {
+  content: '';
+  position: absolute;
+  top: -35%;
+  left: 68%;
+  width: 44.3%;
+  aspect-ratio: 1;
+  background: var(--brand-yellow);
+  z-index: -1;
+  pointer-events: none;
+  clip-path: polygon(
+    13.33% 72.35%,
+    42.41% 100%,
+    73% 83%,
+    88.06% 18.7%,
+    71.55% 0%
+  );
+}
 
 .columns-profile:not(:has(.profile-faculty)) .columns-profile-text-col {
   order: 0;
@@ -246,7 +276,6 @@
   width: 100%;
   height: auto;
   max-width: none;
-  aspect-ratio: 16 / 9;
   object-fit: cover;
 }
 
@@ -258,7 +287,6 @@
   .columns-profile:not(:has(.profile-faculty)) .columns-profile-image-col img {
     width: 100%;
     height: auto;
-    aspect-ratio: 16 / 9;
   }
 }
 
