@@ -1,0 +1,41 @@
+{
+  "variantName": "hero-article",
+  "baseBlock": "hero",
+  "version": "1.0.0",
+  "created": "2026-05-11T05:38:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.unsw.edu.au/news/2026/03/dr-yu-jing-on-powering-clean-energy-why-future-geoscience-needs-more-women",
+    "originPage": "news article page",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "minimal",
+    "purpose": "news-article-hero",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "heading + paragraph + date + image",
+    "buttonCount": 0,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "news article pages",
+      "interview/Q&A article pages",
+      "feature story pages with author/subject headshot",
+      "editorial content with publication date"
+    ],
+    "notSuitableFor": [
+      "landing pages with CTAs",
+      "product pages",
+      "pages requiring full-width background images",
+      "staff profile pages (use hero-profile instead)"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/news/2026/03/dr-yu-jing-on-powering-clean-energy-why-future-geoscience-needs-more-women"],
+    "reuseCount": 1,
+    "lastUsed": "2026-05-18T05:21:00.000Z"
+  }
+}
