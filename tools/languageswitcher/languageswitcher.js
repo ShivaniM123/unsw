@@ -529,7 +529,7 @@ async function main() {
     return;
   }
 
-  // Fallback: placeholders.json only when translate-v2 sheet does not exist (404)
+  // Fallback: placeholders.json when translate-v2 is missing or inaccessible (404/401/403)
   const sitePath = resolveSitePath(context.path, org, repo, segments);
 
   let rows;
