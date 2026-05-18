@@ -5,6 +5,7 @@
 
 .hero-article-container {
   position: relative;
+  overflow-x: clip;
 }
 
 .hero-article {
@@ -20,9 +21,9 @@
 .hero-article::before {
   content: '';
   position: absolute;
-  top: -70%;
-  left: 45%;
-  width: 90%;
+  top: -60%;
+  left: 50%;
+  width: 75%;
   aspect-ratio: 1;
   background: var(--brand-yellow, #fee600);
   z-index: -1;
@@ -71,9 +72,9 @@
 
 @media (width >= 900px) {
   .hero-article::before {
-    top: -70%;
-    left: 45%;
-    width: 90%;
+    top: -60%;
+    left: 50%;
+    width: 75%;
   }
 
   .hero-article {
