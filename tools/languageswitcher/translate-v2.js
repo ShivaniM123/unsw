@@ -143,13 +143,14 @@ export function siteForTargetKey(targets, key, defaultSite) {
 }
 
 async function fetchTranslateSheet(url, token, actions) {
-  if (token) {
-    const authed = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-    if (authed.ok) return authed;
-  }
+  // Prefer daFetch in DA editor — returns 404 when the sheet is gone; bare fetch often gets 401.
   if (actions?.daFetch) {
     const viaDa = await actions.daFetch(url);
-    if (viaDa?.ok) return viaDa;
+    if (viaDa?.ok || viaDa?.status === 404) return viaDa;
+  }
+  if (token) {
+    const authed = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+    if (authed.ok || authed.status === 404) return authed;
   }
   return fetch(url, { credentials: 'omit' });
 }
@@ -164,7 +165,7 @@ async function fetchTranslateSheet(url, token, actions) {
  *   error?: string,
  * }>}
  *   - ok: sheet exists with languages → use locale swap only; never placeholders
- *   - missing: sheet not found (404) → caller may fall back to placeholders
+ *   - missing: sheet not found / inaccessible (404, 401, 403) → caller may fall back to placeholders
  *   - invalid: sheet exists but unusable → show error; never placeholders
  */
 export async function loadTranslateSwitchConfig(org, repo, actions, options = {}) {
@@ -194,7 +195,8 @@ export async function loadTranslateSwitchConfig(org, repo, actions, options = {}
     return { status: 'invalid', error: `${LANG_CONF} fetch failed (${e.message})` };
   }
 
-  if (resp?.status === 404) {
+  // Admin API may return 401/403 when /.da/translate-v2.json was removed, not only 404.
+  if (resp?.status === 404 || resp?.status === 401 || resp?.status === 403) {
     return { status: 'missing' };
   }
 
