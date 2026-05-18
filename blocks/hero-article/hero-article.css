@@ -5,7 +5,6 @@
 
 .hero-article-container {
   position: relative;
-  overflow-x: clip;
 }
 
 .hero-article {
@@ -21,11 +20,11 @@
 .hero-article::before {
   content: '';
   position: absolute;
-  top: -60%;
-  left: 50%;
-  width: 75%;
-  aspect-ratio: 1;
-  background: var(--brand-yellow, #fee600);
+  top: -222px;
+  right: -189px;
+  width: 580px;
+  height: 580px;
+  background: var(--brand-yellow, #ffdc00);
   z-index: -1;
   pointer-events: none;
   clip-path: polygon(
@@ -72,9 +71,10 @@
 
 @media (width >= 900px) {
   .hero-article::before {
-    top: -60%;
-    left: 50%;
-    width: 75%;
+    top: -222px;
+    right: -189px;
+    width: 580px;
+    height: 580px;
   }
 
   .hero-article {
