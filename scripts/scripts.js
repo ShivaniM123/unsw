@@ -1,5 +1,6 @@
 import {
   buildBlock,
+  getMetadata,
   loadHeader,
   loadFooter,
   decorateIcons,
@@ -68,6 +69,9 @@ function decorateIconLinks(main) {
 function buildBreadcrumbBlock(main) {
   // Only add breadcrumb to the actual page main, not fragments
   if (main !== document.querySelector('main')) return;
+
+  // Don't add breadcrumb if metadata says false
+  if (getMetadata('breadcrumb') === 'false') return;
 
   // Don't add breadcrumb on homepage
   const { pathname } = window.location;

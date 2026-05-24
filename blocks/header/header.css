@@ -159,6 +159,23 @@ header .nav-logo {
   object-fit: contain;
 }
 
+header .nav-section-title {
+  margin-left: 16px;
+  padding-left: 16px;
+  border-left: 1px solid #333;
+  font-family: var(--heading-font-family);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-color);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+header .nav-section-title:hover {
+  text-decoration: none;
+  color: var(--text-color);
+}
+
 /* ===== Main Nav Sections ===== */
 header nav .nav-sections {
   grid-area: sections;

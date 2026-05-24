@@ -73,8 +73,8 @@
 
 @media (width >= 900px) {
   :root {
-    --heading-font-size-xxl: 48px;
-    --heading-font-size-xl: 42px;
+    --heading-font-size-xxl: 61px;
+    --heading-font-size-xl: 48px;
     --heading-font-size-l: 28px;
     --heading-font-size-m: 22px;
     --heading-font-size-s: 20px;
@@ -126,7 +126,7 @@ h6 {
   margin-bottom: 0.25em;
   font-family: var(--heading-font-family);
   font-weight: 700;
-  line-height: 1.5;
+  line-height: 1.2;
   scroll-margin: 40px;
   color: var(--text-color);
 }

@@ -21,4 +21,6 @@ export default function decorate(block) {
   }
 
   block.append(textCol, imageCol);
+
+  document.body.classList.add('has-yellow-accent');
 }
