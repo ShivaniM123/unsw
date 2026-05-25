@@ -1,0 +1,106 @@
+.sub-nav-container {
+  background: #000;
+  padding: 0;
+  margin-top: -1px;
+}
+
+.sub-nav-container .sub-nav-wrapper {
+  max-width: unset;
+  padding: 0;
+}
+
+.sub-nav {
+  padding: 0 24px;
+}
+
+.sub-nav .sub-nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+}
+
+.sub-nav .sub-nav-title {
+  color: #fff;
+  font-family: var(--heading-font-family);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-right: 32px;
+  white-space: nowrap;
+}
+
+.sub-nav .sub-nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 32px;
+}
+
+.sub-nav .sub-nav-social {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 16px;
+  align-items: center;
+}
+
+.sub-nav .sub-nav-links li,
+.sub-nav .sub-nav-social li {
+  margin: 0;
+}
+
+.sub-nav .sub-nav-links a,
+.sub-nav .sub-nav-social a {
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.sub-nav .sub-nav-links a {
+  font-size: 0.9375rem;
+  font-weight: 400;
+}
+
+.sub-nav .sub-nav-links a:hover,
+.sub-nav .sub-nav-social a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.sub-nav .sub-nav-social .icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+}
+
+.sub-nav .sub-nav-social .icon img {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
+}
+
+.sub-nav .sub-nav-social .icon svg {
+  fill: #fff;
+  width: 24px;
+  height: 24px;
+}
+
+@media (width < 900px) {
+  .sub-nav .sub-nav-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .sub-nav .sub-nav-links {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .sub-nav .sub-nav-social {
+    gap: 12px;
+  }
+}
