@@ -202,8 +202,14 @@ export default async function decorate(block) {
       logoImg.loading = 'eager';
       logoLink.append(logoImg);
     }
-    if (wrapper) wrapper.append(logoLink);
-    else { navBrand.innerHTML = ''; navBrand.append(logoLink); }
+    const sectionTitle = getMetadata('section-title');
+    if (sectionTitle) {
+      const titleEl = document.createElement('a');
+      titleEl.className = 'nav-section-title';
+      titleEl.href = getMetadata('section-title-link') || '#';
+      titleEl.textContent = sectionTitle;
+      if (wrapper) { wrapper.append(logoLink); wrapper.append(titleEl); } else { navBrand.innerHTML = ''; navBrand.append(logoLink); navBrand.append(titleEl); }
+    } else if (wrapper) { wrapper.append(logoLink); } else { navBrand.innerHTML = ''; navBrand.append(logoLink); }
   }
 
   // --- Sections with dropdowns ---

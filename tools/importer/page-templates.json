@@ -1,62 +1,43 @@
 {
+  "metadata": {
+    "projectType": "da"
+  },
   "templates": [
     {
-      "name": "staff-profile",
+      "name": "news-article",
       "urls": [
-        "https://www.unsw.edu.au/staff/-keith--chee-ooi"
+        "https://www.unsw.edu.au/news/2026/03/dr-yu-jing-on-powering-clean-energy-why-future-geoscience-needs-more-women"
       ],
-      "description": "Staff profile page with biographical information, contact details, research interests, and publications",
+      "description": "UNSW news article page featuring researcher interview about clean energy and geoscience",
       "blocks": [
         {
-          "name": "hero-profile",
+          "name": "hero-article",
           "instances": [
-            ".profile-page-header"
-          ]
-        },
-        {
-          "name": "columns-contact",
-          "instances": [
-            ".text.uds-component.read-more",
-            ".propertytiles"
-          ]
-        },
-        {
-          "name": "tabs-research",
-          "instances": [
-            ".tabs.uds-component"
+            ".degree-page-header .page-header"
           ]
         }
       ],
       "sections": [
         {
           "id": "section-1",
-          "name": "Profile Hero",
-          "selector": ".profile-page-header",
-          "style": "yellow-accent",
+          "name": "Hero / Article Header",
+          "selector": ".column-layout.padded-right",
+          "style": null,
           "blocks": [
-            "hero-profile"
+            "hero-article"
           ],
           "defaultContent": []
         },
         {
           "id": "section-2",
-          "name": "Bio and Contact",
-          "selector": ".column-layout:has(.text.read-more)",
+          "name": "Article Body",
+          "selector": ".column-layout.padded-left.padded-right",
           "style": null,
-          "blocks": [
-            "columns-contact"
-          ],
-          "defaultContent": []
-        },
-        {
-          "id": "section-3",
-          "name": "Research Tabs",
-          "selector": ".column-layout:has(.tabs)",
-          "style": null,
-          "blocks": [
-            "tabs-research"
-          ],
-          "defaultContent": []
+          "blocks": [],
+          "defaultContent": [
+            ".text.uds-component .cmp-text",
+            ".separator.uds-component .cmp-separator"
+          ]
         }
       ]
     }

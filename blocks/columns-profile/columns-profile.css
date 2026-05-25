@@ -16,7 +16,7 @@
   order: 0;
 }
 
-/* --- Columns-profile variant: staff profile text left + image right --- */
+/* --- Staff profile variant: text left + image right --- */
 
 /* Mobile: image on top, text below — square aspect ratio */
 .columns-profile .columns-profile-image-col {
@@ -138,7 +138,6 @@
   height: 31px;
 }
 
-
 .columns-profile .columns-profile-follow-row ul li a:hover {
   opacity: 0.7;
 }
@@ -147,7 +146,6 @@
   width: 24px;
   height: 24px;
 }
-
 
 /* Tablet: 600px+ stacked, larger square image */
 @media (width >= 600px) {
@@ -205,5 +203,121 @@
 
   .columns-profile .columns-profile-text-col .profile-faculty {
     font-size: 24px;
+  }
+}
+
+/* ==========================================================================
+   News article hero variant
+   When columns-profile has no .profile-faculty (news pages vs staff profiles),
+   display as single-column stacked layout matching original UNSW news design.
+   Includes decorative yellow polygon via ::before pseudo-element.
+   ========================================================================== */
+
+/* Yellow pentagon decoration – matches original UNSW SVG shape */
+.columns-profile:not(:has(.profile-faculty)) {
+  position: relative;
+  isolation: isolate;
+}
+
+.section.yellow-accent.columns-profile-container {
+  overflow: hidden;
+}
+
+.columns-profile:not(:has(.profile-faculty))::before {
+  content: '';
+  position: absolute;
+  top: -35%;
+  left: 68%;
+  width: 44.3%;
+  aspect-ratio: 1;
+  background: var(--brand-yellow);
+  z-index: -1;
+  pointer-events: none;
+  clip-path: polygon(
+    13.33% 72.35%,
+    42.41% 100%,
+    73% 83%,
+    88.06% 18.7%,
+    71.55% 0%
+  );
+}
+
+.columns-profile:not(:has(.profile-faculty)) .columns-profile-text-col {
+  order: 0;
+  max-width: 80%;
+  padding: 0 48px;
+}
+
+.columns-profile:not(:has(.profile-faculty)) .columns-profile-text-col h1 {
+  font-size: 36px;
+  margin: 0 0 24px;
+}
+
+.columns-profile:not(:has(.profile-faculty)) .columns-profile-text-col p:first-of-type {
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--brand-grey);
+  margin: 0;
+  line-height: 1.75;
+}
+
+.columns-profile:not(:has(.profile-faculty)) .columns-profile-image-col {
+  order: 1;
+  margin-bottom: 0;
+}
+
+.columns-profile:not(:has(.profile-faculty)) .columns-profile-image-col picture {
+  display: block;
+  width: 100%;
+}
+
+.columns-profile:not(:has(.profile-faculty)) .columns-profile-image-col img {
+  width: 100%;
+  height: auto;
+  max-width: none;
+  object-fit: cover;
+}
+
+@media (width >= 600px) {
+  .columns-profile:not(:has(.profile-faculty)) .columns-profile-text-col h1 {
+    font-size: 42px;
+  }
+
+  .columns-profile:not(:has(.profile-faculty)) .columns-profile-image-col img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (width >= 900px) {
+  .columns-profile:not(:has(.profile-faculty)) > div {
+    flex-direction: row;
+    gap: 48px;
+    align-items: flex-start;
+  }
+
+  .columns-profile:not(:has(.profile-faculty)) .columns-profile-text-col {
+    flex: 1;
+    order: 0;
+    min-height: 393px;
+    max-width: none;
+    padding: 0;
+  }
+
+  .columns-profile:not(:has(.profile-faculty)) .columns-profile-text-col h1 {
+    font-size: 61px;
+    line-height: 1.48;
+    margin: 0 0 32px;
+  }
+
+  .columns-profile:not(:has(.profile-faculty)) .columns-profile-image-col {
+    flex: 1;
+    order: 1;
+    justify-content: flex-end;
+  }
+
+  .columns-profile:not(:has(.profile-faculty)) .columns-profile-image-col img {
+    max-width: 100%;
   }
 }

@@ -1,5 +1,6 @@
 import {
   buildBlock,
+  getMetadata,
   loadHeader,
   loadFooter,
   decorateIcons,
@@ -22,7 +23,7 @@ function buildHeroBlock(main) {
   // eslint-disable-next-line no-bitwise
   if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
     // Check if h1 or picture is already inside a hero block
-    if (h1.closest('.hero') || picture.closest('.hero')) {
+    if (h1.closest('.hero, .hero-article') || picture.closest('.hero, .hero-article')) {
       return; // Don't create a duplicate hero block
     }
     const section = document.createElement('div');
@@ -68,6 +69,9 @@ function decorateIconLinks(main) {
 function buildBreadcrumbBlock(main) {
   // Only add breadcrumb to the actual page main, not fragments
   if (main !== document.querySelector('main')) return;
+
+  // Don't add breadcrumb if metadata says false
+  if (getMetadata('breadcrumb') === 'false') return;
 
   // Don't add breadcrumb on homepage
   const { pathname } = window.location;
@@ -124,10 +128,7 @@ function buildAutoBlocks(main) {
     const hasYellowAccent = sectionMeta
       && sectionMeta.textContent.includes('yellow-accent');
     if (hasYellowAccent) {
-      const container = document.createElement('div');
-      container.className = 'background-shape-container';
-      container.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><polygon points="8,43.4121662 25.4464136,60 43.7984672,49.8005029 52.8354688,11.2215304 42.930188,0"/></svg>';
-      document.body.prepend(container);
+      document.body.classList.add('has-yellow-accent');
     }
   } catch (error) {
     // eslint-disable-next-line no-console

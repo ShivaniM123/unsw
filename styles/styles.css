@@ -13,7 +13,7 @@
 /* UNSW Design System */
 :root {
   /* UNSW brand colors */
-  --brand-yellow: #ffd600;
+  --brand-yellow: #ffdc00;
   --brand-black: #181716;
   --brand-white: #fff;
   --brand-grey: #737373;
@@ -73,8 +73,8 @@
 
 @media (width >= 900px) {
   :root {
-    --heading-font-size-xxl: 48px;
-    --heading-font-size-xl: 42px;
+    --heading-font-size-xxl: 61px;
+    --heading-font-size-xl: 48px;
     --heading-font-size-l: 28px;
     --heading-font-size-m: 22px;
     --heading-font-size-s: 20px;
@@ -126,7 +126,7 @@ h6 {
   margin-bottom: 0.25em;
   font-family: var(--heading-font-family);
   font-weight: 700;
-  line-height: 1.5;
+  line-height: 1.2;
   scroll-margin: 40px;
   color: var(--text-color);
 }
@@ -329,7 +329,7 @@ main > .section > div {
 }
 
 /* Profile pages: all sections use consistent 8% padding to align text */
-body:has(.background-shape-container) main .section > div {
+body.has-yellow-accent main .section > div {
   max-width: none;
   padding: 0 8%;
 }
@@ -362,7 +362,7 @@ main .section.yellow-accent {
   position: relative;
   background-color: transparent;
   margin: 0;
-  padding: 40px 0 48px;
+  padding: 48px 0 80px;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
@@ -370,83 +370,41 @@ main .section.yellow-accent > div {
   position: relative;
 }
 
-/* Page-level yellow pentagon background shape container */
-.background-shape-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  width: 100%;
-  height: 1710px;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-/* Staff pages: polygon (default) — large shape behind profile */
-
-/* Mobile */
-.background-shape-container svg {
-  fill: var(--brand-yellow);
-  position: absolute;
-  z-index: -1;
-  top: 98px;
-  right: -291px;
-  height: 582px;
-  max-height: 72vw;
-}
-
-/* Tablet */
-@media (width >= 600px) {
-  .background-shape-container svg {
-    top: -88px;
-    right: -107px;
-    height: 608px;
-    max-height: 63vw;
-  }
-}
-
-/* Desktop */
-@media (width >= 900px) {
-  .background-shape-container svg {
-    top: -222px;
-    right: -181px;
-    height: 1150px;
-    max-height: none;
-  }
-}
-
-/* Wide screens */
-@media (width >= 1920px) {
-  .background-shape-container svg {
-    right: -45px;
-  }
-}
-
-/* On pages with background shape, body bg must not cover the shape */
-body:has(.background-shape-container) {
+/* Yellow-accent pages: transparent backgrounds so polygon shows through */
+body.has-yellow-accent main .section.yellow-accent,
+body.has-yellow-accent main .section.breadcrumb-container,
+body.has-yellow-accent main .section.columns-container {
   background-color: transparent;
 }
 
-/* Profile/News pages: transparent backgrounds so yellow shape shows through */
-body:has(.background-shape-container) header .nav-wrapper,
-body:has(.background-shape-container) main .section.breadcrumb-container,
-body:has(.background-shape-container) main .section.columns-profile-container,
-body:has(.background-shape-container) main .section.columns-container {
-  background-color: transparent;
+
+/* News article body content: tighter paragraph spacing to match original */
+body.has-yellow-accent main .section .default-content-wrapper p {
+  margin: 0 0 20px;
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  line-height: 28px;
 }
 
-/* Main nav row gets white bg, top bar stays transparent for polygon */
-body:has(.background-shape-container) header nav {
-  background-color: transparent;
+/* News article body: constrain text width, left-aligned with hero title */
+body.has-yellow-accent main .section:not(.yellow-accent, .breadcrumb-container) > .default-content-wrapper p,
+body.has-yellow-accent main .section:not(.yellow-accent, .breadcrumb-container) > .default-content-wrapper h4 {
+  max-width: 870px;
 }
 
-body:has(.background-shape-container) header .nav-brand,
-body:has(.background-shape-container) header .nav-sections {
-  background-color: var(--brand-white);
+/* Lead/intro paragraph: first paragraph in article body uses Clancy light */
+/* stylelint-disable-next-line no-descending-specificity */
+body.has-yellow-accent main .section:not(.yellow-accent, .breadcrumb-container) .default-content-wrapper > p:first-child {
+  font-family: var(--heading-font-family);
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 32px;
 }
 
-/* News pages: container clips polygon at hero section boundary (~700px on original) */
-body:has(.columns-container) .background-shape-container {
-  height: 700px;
+/* stylelint-disable-next-line no-descending-specificity */
+body.has-yellow-accent main .section .default-content-wrapper h4 {
+  font-size: 24px;
+  line-height: 36px;
+  margin: 32px 0;
 }
 
