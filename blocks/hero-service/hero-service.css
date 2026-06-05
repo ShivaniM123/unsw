@@ -1,0 +1,47 @@
+.hero-service-container .hero-service-wrapper {
+  max-width: unset;
+  padding: 0;
+}
+
+.hero-service {
+  position: relative;
+  padding: 40px 24px;
+  min-height: 300px;
+}
+
+.hero-service h1,
+.hero-service h2,
+.hero-service h3,
+.hero-service h4,
+.hero-service h5,
+.hero-service h6,
+.hero-service p {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--background-color);
+}
+
+.hero-service.no-image * {
+  color: var(--text-color);
+}
+
+.hero-service picture {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  object-fit: cover;
+  box-sizing: border-box;
+}
+
+.hero-service img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+@media (width >= 900px) {
+  .hero-service {
+    padding: 40px 32px;
+  }
+}

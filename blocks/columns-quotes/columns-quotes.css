@@ -1,0 +1,33 @@
+.columns-quotes > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.columns-quotes img {
+  width: 100%;
+}
+
+.columns-quotes > div > div {
+  order: 1;
+}
+
+.columns-quotes > div > .columns-quotes-img-col {
+  order: 0;
+}
+
+.columns-quotes > div > .columns-quotes-img-col img {
+  display: block;
+}
+
+@media (width >= 900px) {
+  .columns-quotes > div {
+    align-items: center;
+    flex-direction: unset;
+    gap: 24px;
+  }
+
+  .columns-quotes > div > div {
+    flex: 1;
+    order: unset;
+  }
+}
