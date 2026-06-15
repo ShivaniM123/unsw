@@ -1,0 +1,40 @@
+{
+  "variantName": "hero-service",
+  "baseBlock": "hero",
+  "version": "1.0.0",
+  "created": "2026-06-05T04:45:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.unsw.edu.au/student/support/services/equitable-learning-services",
+    "originPage": "service landing page",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "minimal",
+    "purpose": "service-landing-hero",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "heading + subheading + 2 CTAs + image",
+    "buttonCount": 2,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "service landing pages",
+      "support service pages",
+      "student resource pages with hero image and CTAs",
+      "information pages with prominent call-to-action"
+    ],
+    "notSuitableFor": [
+      "news article pages (use hero-article)",
+      "staff profile pages (use hero-profile)",
+      "pages without CTAs or images"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/student/support/services/equitable-learning-services"],
+    "reuseCount": 1,
+    "lastUsed": "2026-06-05T04:45:00.000Z"
+  }
+}
